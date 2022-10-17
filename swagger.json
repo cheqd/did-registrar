@@ -1,0 +1,406 @@
+{
+    "openapi": "3.0.0",
+    "servers": [
+        {
+            "url": "/1.0/"
+        }
+    ],
+    "info": {
+        "description": "Cheqd Registrar Driver for universal registrar",
+        "version": "1.0.0",
+        "title": "Cheqd Did Registrar"
+    },
+    "paths": {
+        "/create": {
+            "post": {
+                "summary": "Create a DID.",
+                "description": "<p>This endpoint creates a DID. As input it takes the DID plus options, a DID document, and optionally secrets needed to create a DID. The output is a state object that represents the current state of the DID creation process.</p> <p>See the <a href=\"https://identity.foundation/did-registration/#create\">DID Registration</a> specification for additional details.</p>",
+                "operationId": "create",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CreateRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "The request was successful, but the DID may not be fully created yet, as indicated by the \"didState.state\" and \"jobId\" output fields. Additional state information plus metadata are available in the response body.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/CreateState"
+                                }
+                            }
+                        }
+                    },
+                    "201": {
+                        "description": "The DID has been successfully created, as indicated by the \"didState.state\" output field. Additional state information (including the created DID) plus metadata are available in the response body.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/CreateState"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "A problem with the input fields has occurred. Additional state information plus metadata may be available in the response body.",
+                        "content": {
+                            "application/json": {
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "An internal error has occurred. Additional state information plus metadata may be available in the response body.",
+                        "content": {
+                            "application/json": {
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/update": {
+            "post": {
+                "summary": "Update a DID.",
+                "description": "<p>This endpoint updates a DID. As input it takes the existing DID plus options, a DID document, and optionally secrets needed to update a DID. The output is a state object that represents the current state of the DID update process.</p> <p>See the <a href=\"https://identity.foundation/did-registration/#update\">DID Registration</a> specification for additional details.</p>",
+                "operationId": "update",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UpdateRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "The request was successful, and the DID may or may not be fully updated yet, as indicated by the \"didState.state\" and \"jobId\" output fields. Additional state information plus metadata are available in the response body.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UpdateState"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "A problem with the input fields has occurred. Additional state information plus metadata may be available in the response body.",
+                        "content": {
+                            "application/json": {
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "An internal error has occurred. Additional state information plus metadata may be available in the response body.",
+                        "content": {
+                            "application/json": {
+
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/deactivate": {
+            "post": {
+                "summary": "Deactivate a DID.",
+                "description": "<p>This endpoint deactivates a DID. As input it takes the existing DID plus options, and optionally secrets needed to deactivate a DID. The output is a state object that represents the current state of the DID deactivation process.</p> <p>See the <a href=\"https://identity.foundation/did-registration/#deactivate\">DID Registration</a> specification for additional details.</p>",
+                "operationId": "deactivate",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/DeactivateRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "The request was successful, and the DID may or may not be fully deactivated yet, as indicated by the \"didState.state\" and \"jobId\" output fields. Additional state information plus metadata are available in the response body.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/DeactivateState"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "A problem with the input fields has occurred. Additional state information plus metadata may be available in the response body.",
+                        "content": {
+                            "application/json": {
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "An internal error has occurred. Additional state information plus metadata may be available in the response body.",
+                        "content": {
+                            "application/json": {
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "CreateRequest": {
+                "description": "Input fields for the create operation.",
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                    "jobId": {
+                        "description": "This input field is used to keep track of an ongoing DID creation process. See <a href=\"https://identity.foundation/did-registration/#jobid\">https://identity.foundation/did-registration/#jobid</a>.",
+                        "type": "string",
+                        "example": "null"
+                    },
+                    "options": {
+                        "description": "This input field contains an object with various options for the DID create operation, such as the network where the DID should be created. See <a href=\"https://identity.foundation/did-registration/#options\">https://identity.foundation/did-registration/#options</a>.",
+                        "type": "object",
+                        "example": {
+                            "network": "testnet"
+                        }
+                    },
+                    "secret": {
+                        "description": "This input field contains an object with DID controller keys and other secrets needed for performing the DID create operation. See <a href=\"https://identity.foundation/did-registration/#secret\">https://identity.foundation/did-registration/#secret</a>.",
+                        "type": "object",
+                        "example": {
+                            "seed": "72WGp7NgFR1Oqdi8zlt7jQQ434XR0cNQ"
+                        }
+                    },
+                    "didDocument": {
+                        "description": "This input field contains either a complete DID document, or an incremental change (diff) to a DID document. See <a href=\"https://identity.foundation/did-registration/#diddocument\">https://identity.foundation/did-registration/#diddocument</a>.",
+                        "type": "object"
+                    }
+                }
+            },
+            "UpdateRequest": {
+                "description": "Input fields for the update operation.",
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                    "did"
+                ],
+                "properties": {
+                    "jobId": {
+                        "description": "This input field is used to keep track of an ongoing DID update process. See <a href=\"https://identity.foundation/did-registration/#jobid\">https://identity.foundation/did-registration/#jobid</a>.",
+                        "type": "string",
+                        "example": "null"
+                    },
+                    "did": {
+                        "description": "This input field indicates the DID that is the target of the DID update operation.",
+                        "type": "string",
+                        "example": "did:cheqd:testnet:zApY6E8Prv1rWcjRtBKENGaVm2kRk1VQ"
+                    },
+                    "options": {
+                        "description": "This input field contains an object with various options for the DID update operation. See <a href=\"https://identity.foundation/did-registration/#options\">https://identity.foundation/did-registration/#options</a>.",
+                        "type": "object",
+                        "items": {
+                            "network": {
+                                "type": "string"
+                            }
+                        },
+                        "example": {
+                            "network": "testnet"
+                        }
+                    },
+                    "secret": {
+                        "description": "This input field contains an object with DID controller keys and other secrets needed for performing the DID update operation. See <a href=\"https://identity.foundation/did-registration/#secret\">https://identity.foundation/did-registration/#secret</a>.",
+                        "type": "object",
+                        "items": {
+                            "keys" : {
+                                "type": "array"
+                            }
+                        },
+                        "example": {
+                            "keys": [{
+                                "publicKey": "",
+                                "privateKey": ""
+                            }]
+                        }
+                    },
+                    "didDocumentOperation": {
+                        "description": "This input field indicates which update operation should be applied to a DID’s associated DID document. See <a href=\"https://identity.foundation/did-registration/#diddocumentoperation\">https://identity.foundation/did-registration/#diddocumentoperation</a>.",
+                        "type": "array",
+                        "items": {
+                            "type": "string",
+                            "example": ["addToDidDocument"]
+                        }
+                    },
+                    "didDocument": {
+                        "description": "This input field contains either a complete DID document, or an incremental change (diff) to a DID document. See <a href=\"https://identity.foundation/did-registration/#diddocument\">https://identity.foundation/did-registration/#diddocument</a>.",
+                        "type": "array",
+                        "items": {
+                            "type": "object"
+                        },
+                        "example": {
+                                "service": [{
+                                    "id": "did:cheqd:testnet:zApY6E8Prv1rWcjRtBKENGaVm2kRk1VQ#rand",
+                                    "type": "rand",
+                                    "serviceEndpoint": "https://rand.in"
+                                }]
+                            }
+                        }
+                    }
+                },
+            "DeactivateRequest": {
+                "description": "Input fields for the deactivate operation.",
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                    "did"
+                ],
+                "properties": {
+                    "jobId": {
+                        "description": "This input field is used to keep track of an ongoing DID deactivation process. See <a href=\"https://identity.foundation/did-registration/#jobid\">https://identity.foundation/did-registration/#jobid</a>.",
+                        "type": "string",
+                        "example": "null"
+                    },
+                    "did": {
+                        "description": "This input field indicates the DID that is the target of the DID deactivation operation.",
+                        "type": "string",
+                        "example": "did:cheqd:testnet:zApY6E8Prv1rWcjRtBKENGaVm2kRk1VQ"
+                    },
+                    "options": {
+                        "description": "This input field contains an object with various options for the DID deactivate operation. See <a href=\"https://identity.foundation/did-registration/#options\">https://identity.foundation/did-registration/#options</a>.",
+                        "type": "object"
+                    },
+                    "secret": {
+                        "description": "This input field contains an object with DID controller keys and other secrets needed for performing the DID deactivate operation. See <a href=\"https://identity.foundation/did-registration/#secret\">https://identity.foundation/did-registration/#secret</a>.",
+                        "type": "object"
+                    }
+                }
+            },
+            "CreateState": {
+                "description": "The state after a create operation.",
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                    "didState"
+                ],
+                "properties": {
+                    "jobId": {
+                        "type": "string",
+                        "example": "null"
+                    },
+                    "didState": {
+                        "$ref": "#/components/schemas/DidState"
+                    },
+                    "didRegistrationMetadata": {
+                        "type": "object"
+                    },
+                    "didDocumentMetadata": {
+                        "type": "object"
+                    }
+                }
+            },
+            "UpdateState": {
+                "description": "The state after an update operation.",
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                    "didState"
+                ],
+                "properties": {
+                    "jobId": {
+                        "type": "string",
+                        "example": "null"
+                    },
+                    "didState": {
+                        "$ref": "#/components/schemas/DidState"
+                    },
+                    "didRegistrationMetadata": {
+                        "type": "object"
+                    },
+                    "didDocumentMetadata": {
+                        "type": "object"
+                    }
+                }
+            },
+            "DeactivateState": {
+                "description": "The state after a deactivate operation.",
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                    "didState"
+                ],
+                "properties": {
+                    "jobId": {
+                        "type": "string",
+                        "example": "null"
+                    },
+                    "didState": {
+                        "$ref": "#/components/schemas/DidState"
+                    },
+                    "didRegistrationMetadata": {
+                        "type": "object"
+                    },
+                    "didDocumentMetadata": {
+                        "type": "object"
+                    }
+                }
+            },
+            "DidState": {
+                "description": "The current state of a DID.",
+                "type": "object",
+                "additionalProperties": true,
+                "properties": {
+                    "state": {
+                        "type": "string",
+                        "example": "finished"
+                    },
+                    "did": {
+                        "type": "string",
+                        "example": "did:cheqd:testnet:zApY6E8Prv1rWcjRtBKENGaVm2kRk1VQ"
+                    },
+                    "secret": {
+                        "type": "object",
+                        "example": {
+                            "keys": [
+                                {
+                                    "publicKey": "keaiUef4jaPvupBpC2IK9/H/yd/OPsgxCADOgftuLQc",
+                                    "privateKey": "Z0FhWmllZzNtbExTZVJId1RzNUhTa1dIOG5TWnNpRkSR5qJR5"
+                                }
+                            ]
+                        }
+                    },
+                    "didDocument": {
+                        "type": "object",
+                        "example": {
+                            "context": [],
+                            "id": "did:cheqd:testnet:zApY6E8Prv1rWcjRtBKENGaVm2kRk1VQ",
+                            "controller": [
+                              "did:cheqd:testnet:zApY6E8Prv1rWcjRtBKENGaVm2kRk1VQ"
+                            ],
+                            "authentication": [
+                              "did:cheqd:testnet:zApY6E8Prv1rWcjRtBKENGaVm2kRk1VQ#key-0"
+                            ],
+                            "assertionMethod": [],
+                            "capabilityInvocation": [],
+                            "capabilityDelegation": [],
+                            "keyAgreement": [],
+                            "alsoKnownAs": [],
+                            "verificationMethod": [
+                              {
+                                "id": "did:cheqd:testnet:zApY6E8Prv1rWcjRtBKENGaVm2kRk1VQ#key-0",
+                                "type": "Ed25519VerificationKey2020",
+                                "controller": "did:cheqd:testnet:zApY6E8Prv1rWcjRtBKENGaVm2kRk1VQ",
+                                "publicKeyMultibase": "zApY6E8Prv1rWcjRtBKENGaVm2kRk1VQsFzQoQNbAoVdp",
+                                "publicKeyJwk": []
+                              }
+                            ],
+                            "service": []
+                          }
+                    }
+                }
+            }
+        }
+    }
+}

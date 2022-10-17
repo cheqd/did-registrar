@@ -10,6 +10,24 @@
 
 A cheqd driver for the universal registrar
 
+## Specifications
+
+* [Decentralized Identifiers](https://w3c.github.io/did-core/)
+
+## Build and Run (Docker)
+
+```
+docker build -f ./docker/Dockerfile . -t exampleorg/uni-registrar-driver-did-example
+docker run -p 9080:9080 exampleorg/uni-registrar-driver-did-example
+curl -X POST http://localhost:9080/1.0/create -H "Content-Type: application/json"
+```
+
+## Build and Run (NodeJS)
+
+```
+npm start
+```
+
 ## 💬 Community
 
 The [**cheqd Community Slack**](http://cheqd.link/join-cheqd-slack) is our primary chat channel for the open-source community, software developers, and node operators.
@@ -19,3 +37,4 @@ Please reach out to us there for discussions, help, and feedback on the project.
 ## 🙋 Find us elsewhere
 
 [![Telegram](https://img.shields.io/badge/Telegram-2CA5E0?style=for-the-badge\&logo=telegram\&logoColor=white)](https://t.me/cheqd) [![Discord](https://img.shields.io/badge/Discord-7289DA?style=for-the-badge\&logo=discord\&logoColor=white)](http://cheqd.link/discord-github) [![Twitter](https://img.shields.io/badge/Twitter-1DA1F2?style=for-the-badge\&logo=twitter\&logoColor=white)](https://twitter.com/intent/follow?screen\_name=cheqd\_io) [![LinkedIn](https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge\&logo=linkedin\&logoColor=white)](http://cheqd.link/linkedin) [![Slack](https://img.shields.io/badge/Slack-4A154B?style=for-the-badge\&logo=slack\&logoColor=white)](http://cheqd.link/join-cheqd-slack) [![Medium](https://img.shields.io/badge/Medium-12100E?style=for-the-badge\&logo=medium\&logoColor=white)](https://blog.cheqd.io) [![YouTube](https://img.shields.io/badge/YouTube-FF0000?style=for-the-badge\&logo=youtube\&logoColor=white)](https://www.youtube.com/channel/UCBUGvvH6t3BAYo5u41hJPzw/)
+![DIF Logo](https://raw.githubusercontent.com/decentralized-identity/universal-registrar/master/docs/logo-dif.png)

@@ -63,6 +63,7 @@ export class DidController {
                     break
                 case DidDocumentOperation.Remove:
                     resolvedDocument = jsonSubtract(resolvedDocument.didDocument, didDocument)
+                    break
             }
             i++
         }
@@ -71,7 +72,7 @@ export class DidController {
 
         await CheqdRegistrar.instance.update(signInputs, didPayload)
 
-        return response.status(200).json({
+        return response.status(201).json({
             jobId: null,
             didState: {
                 did: didPayload.id,

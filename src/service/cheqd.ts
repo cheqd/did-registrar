@@ -84,7 +84,7 @@ export class CheqdRegistrar {
 export async function CheqdResolver(id: string) {
     const result = await fetch(`${DefaultResolverUrl.Cheqd}/${id}`)
     if (!result.ok) { 
-        console.log("HTTP-Error: " + result.status)
+        return null
     }
     return await result.json()
 }

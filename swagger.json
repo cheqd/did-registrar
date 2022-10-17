@@ -50,9 +50,6 @@
                         "description": "A problem with the input fields has occurred. Additional state information plus metadata may be available in the response body.",
                         "content": {
                             "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/CreateState"
-                                }
                             }
                         }
                     },
@@ -60,9 +57,6 @@
                         "description": "An internal error has occurred. Additional state information plus metadata may be available in the response body.",
                         "content": {
                             "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/CreateState"
-                                }
                             }
                         }
                     }
@@ -98,9 +92,6 @@
                         "description": "A problem with the input fields has occurred. Additional state information plus metadata may be available in the response body.",
                         "content": {
                             "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/UpdateState"
-                                }
                             }
                         }
                     },
@@ -108,9 +99,7 @@
                         "description": "An internal error has occurred. Additional state information plus metadata may be available in the response body.",
                         "content": {
                             "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/UpdateState"
-                                }
+
                             }
                         }
                     }
@@ -146,9 +135,6 @@
                         "description": "A problem with the input fields has occurred. Additional state information plus metadata may be available in the response body.",
                         "content": {
                             "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/DeactivateState"
-                                }
                             }
                         }
                     },
@@ -156,9 +142,6 @@
                         "description": "An internal error has occurred. Additional state information plus metadata may be available in the response body.",
                         "content": {
                             "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/DeactivateState"
-                                }
                             }
                         }
                     }
@@ -218,16 +201,29 @@
                     },
                     "options": {
                         "description": "This input field contains an object with various options for the DID update operation. See <a href=\"https://identity.foundation/did-registration/#options\">https://identity.foundation/did-registration/#options</a>.",
-                        "type": "object"
+                        "type": "object",
+                        "items": {
+                            "network": {
+                                "type": "string"
+                            }
+                        },
+                        "example": {
+                            "network": "testnet"
+                        }
                     },
                     "secret": {
                         "description": "This input field contains an object with DID controller keys and other secrets needed for performing the DID update operation. See <a href=\"https://identity.foundation/did-registration/#secret\">https://identity.foundation/did-registration/#secret</a>.",
                         "type": "object",
+                        "items": {
+                            "keys" : {
+                                "type": "array"
+                            }
+                        },
                         "example": {
-                            "keys": {
+                            "keys": [{
                                 "publicKey": "",
                                 "privateKey": ""
-                            }
+                            }]
                         }
                     },
                     "didDocumentOperation": {
@@ -235,7 +231,7 @@
                         "type": "array",
                         "items": {
                             "type": "string",
-                            "example": []
+                            "example": ["addToDidDocument"]
                         }
                     },
                     "didDocument": {
@@ -245,31 +241,15 @@
                             "type": "object"
                         },
                         "example": {
-                            "jobId": "null",
-                            "did": "did:cheqd:testnet:zApY6E8Prv1rWcjRtBKENGaVm2kRk1VQ",
-                            "options": {
-                                "network": "testnet"
-                            },
-                            "secret": {
-                                "keys": [{
-                                    "publicKey": "5E8KLz/YVQJH8eklJi2Ny2QYVdEtYRqIF7lBj5lfMU8",
-                                    "privateKey": "QWt4TjVLMTZYTzVXY1RReGlhU1VmYm1IYmRRQk14ejPkTwovP9hVAkfx6SUmLY3LZBhV0S1hGogXuUGPmV8xTw"
-                                }]
-                            },
-                            "didDocumentOperation": [
-                                "addToDidDocument"
-                            ],
-                            "didDocument": [{
                                 "service": [{
                                     "id": "did:cheqd:testnet:zApY6E8Prv1rWcjRtBKENGaVm2kRk1VQ#rand",
                                     "type": "rand",
                                     "serviceEndpoint": "https://rand.in"
                                 }]
-                            }]
+                            }
                         }
                     }
-                }
-            },
+                },
             "DeactivateRequest": {
                 "description": "Input fields for the deactivate operation.",
                 "type": "object",

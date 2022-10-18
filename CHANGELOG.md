@@ -1,5 +1,7 @@
 # Changelog
 
+## [1.0.1](https://github.com/cheqd/did-registrar/compare/1.0.0...1.0.1) (2022-10-18)
+
 ## 1.0.0 (2022-10-18)
 
 

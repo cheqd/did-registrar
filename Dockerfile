@@ -45,7 +45,8 @@ ENV DID_REGISTRAR_PORT ${DID_REGISTRAR_PORT}
 # Install pre-requisites
 RUN chown -R node:node /home/node/app && \
     apk update && \
-    apk add --no-cache bash ca-certificates
+    apk add --no-cache bash ca-certificates && \
+    npm install swagger-ui-express@4.5.0
 
 # Specify default port
 EXPOSE ${DID_REGISTRAR_PORT}
@@ -55,4 +56,4 @@ USER node
 SHELL ["/bin/bash", "-euo", "pipefail", "-c"]
 
 # Run the application
-CMD [ "npm start" ]
+ENTRYPOINT [ "node", "index.js" ]

@@ -1,0 +1,9 @@
+# Skip unncecessary folders
+dist/**
+node_modules/**
+.github/**
+
+# Skip unnecessary files
+**/*.md
+Dockerfile**
+docker-compose.yml

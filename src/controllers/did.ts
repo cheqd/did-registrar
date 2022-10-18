@@ -7,13 +7,31 @@ import { DidDocumentOperation, IDIDCreateRequest, IDIDUpdateRequest } from '../t
 
 export class DidController {
 
+    public static createValidator = [
+        check('secret').custom((value)=>{
+            if (value) {
+                if(value.seed && value.keys) return false
+                else if(value.seed?.length != 32 ) return false
+            }
+            return true
+        }).withMessage('Only one of seed or keys should be provided, Seed length should be 32')
+    ]
+
     public static updateValidator = [
         check('didDocument').isArray().withMessage('didDocument is required'),
-        check('secret').contains('keys').withMessage('keys are required in secret'),
-        check('did').isString().withMessage('did is required')
+        check('secret').isObject().custom((value) => value.keys).withMessage('secret with keys is required'),
+        check('did').isString().contains('did:cheqd:').withMessage('cheqd DID is required')
     ]
 
     public async create(request: Request, response: Response) {
+        // validate body
+        const result = validationResult(request);
+        if (!result.isEmpty()) {
+            return response.status(400).json({
+                message: result.array()[0].msg
+            })
+        }
+        
         let {secret, options, didDocument} = request.body as IDIDCreateRequest
         
         secret = secret || { seed: randomStr() }
@@ -45,11 +63,12 @@ export class DidController {
 
         const { secret, options, didDocument, didDocumentOperation, did } = request.body as IDIDUpdateRequest 
         await CheqdRegistrar.instance.connect(options?.network)
-        
         // check if did is registered on the ledger
         let resolvedDocument = await CheqdResolver(did)
-        if(resolvedDocument.didDocument == null) {
-            return response.status(400).send('Did not found')
+        if(!resolvedDocument?.didDocument) {
+            return response.status(400).send({
+                message: `${did} DID not found`
+            })
         }
         var i=0
         for (var operation of didDocumentOperation) {

@@ -8,12 +8,10 @@ FROM node:16-alpine AS builder
 WORKDIR /home/node/app
 
 # Copy source files
-COPY package-lock.json package.json ./
+COPY . .
 
 # Installing dependencies
 RUN npm ci
-
-COPY . .
 
 # Build the app
 RUN npm run build
@@ -28,18 +26,36 @@ FROM node:16-alpine AS runner
 WORKDIR /home/node/app
 
 # Copy built application
-COPY --from=builder /home/node/app/dist .
+COPY --from=builder /home/node/app/dist ./dist
 
-ARG PORT=9080
-ARG MNEMONIC
-ARG ADDRESS
+# Build-time arguments
+ARG NODE_ENV=production
+ARG NPM_CONFIG_LOGLEVEL=warn
+ARG PORT=3000
+ARG FEE_PAYER_ADDRESS
+ARG FEE_PAYER_MNEMONIC
 
+# NPM environment variables
+ENV NODE_ENV ${NODE_ENV}
+ENV NPM_CONFIG_LOGLEVEL ${NPM_CONFIG_LOGLEVEL}
 ENV PORT ${PORT}
-ENV MNEMONIC ${MNEMONIC}
-ENV ADDRESS ${ADDRESS}
 
-RUN npm i swagger-ui-express
+# App-specific environment variables
+ENV FEE_PAYER_ADDRESS ${FEE_PAYER_ADDRESS}
+ENV FEE_PAYER_MNEMONIC ${FEE_PAYER_MNEMONIC}
 
+# Install pre-requisites
+RUN npm install -g swagger-ui-express@4.5.0 && \
+    chown -R node:node /home/node/app && \
+    apk update && \
+    apk add --no-cache bash ca-certificates
+
+# Specify default port
 EXPOSE ${PORT}
 
-CMD [ "node", "index.js" ]
+# Set user and shell
+USER node
+SHELL ["/bin/bash", "-euo", "pipefail", "-c"]
+
+# Run the application
+CMD [ "npm start" ]

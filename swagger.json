@@ -49,15 +49,13 @@
                     "400": {
                         "description": "A problem with the input fields has occurred. Additional state information plus metadata may be available in the response body.",
                         "content": {
-                            "application/json": {
-                            }
+                            "application/json": {}
                         }
                     },
                     "500": {
                         "description": "An internal error has occurred. Additional state information plus metadata may be available in the response body.",
                         "content": {
-                            "application/json": {
-                            }
+                            "application/json": {}
                         }
                     }
                 }
@@ -91,16 +89,13 @@
                     "400": {
                         "description": "A problem with the input fields has occurred. Additional state information plus metadata may be available in the response body.",
                         "content": {
-                            "application/json": {
-                            }
+                            "application/json": {}
                         }
                     },
                     "500": {
                         "description": "An internal error has occurred. Additional state information plus metadata may be available in the response body.",
                         "content": {
-                            "application/json": {
-
-                            }
+                            "application/json": {}
                         }
                     }
                 }
@@ -134,15 +129,13 @@
                     "400": {
                         "description": "A problem with the input fields has occurred. Additional state information plus metadata may be available in the response body.",
                         "content": {
-                            "application/json": {
-                            }
+                            "application/json": {}
                         }
                     },
                     "500": {
                         "description": "An internal error has occurred. Additional state information plus metadata may be available in the response body.",
                         "content": {
-                            "application/json": {
-                            }
+                            "application/json": {}
                         }
                     }
                 }
@@ -163,14 +156,14 @@
                     },
                     "options": {
                         "description": "This input field contains an object with various options for the DID create operation, such as the network where the DID should be created. See <a href=\"https://identity.foundation/did-registration/#options\">https://identity.foundation/did-registration/#options</a>.",
-                        "type": "object",
+                        "$ref": "#/components/schemas/Options",
                         "example": {
                             "network": "testnet"
                         }
                     },
                     "secret": {
                         "description": "This input field contains an object with DID controller keys and other secrets needed for performing the DID create operation. See <a href=\"https://identity.foundation/did-registration/#secret\">https://identity.foundation/did-registration/#secret</a>.",
-                        "type": "object",
+                        "$ref": "#/components/schemas/Secret",
                         "example": {
                             "seed": "72WGp7NgFR1Oqdi8zlt7jQQ434XR0cNQ"
                         }
@@ -201,29 +194,21 @@
                     },
                     "options": {
                         "description": "This input field contains an object with various options for the DID update operation. See <a href=\"https://identity.foundation/did-registration/#options\">https://identity.foundation/did-registration/#options</a>.",
-                        "type": "object",
-                        "items": {
-                            "network": {
-                                "type": "string"
-                            }
-                        },
+                        "$ref": "#/components/schemas/Options",
                         "example": {
                             "network": "testnet"
                         }
                     },
                     "secret": {
                         "description": "This input field contains an object with DID controller keys and other secrets needed for performing the DID update operation. See <a href=\"https://identity.foundation/did-registration/#secret\">https://identity.foundation/did-registration/#secret</a>.",
-                        "type": "object",
-                        "items": {
-                            "keys" : {
-                                "type": "array"
-                            }
-                        },
+                        "$ref": "#/components/schemas/Secret",
                         "example": {
-                            "keys": [{
-                                "publicKey": "",
-                                "privateKey": ""
-                            }]
+                            "keys": [
+                                {
+                                    "publicKey": "",
+                                    "privateKey": ""
+                                }
+                            ]
                         }
                     },
                     "didDocumentOperation": {
@@ -231,7 +216,9 @@
                         "type": "array",
                         "items": {
                             "type": "string",
-                            "example": ["addToDidDocument"]
+                            "example": [
+                                "addToDidDocument"
+                            ]
                         }
                     },
                     "didDocument": {
@@ -241,15 +228,17 @@
                             "type": "object"
                         },
                         "example": {
-                                "service": [{
+                            "service": [
+                                {
                                     "id": "did:cheqd:testnet:zApY6E8Prv1rWcjRtBKENGaVm2kRk1VQ#rand",
                                     "type": "rand",
                                     "serviceEndpoint": "https://rand.in"
-                                }]
-                            }
+                                }
+                            ]
                         }
                     }
-                },
+                }
+            },
             "DeactivateRequest": {
                 "description": "Input fields for the deactivate operation.",
                 "type": "object",
@@ -270,11 +259,11 @@
                     },
                     "options": {
                         "description": "This input field contains an object with various options for the DID deactivate operation. See <a href=\"https://identity.foundation/did-registration/#options\">https://identity.foundation/did-registration/#options</a>.",
-                        "type": "object"
+                        "$ref": "#/components/schemas/Options"
                     },
                     "secret": {
                         "description": "This input field contains an object with DID controller keys and other secrets needed for performing the DID deactivate operation. See <a href=\"https://identity.foundation/did-registration/#secret\">https://identity.foundation/did-registration/#secret</a>.",
-                        "type": "object"
+                        "$ref": "#/components/schemas/Secret"
                     }
                 }
             },
@@ -377,10 +366,10 @@
                             "context": [],
                             "id": "did:cheqd:testnet:zApY6E8Prv1rWcjRtBKENGaVm2kRk1VQ",
                             "controller": [
-                              "did:cheqd:testnet:zApY6E8Prv1rWcjRtBKENGaVm2kRk1VQ"
+                                "did:cheqd:testnet:zApY6E8Prv1rWcjRtBKENGaVm2kRk1VQ"
                             ],
                             "authentication": [
-                              "did:cheqd:testnet:zApY6E8Prv1rWcjRtBKENGaVm2kRk1VQ#key-0"
+                                "did:cheqd:testnet:zApY6E8Prv1rWcjRtBKENGaVm2kRk1VQ#key-0"
                             ],
                             "assertionMethod": [],
                             "capabilityInvocation": [],
@@ -388,16 +377,151 @@
                             "keyAgreement": [],
                             "alsoKnownAs": [],
                             "verificationMethod": [
-                              {
-                                "id": "did:cheqd:testnet:zApY6E8Prv1rWcjRtBKENGaVm2kRk1VQ#key-0",
-                                "type": "Ed25519VerificationKey2020",
-                                "controller": "did:cheqd:testnet:zApY6E8Prv1rWcjRtBKENGaVm2kRk1VQ",
-                                "publicKeyMultibase": "zApY6E8Prv1rWcjRtBKENGaVm2kRk1VQsFzQoQNbAoVdp",
-                                "publicKeyJwk": []
-                              }
+                                {
+                                    "id": "did:cheqd:testnet:zApY6E8Prv1rWcjRtBKENGaVm2kRk1VQ#key-0",
+                                    "type": "Ed25519VerificationKey2020",
+                                    "controller": "did:cheqd:testnet:zApY6E8Prv1rWcjRtBKENGaVm2kRk1VQ",
+                                    "publicKeyMultibase": "zApY6E8Prv1rWcjRtBKENGaVm2kRk1VQsFzQoQNbAoVdp",
+                                    "publicKeyJwk": []
+                                }
                             ],
                             "service": []
-                          }
+                        }
+                    }
+                }
+            },
+            "Secret": {
+                "type": "object",
+                "properties": {
+                    "seed": {
+                        "type": "string"
+                    },
+                    "keys": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/KeyPair"
+                        }
+                    }
+                }
+            },
+            "Options": {
+                "type": "object",
+                "properties": {
+                    "network": {
+                        "type": "string"
+                    }
+                }
+            },
+            "KeyPair": {
+                "type": "object",
+                "properties": {
+                    "publicKey": {
+                        "type": "string"
+                    },
+                    "privateKey": {
+                        "type": "string"
+                    }
+                }
+            },
+            "DidDocument": {
+                "type": "object",
+                "properties": {
+                    "context": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "id": {
+                        "type": "string",
+                        "example": "did:cheqd:testnet:zApY6E8Prv1rWcjRtBKENGaVm2kRk1VQ"
+                    },
+                    "controller": {
+                        "type": "array",
+                        "items": {
+                            "type": "string" 
+                        },
+                        "example": 
+                        [
+                        "did:cheqd:testnet:zApY6E8Prv1rWcjRtBKENGaVm2kRk1VQ"
+                        ]
+                    },
+                    "authentication": {
+                        "type": "array",
+                        "items": {
+                            "type": "string" 
+                        },
+                        "example": [
+                        "did:cheqd:testnet:zApY6E8Prv1rWcjRtBKENGaVm2kRk1VQ#key-0"
+                    ]},
+                    "assertionMethod": {
+                        "type": "array",
+                        "items": {
+                            "type": "string" 
+                        }
+                    },
+                    "capabilityInvocation": {
+                        "type": "array",
+                        "items": {
+                            "type": "string" 
+                        }
+                    },
+                    "capabilityDelegation": {
+                        "type": "array",
+                        "items": {
+                            "type": "string" 
+                        }
+                    },
+                    "keyAgreement": {
+                        "type": "array",
+                        "items": {
+                            "type": "string" 
+                        }
+                    },
+                    "alsoKnownAs": {
+                        "type": "array",
+                        "items": {
+                            "type": "string" 
+                        }
+                    },
+                    "verificationMethod": {
+                        "type": "array",
+                        "items": {
+                            "type": "string" 
+                        }}
+                    ,
+                    "service": {
+                        "type": "array",
+                        "items": {
+                            "type": "string" 
+                        }
+                    }
+                }
+            },
+            "VerificationMethod": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "example": "did:cheqd:testnet:zApY6E8Prv1rWcjRtBKENGaVm2kRk1VQ#key-0"
+                    },
+                    "type": {
+                        "type": "string",
+                        "example":"Ed25519VerificationKey2020"
+                    },
+                    "controller": {
+                        "type": "string",
+                        "example":"did:cheqd:testnet:zApY6E8Prv1rWcjRtBKENGaVm2kRk1VQ"
+                    },
+                    "publicKeyMultibase": {
+                        "type": "string",
+                        "example":"zApY6E8Prv1rWcjRtBKENGaVm2kRk1VQsFzQoQNbAoVdp"
+                    },
+                    "publicKeyJwk": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
                     }
                 }
             }

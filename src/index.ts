@@ -3,7 +3,7 @@ import App from './app'
 
 require('dotenv').config()
 
-const port = process.env.PORT
+const port = process.env.DID_REGISTRAR_PORT || 9080
 App.set('port', port)
 
 const server = http.createServer(App)

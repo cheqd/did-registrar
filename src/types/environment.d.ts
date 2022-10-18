@@ -1,8 +1,8 @@
 declare global {
     namespace NodeJS {
         interface ProcessEnv {
-            ADDRESS: string
-            MNEMONIC: string
+            DID_REGISTRAR_ADDRESS: string
+            DID_REGISTRAR_MNEMONIC: string
         }
     }
 }

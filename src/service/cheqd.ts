@@ -9,9 +9,9 @@ import * as dotenv from 'dotenv'
 
 dotenv.config()
 
-const { MNEMONIC, ADDRESS } = process.env
+const { DID_REGISTRAR_MNEMONIC, DID_REGISTRAR_ADDRESS } = process.env
 
-const FEE = { amount: [{ denom: 'ncheq', amount: '5000000' }], gas: '200000', payer: ADDRESS }
+const FEE = { amount: [{ denom: 'ncheq', amount: '5000000' }], gas: '200000', payer: DID_REGISTRAR_ADDRESS }
 
 export enum DefaultRPCUrl {
 	Mainnet = 'https://rpc.cheqd.net',
@@ -33,7 +33,7 @@ export class CheqdRegistrar {
     public static instance = new CheqdRegistrar()
 
     constructor() {
-        if(!MNEMONIC && !ADDRESS) {
+        if(!DID_REGISTRAR_MNEMONIC && !DID_REGISTRAR_ADDRESS) {
             throw new Error('No faucet address provided')
         }
     }
@@ -43,7 +43,7 @@ export class CheqdRegistrar {
         const sdkOptions: ICheqdSDKOptions = {
             modules: [DIDModule as unknown as AbstractCheqdSDKModule],
             rpcUrl: network === NetworkType.Mainnet ? DefaultRPCUrl.Mainnet : DefaultRPCUrl.Testnet,
-            wallet: await DirectSecp256k1HdWallet.fromMnemonic(MNEMONIC!, {prefix: 'cheqd'})
+            wallet: await DirectSecp256k1HdWallet.fromMnemonic(DID_REGISTRAR_MNEMONIC!, {prefix: 'cheqd'})
         }
         this.sdk = await createCheqdSDK(sdkOptions)
     }
@@ -60,7 +60,7 @@ export class CheqdRegistrar {
         .createDidTx(
             signInputs,
             didPayload,
-            ADDRESS,
+            DID_REGISTRAR_ADDRESS,
             FEE,
             undefined,
             { sdk: this.forceGetSdk() }
@@ -72,7 +72,7 @@ export class CheqdRegistrar {
         .updateDidTx(
             signInputs,
             didPayload,
-            ADDRESS,
+            DID_REGISTRAR_ADDRESS,
             FEE,
             undefined,
             { sdk: this.forceGetSdk() }
@@ -82,9 +82,6 @@ export class CheqdRegistrar {
 }
 
 export async function CheqdResolver(id: string) {
-    if(!id.startsWith('did')) {
-        return null
-    }
     const result = await fetch(`${DefaultResolverUrl.Cheqd}/${id}`)
     if (!result.ok) { 
         return null

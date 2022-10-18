@@ -31,16 +31,16 @@ COPY --from=builder /home/node/app/dist .
 # Build-time arguments
 ARG NODE_ENV=production
 ARG NPM_CONFIG_LOGLEVEL=warn
-ARG PORT=3000
-ARG MNEMONIC
-ARG ADDRESS
+ARG DID_REGISTRAR_PORT=3000
+ARG DID_REGISTRARi_MNEMONIC
+ARG DID_REGISTRAR_PORT
 
 # Run-time environment variables
 ENV NODE_ENV ${NODE_ENV}
 ENV NPM_CONFIG_LOGLEVEL ${NPM_CONFIG_LOGLEVEL}
-ENV PORT ${PORT}
-ENV MNEMONIC ${MNEMONIC}
-ENV ADDRESS ${ADDRESS}
+ENV DID_REGISTRAR_PORT ${DID_REGISTRAR_PORT}
+ENV DID_REGISTRAR_MNEMONIC ${DID_REGISTRAR_MNEMONIC}
+ENV DID_REGISTRAR_PORT ${DID_REGISTRAR_PORT}
 
 # Install pre-requisites
 RUN chown -R node:node /home/node/app && \
@@ -48,7 +48,7 @@ RUN chown -R node:node /home/node/app && \
     apk add --no-cache bash ca-certificates
 
 # Specify default port
-EXPOSE ${PORT}
+EXPOSE ${DID_REGISTRAR_PORT}
 
 # Set user and shell
 USER node

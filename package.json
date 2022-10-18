@@ -5,8 +5,8 @@
   "source": "src/index.ts",
   "scripts": {
     "dev": "nodemon src/index.ts",
-    "start": "node dist/index.js",
-    "build": "esbuild src/index.ts --platform=node --bundle --minify --outdir=dist --external:swagger-ui-express"
+    "start": "node dist/src/index.js",
+    "build": "tsc --build"
   },
   "repository": {
     "type": "git",

@@ -82,9 +82,6 @@ export class CheqdRegistrar {
 }
 
 export async function CheqdResolver(id: string) {
-    if(!id.startsWith('did')) {
-        return null
-    }
     const result = await fetch(`${DefaultResolverUrl.Cheqd}/${id}`)
     if (!result.ok) { 
         return null

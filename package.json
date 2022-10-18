@@ -1,13 +1,7 @@
 {
   "name": "@cheqd/did-registrar",
   "version": "1.0.0",
-  "description": "Cheqd driver fot the universal registrar",
-  "source": "src/index.ts",
-  "scripts": {
-    "dev": "nodemon src/index.ts",
-    "start": "node dist/index.js",
-    "build": "esbuild src/index.ts --platform=node --bundle --minify --outdir=dist --external:swagger-ui-express"
-  },
+  "description": "Universal Registrar for cheqd DID method",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/cheqd/did-registrar.git"
@@ -18,7 +12,22 @@
   "homepage": "https://github.com/cheqd/did-registrar#readme",
   "license": "Apache-2.0",
   "author": "Cheqd Foundation Limited (https://github.com/cheqd)",
-  "private": true,
+  "source": "src/index.ts",
+  "scripts": {
+    "dev": "nodemon src/index.ts",
+    "start": "node dist/index.js",
+    "build": "esbuild src/index.ts --platform=node --bundle --minify --outdir=dist --external:swagger-ui-express"
+  },
+  "dependencies": {
+    "@cheqd/sdk": "npm:@daevm/cheqd-sdk@^1.3.3",
+    "@cheqd/ts-proto": "^1.0.13",
+    "@cosmjs/proto-signing": "^0.29.2",
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "express-validator": "^6.14.2",
+    "helmet": "^6.0.0",
+    "swagger-ui-express": "^4.5.0"
+  },
   "devDependencies": {
     "@semantic-release/changelog": "^6.0.1",
     "@semantic-release/commit-analyzer": "^9.0.2",
@@ -41,14 +50,8 @@
     "semantic-release": "^19.0.5",
     "typescript": "^4.8.4"
   },
-  "dependencies": {
-    "@cheqd/sdk": "npm:@daevm/cheqd-sdk@^1.3.3",
-    "@cheqd/ts-proto": "^1.0.13",
-    "@cosmjs/proto-signing": "^0.29.2",
-    "dotenv": "^16.0.3",
-    "express": "^4.18.2",
-    "express-validator": "^6.14.2",
-    "helmet": "^6.0.0",
-    "swagger-ui-express": "^4.5.0"
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/",
+    "access": "public"
   }
 }

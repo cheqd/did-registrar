@@ -155,22 +155,13 @@
                         "example": "null"
                     },
                     "options": {
-                        "description": "This input field contains an object with various options for the DID create operation, such as the network where the DID should be created. See <a href=\"https://identity.foundation/did-registration/#options\">https://identity.foundation/did-registration/#options</a>.",
-                        "$ref": "#/components/schemas/Options",
-                        "example": {
-                            "network": "testnet"
-                        }
+                        "$ref": "#/components/schemas/Options"
                     },
                     "secret": {
-                        "description": "This input field contains an object with DID controller keys and other secrets needed for performing the DID create operation. See <a href=\"https://identity.foundation/did-registration/#secret\">https://identity.foundation/did-registration/#secret</a>.",
-                        "$ref": "#/components/schemas/Secret",
-                        "example": {
-                            "seed": "72WGp7NgFR1Oqdi8zlt7jQQ434XR0cNQ"
-                        }
+                        "$ref": "#/components/schemas/Secret"
                     },
                     "didDocument": {
-                        "description": "This input field contains either a complete DID document, or an incremental change (diff) to a DID document. See <a href=\"https://identity.foundation/did-registration/#diddocument\">https://identity.foundation/did-registration/#diddocument</a>.",
-                        "type": "object"
+                        "$ref": "#/components/schemas/DidDocument"
                     }
                 }
             },
@@ -193,41 +184,24 @@
                         "example": "did:cheqd:testnet:zApY6E8Prv1rWcjRtBKENGaVm2kRk1VQ"
                     },
                     "options": {
-                        "description": "This input field contains an object with various options for the DID update operation. See <a href=\"https://identity.foundation/did-registration/#options\">https://identity.foundation/did-registration/#options</a>.",
-                        "$ref": "#/components/schemas/Options",
-                        "example": {
-                            "network": "testnet"
-                        }
+                        "$ref": "#/components/schemas/Options"
                     },
                     "secret": {
-                        "description": "This input field contains an object with DID controller keys and other secrets needed for performing the DID update operation. See <a href=\"https://identity.foundation/did-registration/#secret\">https://identity.foundation/did-registration/#secret</a>.",
-                        "$ref": "#/components/schemas/Secret",
-                        "example": {
-                            "keys": [
-                                {
-                                    "publicKey": "",
-                                    "privateKey": ""
-                                }
-                            ]
-                        }
+                        "$ref": "#/components/schemas/Secret"
                     },
                     "didDocumentOperation": {
-                        "description": "This input field indicates which update operation should be applied to a DID’s associated DID document. See <a href=\"https://identity.foundation/did-registration/#diddocumentoperation\">https://identity.foundation/did-registration/#diddocumentoperation</a>.",
                         "type": "array",
                         "items": {
-                            "type": "string",
-                            "example": [
-                                "addToDidDocument"
-                            ]
-                        }
+                            "type": "string"
+                        },
+                        "example": ["addToDidDocument", "removeFromDidDocument"]
                     },
                     "didDocument": {
-                        "description": "This input field contains either a complete DID document, or an incremental change (diff) to a DID document. See <a href=\"https://identity.foundation/did-registration/#diddocument\">https://identity.foundation/did-registration/#diddocument</a>.",
                         "type": "array",
                         "items": {
-                            "type": "object"
+                            "$ref": "#/components/schemas/DidDocument"
                         },
-                        "example": {
+                        "example": [{
                             "service": [
                                 {
                                     "id": "did:cheqd:testnet:zApY6E8Prv1rWcjRtBKENGaVm2kRk1VQ#rand",
@@ -235,7 +209,7 @@
                                     "serviceEndpoint": "https://rand.in"
                                 }
                             ]
-                        }
+                        }]
                     }
                 }
             },
@@ -258,11 +232,9 @@
                         "example": "did:cheqd:testnet:zApY6E8Prv1rWcjRtBKENGaVm2kRk1VQ"
                     },
                     "options": {
-                        "description": "This input field contains an object with various options for the DID deactivate operation. See <a href=\"https://identity.foundation/did-registration/#options\">https://identity.foundation/did-registration/#options</a>.",
                         "$ref": "#/components/schemas/Options"
                     },
                     "secret": {
-                        "description": "This input field contains an object with DID controller keys and other secrets needed for performing the DID deactivate operation. See <a href=\"https://identity.foundation/did-registration/#secret\">https://identity.foundation/did-registration/#secret</a>.",
                         "$ref": "#/components/schemas/Secret"
                     }
                 }
@@ -391,10 +363,12 @@
                 }
             },
             "Secret": {
+                "description": "This input field contains an object with DID controller keys and other secrets needed for performing the DID deactivate operation. See <a href=\"https://identity.foundation/did-registration/#secret\">https://identity.foundation/did-registration/#secret</a>.",
                 "type": "object",
                 "properties": {
                     "seed": {
-                        "type": "string"
+                        "type": "string",
+                        "example": "72WGp7NgFR1Oqdi8zlt7jQQ434XR0cNQ"
                     },
                     "keys": {
                         "type": "array",
@@ -405,11 +379,15 @@
                 }
             },
             "Options": {
+                "description": "This input field contains an object with various options for the DID create operation, such as the network where the DID should be created. See <a href=\"https://identity.foundation/did-registration/#options\">https://identity.foundation/did-registration/#options</a>.",
                 "type": "object",
                 "properties": {
                     "network": {
                         "type": "string"
                     }
+                },
+                "example": {
+                    "network": "testnet"
                 }
             },
             "KeyPair": {
@@ -424,6 +402,7 @@
                 }
             },
             "DidDocument": {
+                "description": "This input field contains either a complete DID document, or an incremental change (diff) to a DID document. See <a href=\"https://identity.foundation/did-registration/#diddocument\">https://identity.foundation/did-registration/#diddocument</a>.",
                 "type": "object",
                 "properties": {
                     "context": {
@@ -493,7 +472,7 @@
                     "service": {
                         "type": "array",
                         "items": {
-                            "type": "string" 
+                            "type": "object" 
                         }
                     }
                 }

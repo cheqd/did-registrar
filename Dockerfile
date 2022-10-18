@@ -26,34 +26,36 @@ FROM node:16-alpine AS runner
 WORKDIR /home/node/app
 
 # Copy built application
-COPY --from=builder /home/node/app/dist .
+COPY --from=builder /home/node/app/dist ./dist
 
 # Build-time arguments
 ARG NODE_ENV=production
 ARG NPM_CONFIG_LOGLEVEL=warn
-ARG DID_REGISTRAR_PORT=3000
-ARG DID_REGISTRARi_MNEMONIC
-ARG DID_REGISTRAR_PORT
+ARG PORT=3000
+ARG FEE_PAYER_ADDRESS
+ARG FEE_PAYER_MNEMONIC
 
-# Run-time environment variables
+# NPM environment variables
 ENV NODE_ENV ${NODE_ENV}
 ENV NPM_CONFIG_LOGLEVEL ${NPM_CONFIG_LOGLEVEL}
-ENV DID_REGISTRAR_PORT ${DID_REGISTRAR_PORT}
-ENV DID_REGISTRAR_MNEMONIC ${DID_REGISTRAR_MNEMONIC}
-ENV DID_REGISTRAR_PORT ${DID_REGISTRAR_PORT}
+ENV PORT ${PORT}
+
+# App-specific environment variables
+ENV FEE_PAYER_ADDRESS ${FEE_PAYER_ADDRESS}
+ENV FEE_PAYER_MNEMONIC ${FEE_PAYER_MNEMONIC}
 
 # Install pre-requisites
-RUN chown -R node:node /home/node/app && \
+RUN npm install -g swagger-ui-express@4.5.0 && \
+    chown -R node:node /home/node/app && \
     apk update && \
-    apk add --no-cache bash ca-certificates && \
-    npm install swagger-ui-express@4.5.0
+    apk add --no-cache bash ca-certificates
 
 # Specify default port
-EXPOSE ${DID_REGISTRAR_PORT}
+EXPOSE ${PORT}
 
 # Set user and shell
 USER node
 SHELL ["/bin/bash", "-euo", "pipefail", "-c"]
 
 # Run the application
-ENTRYPOINT [ "node", "index.js" ]
+CMD [ "npm start" ]

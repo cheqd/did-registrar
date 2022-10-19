@@ -20,7 +20,8 @@ export class DidController {
     public static updateValidator = [
         check('didDocument').isArray().withMessage('didDocument is required'),
         check('secret').isObject().custom((value) => value.keys).withMessage('secret with keys is required'),
-        check('did').isString().contains('did:cheqd:').withMessage('cheqd DID is required')
+        check('did').isString().contains('did:cheqd:').withMessage('cheqd DID is required'),
+        check('didDocumentOperation').optional().isArray().custom((value) => value.includes(DidDocumentOperation.Set) ? value.length==1 : value.length<=2 ).withMessage('Set operation can\'t be used with Add/Remove')
     ]
 
     public async create(request: Request, response: Response) {
@@ -39,17 +40,24 @@ export class DidController {
         await CheqdRegistrar.instance.connect(options?.network)
         let { didPayload, keys, signInputs } = createDidPayloadWithSignInputs(secret.seed, secret.keys)
         if (didDocument) didPayload = jsonConcat(didPayload, didDocument)
-        await CheqdRegistrar.instance.create(signInputs, didPayload)
 
-        return response.status(201).json({
-            jobId: null,
-            didState: {
-              did: didPayload.id,
-              state: "finished",
-              secret: { keys },
-              didDocument: didPayload
-            }
-        })
+        try {
+            await CheqdRegistrar.instance.create(signInputs, didPayload)
+            return response.status(201).json({
+                jobId: null,
+                didState: {
+                  did: didPayload.id,
+                  state: "finished",
+                  secret: { keys },
+                  didDocument: didPayload
+                }
+            })
+        } catch (error) {
+            return response.status(500).json({
+                message: `Internal server error: ${error}`
+            })
+        }
+
     }
 
     public async update(request: Request, response: Response) {
@@ -61,7 +69,7 @@ export class DidController {
             })
         }
 
-        const { secret, options, didDocument, didDocumentOperation, did } = request.body as IDIDUpdateRequest 
+        const { secret, options, didDocument, didDocumentOperation=[DidDocumentOperation.Set], did } = request.body as IDIDUpdateRequest 
         await CheqdRegistrar.instance.connect(options?.network)
         // check if did is registered on the ledger
         let resolvedDocument = await CheqdResolver(did)
@@ -70,35 +78,42 @@ export class DidController {
                 message: `${did} DID not found`
             })
         }
+        console.log(didDocumentOperation)
         var i=0
+        let updatedDocument = resolvedDocument.didDocument
         for (var operation of didDocumentOperation) {
             switch (operation) {
                 case DidDocumentOperation.Set:
-                    didDocument[i].versionId = resolvedDocument.didDocumentMetadata.versionId
-                    resolvedDocument = didDocument
+                    // TODO: validate didDocument schema
+                    updatedDocument = didDocument[i]
                     break
                 case DidDocumentOperation.Add:
-                    resolvedDocument = jsonConcat(resolvedDocument.didDocument, didDocument)
+                    updatedDocument = jsonConcat(updatedDocument, didDocument[i])
                     break
                 case DidDocumentOperation.Remove:
-                    resolvedDocument = jsonSubtract(resolvedDocument.didDocument, didDocument)
+                    updatedDocument = jsonSubtract(updatedDocument, didDocument[i])
                     break
             }
             i++
         }
+        updatedDocument.versionId = resolvedDocument.didDocumentMetadata.versionId
 
-        const {didDocument: didPayload, signInputs} = await createUpdateDidPayloadWithSignInputs(resolvedDocument, secret.keys)
-
-        await CheqdRegistrar.instance.update(signInputs, didPayload)
-
-        return response.status(201).json({
-            jobId: null,
-            didState: {
-                did: didPayload.id,
-                state: "finished",
-                secret,
-                didDocument: didPayload
-            }
-        })
+        try {
+            const {didDocument: didPayload, signInputs} = await createUpdateDidPayloadWithSignInputs(updatedDocument, secret.keys)
+            await CheqdRegistrar.instance.update(signInputs, didPayload)
+            return response.status(201).json({
+                jobId: null,
+                didState: {
+                    did: didPayload.id,
+                    state: "finished",
+                    secret,
+                    didDocument: didPayload
+                }
+            })
+        } catch (error) {
+            return response.status(500).json({
+                message: `Internal server error: ${error}`
+            })
+        }
     }
 }

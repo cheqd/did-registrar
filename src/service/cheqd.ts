@@ -82,7 +82,7 @@ export class CheqdRegistrar {
 }
 
 export async function CheqdResolver(id: string) {
-    const result = await fetch(`${DefaultResolverUrl.Cheqd}/${id}`)
+    const result = await fetch(`${DefaultResolverUrl.Cheqd}/1.0/identifiers/${id}`)
     if (!result.ok) { 
         return null
     }

@@ -26,7 +26,7 @@ FROM node:16-alpine AS runner
 WORKDIR /home/node/app
 
 # Copy built application
-COPY --from=builder /home/node/app/dist ./dist
+COPY --from=builder /home/node/app/dist .
 
 # Build-time arguments
 ARG NODE_ENV=production
@@ -45,7 +45,7 @@ ENV FEE_PAYER_ADDRESS ${FEE_PAYER_ADDRESS}
 ENV FEE_PAYER_MNEMONIC ${FEE_PAYER_MNEMONIC}
 
 # Install pre-requisites
-RUN npm install -g swagger-ui-express@4.5.0 && \
+RUN npm install swagger-ui-express@4.5.0 && \
     chown -R node:node /home/node/app && \
     apk update && \
     apk add --no-cache bash ca-certificates
@@ -55,7 +55,7 @@ EXPOSE ${PORT}
 
 # Set user and shell
 USER node
-SHELL ["/bin/bash", "-euo", "pipefail", "-c"]
+SHELL [ "/bin/bash", "-euo", "pipefail", "-c" ]
 
 # Run the application
-CMD [ "npm start" ]
+CMD [ "node", "index.js" ]

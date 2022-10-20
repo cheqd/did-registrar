@@ -4,6 +4,8 @@ import { DidController } from './controllers/did'
 import { CheqdRegistrar } from './service/cheqd'
 import * as swagger from 'swagger-ui-express'
 import * as swaggerJson from '../swagger.json'
+import { CheqdController } from './controllers/cheqd'
+
 class App {
     public express: express.Application
 
@@ -24,11 +26,18 @@ class App {
     private routes() {
         const app = this.express
         const URL_PREFIX = '/1.0'
+        
+        app.get('/', (req, res) => res.redirect('api-docs'))
 
-        // routes 
+        // did-registrar
         app.post(`${URL_PREFIX}/create`, DidController.createValidator, new DidController().create)
         app.post(`${URL_PREFIX}/update`, DidController.updateValidator, new DidController().update)
         app.post(`${URL_PREFIX}/deactivate`, (req,res)=>res.send('To be implemented'))
+
+        // cheqd-helpers
+        app.get(`${URL_PREFIX}/key-pair`, new CheqdController().generateKeys)
+        app.get(`${URL_PREFIX}/did-document`, CheqdController.didDocValidator, new CheqdController().generateDidDoc)
+
         // 404 for all other requests
         app.all('*', (req, res) => res.status(400).send('Bad request'))
     }

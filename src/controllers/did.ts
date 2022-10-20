@@ -1,4 +1,6 @@
-import { createDidPayloadWithSignInputs, createUpdateDidPayloadWithSignInputs } from '@cheqd/sdk/build/utils'
+import { IKeyPair, ISignInputs } from '@cheqd/sdk/build/types'
+import { createDidPayloadWithSignInputs, createSignInputsFromKeyPair } from '@cheqd/sdk/build/utils'
+import { MsgCreateDidPayload } from '@cheqd/ts-proto/cheqd/v1/tx'
 import { Request, Response } from 'express'
 import { validationResult, check } from 'express-validator'
 import { jsonConcat, jsonSubtract, randomStr } from '../helpers/helpers'
@@ -11,7 +13,7 @@ export class DidController {
         check('secret').custom((value)=>{
             if (value) {
                 if(value.seed && value.keys) return false
-                else if(value.seed?.length != 32 ) return false
+                else if(value.seed && value.seed.length != 32 ) return false
             }
             return true
         }).withMessage('Only one of seed or keys should be provided, Seed length should be 32')
@@ -38,8 +40,18 @@ export class DidController {
         secret = secret || { seed: randomStr() }
         
         await CheqdRegistrar.instance.connect(options?.network)
-        let { didPayload, keys, signInputs } = createDidPayloadWithSignInputs(secret.seed, secret.keys)
-        if (didDocument) didPayload = jsonConcat(didPayload, didDocument)
+        
+        let didPayload: Partial<MsgCreateDidPayload>, signInputs: ISignInputs[], keys: IKeyPair[]
+        if (didDocument && secret.keys) {
+            didPayload = didDocument
+            signInputs = createSignInputsFromKeyPair(didDocument, secret.keys)
+            keys = secret.keys
+        } else {
+            const response = createDidPayloadWithSignInputs(secret.seed, secret.keys)
+            didPayload = response.didPayload
+            signInputs = response.signInputs
+            keys = response.keys
+        }
 
         try {
             await CheqdRegistrar.instance.create(signInputs, didPayload)
@@ -99,15 +111,15 @@ export class DidController {
         updatedDocument.versionId = resolvedDocument.didDocumentMetadata.versionId
 
         try {
-            const {didDocument: didPayload, signInputs} = await createUpdateDidPayloadWithSignInputs(updatedDocument, secret.keys)
-            await CheqdRegistrar.instance.update(signInputs, didPayload)
+            const signInputs = createSignInputsFromKeyPair(updatedDocument, secret.keys)
+            await CheqdRegistrar.instance.update(signInputs, updatedDocument)
             return response.status(201).json({
                 jobId: null,
                 didState: {
-                    did: didPayload.id,
+                    did: updatedDocument.id,
                     state: "finished",
                     secret,
-                    didDocument: didPayload
+                    didDocument: updatedDocument
                 }
             })
         } catch (error) {

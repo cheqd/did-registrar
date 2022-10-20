@@ -26,7 +26,7 @@ FROM node:16-alpine AS runner
 WORKDIR /home/node/app
 
 # Copy built application
-COPY --from=builder /home/node/app/dist ./dist
+COPY --from=builder /home/node/app/dist .
 
 # Build-time arguments
 ARG NODE_ENV=production
@@ -58,4 +58,4 @@ USER node
 SHELL ["/bin/bash", "-euo", "pipefail", "-c"]
 
 # Run the application
-CMD [ "npm start" ]
+CMD [ "node", "index.js" ]

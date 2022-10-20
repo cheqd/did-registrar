@@ -16,6 +16,9 @@
             "externalDocs": {
                 "url": "https://github.com/cheqd/did-registrar#readme"
             }
+        },
+        {
+            "name": "Cheqd"
         }
     ],
     "paths": {
@@ -157,6 +160,104 @@
                     }
                 }
             }
+        },
+        "/key-pair": {
+            "get": {
+                "tags": [
+                    "Cheqd"
+                ],
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "seed",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "32bit string to generate key pair"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "The request was successful",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/KeyPair"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/did-document": {
+            "get": {
+                "tags": [
+                    "Cheqd"
+                ],
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "verificationMethod",
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "Ed25519VerificationKey2020",
+                                "JsonWebKey2020"
+                            ],
+                            "default": "Ed25519VerificationKey2020"
+                        }
+                    },
+                    {
+                        "in": "query",
+                        "name": "methodSpecificIdAlgo",
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "base58btc",
+                                "uuid"
+                            ],
+                            "default": "uuid"
+                        }
+                    },
+                    {
+                        "in": "query",
+                        "name": "methodSpecificIdLength",
+                        "schema": {
+                            "type": "number",
+                            "enum": [
+                                16,
+                                32
+                            ],
+                            "default": 16
+                        }
+                    },
+                    {
+                        "in": "query",
+                        "name": "network",
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "testnet",
+                                "mainnet"
+                            ],
+                            "default": "testnet"
+                        }
+                    },
+                    {
+                        "in": "query",
+                        "name": "keyPair",
+                        "schema": {
+                            "$ref": "#/components/schemas/KeyPair"
+                        }
+                    }                    
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Did document generated succesfully"
+                    }
+                }
+            }
         }
     },
     "components": {
@@ -199,9 +300,7 @@
                                 "$ref": "#/components/schemas/Service"
                             }
                         },
-                        "example": {
-                            
-                        }
+                        "example": {}
                     }
                 }
             },

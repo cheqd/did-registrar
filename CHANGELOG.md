@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.0.3](https://github.com/cheqd/did-registrar/compare/1.0.2...1.0.3) (2022-10-19)
+
+
+### Bug Fixes
+
+* Error handling && swagger schemas ([dd47352](https://github.com/cheqd/did-registrar/commit/dd4735284bf09b8d390ef7d67c970b72da56301e))
+* Error handling && swagger schemas ([#12](https://github.com/cheqd/did-registrar/issues/12)) ([d6d1fb5](https://github.com/cheqd/did-registrar/commit/d6d1fb58b962df78aa0e138a0b8bff7c5c5aa775))
+
 ## [1.0.2](https://github.com/cheqd/did-registrar/compare/1.0.1...1.0.2) (2022-10-18)
 
 ## [1.0.1](https://github.com/cheqd/did-registrar/compare/1.0.0...1.0.1) (2022-10-18)

@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.1](https://github.com/cheqd/did-registrar/compare/1.1.0...1.1.1) (2022-10-20)
+
+
+### Bug Fixes
+
+* Dockerfile ([#16](https://github.com/cheqd/did-registrar/issues/16)) ([a65a061](https://github.com/cheqd/did-registrar/commit/a65a061de508a91d26904e6ba8786deaaeb767f0)), closes [cheqd/did-registrar#15](https://github.com/cheqd/did-registrar/issues/15)
+
 ## [1.1.0](https://github.com/cheqd/did-registrar/compare/1.0.3...1.1.0) (2022-10-20)
 
 

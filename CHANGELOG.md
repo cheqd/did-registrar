@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.1.0](https://github.com/cheqd/did-registrar/compare/1.0.3...1.1.0) (2022-10-20)
+
+
+### Features
+
+* Add cheqd helper apis ([72b7aae](https://github.com/cheqd/did-registrar/commit/72b7aae8895421a1d3dcec1276a9a57550b0c968))
+* Add cheqd helper apis ([#14](https://github.com/cheqd/did-registrar/issues/14)) ([8378d5b](https://github.com/cheqd/did-registrar/commit/8378d5b8ebc68b6c8c22901079e11f58f9bc7e0b))
+
 ## [1.0.3](https://github.com/cheqd/did-registrar/compare/1.0.2...1.0.3) (2022-10-19)
 
 

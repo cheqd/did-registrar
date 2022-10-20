@@ -55,7 +55,7 @@ EXPOSE ${PORT}
 
 # Set user and shell
 USER node
-SHELL [ "/bin/bash", "-euo", "pipefail", "-c" ]
+SHELL ["/bin/bash", "-euo", "pipefail", "-c"]
 
 # Run the application
 CMD [ "node", "index.js" ]

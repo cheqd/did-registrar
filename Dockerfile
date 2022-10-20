@@ -45,7 +45,7 @@ ENV FEE_PAYER_ADDRESS ${FEE_PAYER_ADDRESS}
 ENV FEE_PAYER_MNEMONIC ${FEE_PAYER_MNEMONIC}
 
 # Install pre-requisites
-RUN npm install -g swagger-ui-express@4.5.0 && \
+RUN npm install swagger-ui-express@4.5.0 && \
     chown -R node:node /home/node/app && \
     apk update && \
     apk add --no-cache bash ca-certificates

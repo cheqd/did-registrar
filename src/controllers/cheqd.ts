@@ -33,7 +33,7 @@ export class CheqdController {
 
         return response.json({
             didDoc: createDidPayload(verificationMethods, [verificationKeys]),
-            keys: keyPair
+            key: keyPair
         })
     }
 }

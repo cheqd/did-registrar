@@ -6,6 +6,7 @@ import type { MsgCreateDidPayload, MsgUpdateDidPayload } from '@cheqd/ts-proto/c
 import { DirectSecp256k1HdWallet } from '@cosmjs/proto-signing'
 import { CheqdSDK, createCheqdSDK, DIDModule } from '@cheqd/sdk'
 import * as dotenv from 'dotenv'
+import fetch from 'node-fetch'
 
 dotenv.config()
 
@@ -86,5 +87,5 @@ export async function CheqdResolver(id: string) {
     if (!result.ok) { 
         return null
     }
-    return await result.json()
+    return (await result.json() as any)
 }

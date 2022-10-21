@@ -290,7 +290,10 @@
                             }
                         },
                         "example": {
-                            "seed": "72WGp7NgFR1Oqdi8zlt7jQQ434XR0cNQ"
+                            "keys": [{
+                                "privateKey": "",
+                                "publicKey": ""
+                            }]
                         }
                     },
                     "didDocument": {

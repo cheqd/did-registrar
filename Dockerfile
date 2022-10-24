@@ -2,7 +2,7 @@
 ###         STAGE 1: Build did-registrar app           ###
 ###############################################################
 
-FROM node:16-alpine AS builder
+FROM node:19-alpine AS builder
 
 # Set working directory & bash defaults
 WORKDIR /home/node/app
@@ -20,7 +20,7 @@ RUN npm run build
 ###             STAGE 2: Run did-registar app            ###
 ###############################################################
 
-FROM node:16-alpine AS runner
+FROM node:19-alpine AS runner
 
 # Set working directory & bash defaults
 WORKDIR /home/node/app

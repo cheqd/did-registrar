@@ -1,5 +1,7 @@
 # Changelog
 
+## [1.1.3](https://github.com/cheqd/did-registrar/compare/1.1.2...1.1.3) (2022-11-03)
+
 ## [1.1.2](https://github.com/cheqd/did-registrar/compare/1.1.1...1.1.2) (2022-10-21)
 
 ## [1.1.1](https://github.com/cheqd/did-registrar/compare/1.1.0...1.1.1) (2022-10-20)

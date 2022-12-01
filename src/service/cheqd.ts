@@ -1,7 +1,7 @@
 import type { ICheqdSDKOptions } from '@cheqd/sdk'
 import type { AbstractCheqdSDKModule } from '@cheqd/sdk/build/modules/_'
 import type { ISignInputs } from '@cheqd/sdk/build/types'
-import type { MsgCreateDidPayload, MsgUpdateDidPayload } from '@cheqd/ts-proto/cheqd/v1/tx'
+import type { MsgCreateDidPayload, MsgUpdateDidPayload } from '@cheqd/ts-proto/cheqd/did/v1/tx'
 
 import { DirectSecp256k1HdWallet } from '@cosmjs/proto-signing'
 import { CheqdSDK, createCheqdSDK, DIDModule } from '@cheqd/sdk'

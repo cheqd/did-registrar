@@ -1,6 +1,6 @@
 import { IKeyPair, ISignInputs } from '@cheqd/sdk/build/types'
 import { createDidPayloadWithSignInputs, createSignInputsFromKeyPair } from '@cheqd/sdk/build/utils'
-import { MsgCreateDidPayload } from '@cheqd/ts-proto/cheqd/v1/tx'
+import { MsgCreateDidPayload } from '@cheqd/ts-proto/cheqd/did/v1/tx'
 import { Request, Response } from 'express'
 import { validationResult, check } from 'express-validator'
 import { jsonConcat, jsonSubtract, randomStr } from '../helpers/helpers'

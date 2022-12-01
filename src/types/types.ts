@@ -1,5 +1,5 @@
 import { IKeyPair } from '@cheqd/sdk/build/types'
-import { MsgCreateDidPayload, MsgUpdateDidPayload } from '@cheqd/ts-proto/cheqd/v1/tx'
+import { MsgCreateDidPayload, MsgUpdateDidPayload } from '@cheqd/ts-proto/cheqd/did/v1/tx'
 import { NetworkType } from '../service/cheqd'
 
 export type IdentifierPayload = Partial<MsgCreateDidPayload> | Partial<MsgUpdateDidPayload>

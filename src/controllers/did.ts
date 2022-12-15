@@ -1,6 +1,6 @@
 import { IKeyPair, ISignInputs } from '@cheqd/sdk/build/types'
 import { createDidPayloadWithSignInputs, createSignInputsFromKeyPair } from '@cheqd/sdk/build/utils'
-import { MsgCreateDidPayload } from '@cheqd/ts-proto/cheqd/v1/tx'
+import { MsgCreateDidDocPayload } from '@cheqd/ts-proto/cheqd/did/v2'
 import { Request, Response } from 'express'
 import { validationResult, check } from 'express-validator'
 import { jsonConcat, jsonSubtract, randomStr } from '../helpers/helpers'
@@ -41,7 +41,7 @@ export class DidController {
         
         await CheqdRegistrar.instance.connect(options?.network)
         
-        let didPayload: Partial<MsgCreateDidPayload>, signInputs: ISignInputs[], keys: IKeyPair[]
+        let didPayload: Partial<MsgCreateDidDocPayload>, signInputs: ISignInputs[], keys: IKeyPair[]
         if (didDocument && secret.keys) {
             didPayload = didDocument
             signInputs = createSignInputsFromKeyPair(didDocument, secret.keys)
@@ -54,16 +54,22 @@ export class DidController {
         }
 
         try {
-            await CheqdRegistrar.instance.create(signInputs, didPayload)
-            return response.status(201).json({
-                jobId: null,
-                didState: {
-                  did: didPayload.id,
-                  state: "finished",
-                  secret: { keys },
-                  didDocument: didPayload
-                }
-            })
+            const result = await CheqdRegistrar.instance.create(signInputs, didPayload)
+            if ( result.code == 0 ) {
+                return response.status(201).json({
+                    jobId: null,
+                    didState: {
+                    did: didPayload.id,
+                    state: "finished",
+                    secret: { keys },
+                    didDocument: didPayload
+                    }
+                })
+            } else {
+                return response.status(404).json({
+                    message: `Invalid payload: ${JSON.stringify(result.rawLog)}`
+                })
+            }
         } catch (error) {
             return response.status(500).json({
                 message: `Internal server error: ${error}`

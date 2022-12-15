@@ -1,8 +1,9 @@
 import { IKeyPair } from '@cheqd/sdk/build/types'
-import { MsgCreateDidPayload, MsgUpdateDidPayload } from '@cheqd/ts-proto/cheqd/v1/tx'
+import { MsgCreateDidDocPayload, MsgUpdateDidDocPayload } from '@cheqd/ts-proto/cheqd/did/v2'
+import { AlternativeUri } from '@cheqd/ts-proto/cheqd/resource/v2'
 import { NetworkType } from '../service/cheqd'
 
-export type IdentifierPayload = Partial<MsgCreateDidPayload> | Partial<MsgUpdateDidPayload>
+export type IdentifierPayload = Partial<MsgCreateDidDocPayload> | Partial<MsgUpdateDidDocPayload>
 
 export interface IDIDCreateRequest {
     jobId: string | null
@@ -14,7 +15,7 @@ export interface IDIDCreateRequest {
         seed?: string,
         keys?: IKeyPair[]
     },
-    didDocument: Partial<MsgCreateDidPayload>
+    didDocument: Partial<MsgCreateDidDocPayload>
 }
 
 export interface IDIDUpdateRequest {
@@ -23,7 +24,20 @@ export interface IDIDUpdateRequest {
     options: Record<string, any>, 
     secret: Record<string, any>,
     didDocumentOperation: DidDocumentOperation[]
-    didDocument: Partial<MsgUpdateDidPayload>[]
+    didDocument: Partial<MsgUpdateDidDocPayload>[]
+}
+
+export interface IResourceCreateRequest {
+    jobId: string | null
+    secret: {
+        keys: IKeyPair[]
+    }
+    data: any, 
+    name: string, 
+    type: string, 
+    mimeType: string, 
+    alsoKnownAs?: AlternativeUri[], 
+    version: string
 }
 
 export enum DidDocumentOperation {

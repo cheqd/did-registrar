@@ -1,22 +1,23 @@
-import type { ICheqdSDKOptions } from '@cheqd/sdk'
+import { ICheqdSDKOptions, ResourceModule } from '@cheqd/sdk'
 import type { AbstractCheqdSDKModule } from '@cheqd/sdk/build/modules/_'
 import type { ISignInputs } from '@cheqd/sdk/build/types'
-import type { MsgCreateDidPayload, MsgUpdateDidPayload } from '@cheqd/ts-proto/cheqd/v1/tx'
+import type { MsgCreateDidDocPayload, MsgUpdateDidDocPayload } from '@cheqd/ts-proto/cheqd/did/v2'
 
 import { DirectSecp256k1HdWallet } from '@cosmjs/proto-signing'
 import { CheqdSDK, createCheqdSDK, DIDModule } from '@cheqd/sdk'
 import * as dotenv from 'dotenv'
 import fetch from 'node-fetch'
+import { MsgCreateResourcePayload } from '@cheqd/ts-proto/cheqd/resource/v2'
 
 dotenv.config()
 
 const { FEE_PAYER_MNEMONIC, FEE_PAYER_ADDRESS } = process.env
 
-const FEE = { amount: [{ denom: 'ncheq', amount: '5000000' }], gas: '200000', payer: FEE_PAYER_ADDRESS }
+const FEE = { amount: [{ denom: 'ncheq', amount: '5000000000' }], gas: '200000', payer: FEE_PAYER_ADDRESS }
 
 export enum DefaultRPCUrl {
 	Mainnet = 'https://rpc.cheqd.net',
-	Testnet = 'https://rpc.cheqd.network'
+	Testnet = 'http://localhost:26657'
 }
 
 export enum NetworkType {
@@ -42,7 +43,7 @@ export class CheqdRegistrar {
     public async connect(network?: NetworkType) {
         if (this.sdk) return
         const sdkOptions: ICheqdSDKOptions = {
-            modules: [DIDModule as unknown as AbstractCheqdSDKModule],
+            modules: [DIDModule as unknown as AbstractCheqdSDKModule, ResourceModule as unknown as AbstractCheqdSDKModule],
             rpcUrl: network === NetworkType.Mainnet ? DefaultRPCUrl.Mainnet : DefaultRPCUrl.Testnet,
             wallet: await DirectSecp256k1HdWallet.fromMnemonic(FEE_PAYER_MNEMONIC!, {prefix: 'cheqd'})
         }
@@ -56,7 +57,7 @@ export class CheqdRegistrar {
         return this.sdk
     }
 
-    public async create(signInputs: ISignInputs[], didPayload: Partial<MsgCreateDidPayload>) {
+    public async create(signInputs: ISignInputs[], didPayload: Partial<MsgCreateDidDocPayload>) {
         return await this.forceGetSdk()
         .createDidTx(
             signInputs,
@@ -68,11 +69,22 @@ export class CheqdRegistrar {
         )
     }
 
-    public async update(signInputs: ISignInputs[], didPayload: Partial<MsgUpdateDidPayload>) {
+    public async update(signInputs: ISignInputs[], didPayload: Partial<MsgUpdateDidDocPayload>) {
         return await this.forceGetSdk()
         .updateDidTx(
             signInputs,
             didPayload,
+            FEE_PAYER_ADDRESS,
+            FEE,
+            undefined,
+            { sdk: this.forceGetSdk() }
+        )
+    }
+
+    public async createResource(signInputs: ISignInputs[], resourcePayload: Partial<MsgCreateResourcePayload>) {
+        return await this.forceGetSdk().createResourceTx(
+            signInputs,
+            resourcePayload,
             FEE_PAYER_ADDRESS,
             FEE,
             undefined,

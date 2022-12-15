@@ -5,6 +5,7 @@ import { CheqdRegistrar } from './service/cheqd'
 import * as swagger from 'swagger-ui-express'
 import * as swaggerJson from '../swagger.json'
 import { CheqdController } from './controllers/cheqd'
+import { ResourceController } from './controllers/resource'
 
 class App {
     public express: express.Application
@@ -33,6 +34,7 @@ class App {
         app.post(`${URL_PREFIX}/create`, DidController.createValidator, new DidController().create)
         app.post(`${URL_PREFIX}/update`, DidController.updateValidator, new DidController().update)
         app.post(`${URL_PREFIX}/deactivate`, (req,res)=>res.send('To be implemented'))
+        app.post(`${URL_PREFIX}/:did/create-resource`, new ResourceController().create)
 
         // cheqd-helpers
         app.get(`${URL_PREFIX}/key-pair`, new CheqdController().generateKeys)

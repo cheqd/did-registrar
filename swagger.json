@@ -18,7 +18,7 @@
             }
         },
         {
-            "name": "Cheqd"
+            "name": "Cheqd Helpers"
         }
     ],
     "paths": {
@@ -161,10 +161,41 @@
                 }
             }
         },
+        "/{did}/create-resource": {
+            "post": {
+                "tags": [
+                    "Resource"
+                ],
+                "summary": "Create a Resource",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "did",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CreateResourceRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "The resource is created successfully"
+                    }
+                }
+            }
+        },
         "/key-pair": {
             "get": {
                 "tags": [
-                    "Cheqd"
+                    "Cheqd Helpers"
                 ],
                 "parameters": [
                     {
@@ -193,7 +224,7 @@
         "/did-document": {
             "get": {
                 "tags": [
-                    "Cheqd"
+                    "Cheqd Helpers"
                 ],
                 "parameters": [
                     {
@@ -250,7 +281,7 @@
                         "schema": {
                             "$ref": "#/components/schemas/KeyPair"
                         }
-                    }                    
+                    }
                 ],
                 "responses": {
                     "200": {
@@ -290,10 +321,12 @@
                             }
                         },
                         "example": {
-                            "keys": [{
-                                "privateKey": "",
-                                "publicKey": ""
-                            }]
+                            "keys": [
+                                {
+                                    "privateKey": "",
+                                    "publicKey": ""
+                                }
+                            ]
                         }
                     },
                     "didDocument": {
@@ -412,6 +445,66 @@
                                 }
                             }
                         }
+                    }
+                }
+            },
+            "CreateResourceRequest": {
+                "description": "Input fields for the resource creation",
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                    "jobId": {
+                        "description": "This input field is used to keep track of an ongoing DID deactivation process. See <a href=\"https://identity.foundation/did-registration/#jobid\">https://identity.foundation/did-registration/#jobid</a>.",
+                        "type": "string",
+                        "example": "null"
+                    },
+                    "secret": {
+                        "description": "This input field requires a keyPair</a>.",
+                        "type": "object",
+                        "required": [
+                            "keys"
+                        ],
+                        "properties": {
+                            "keys": {
+                                "type": "array",
+                                "items": {
+                                    "$ref": "#/components/schemas/KeyPair"
+                                }
+                            }
+                        }
+                    },
+                    "data": {
+                        "oneOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "object"
+                            }
+                        ]
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "mimeType": {
+                        "type": "string"
+                    },
+                    "alsoKnownAs": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "uri": {
+                                    "type": "string"
+                                },
+                                "description": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    },
+                    "version": {
+                        "type": "string"
                     }
                 }
             },

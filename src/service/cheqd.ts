@@ -1,7 +1,7 @@
 import { ICheqdSDKOptions, ResourceModule } from '@cheqd/sdk'
 import type { AbstractCheqdSDKModule } from '@cheqd/sdk/build/modules/_'
-import type { ISignInputs } from '@cheqd/sdk/build/types'
-import type { MsgCreateDidDocPayload, MsgUpdateDidDocPayload } from '@cheqd/ts-proto/cheqd/did/v2'
+import type { ISignInputs, MsgDeactivateDidPayload } from '@cheqd/sdk/build/types'
+import type { MsgCreateDidDocPayload, MsgDeactivateDidDocPayload, MsgUpdateDidDocPayload } from '@cheqd/ts-proto/cheqd/did/v2'
 
 import { DirectSecp256k1HdWallet } from '@cosmjs/proto-signing'
 import { CheqdSDK, createCheqdSDK, DIDModule } from '@cheqd/sdk'
@@ -72,6 +72,18 @@ export class CheqdRegistrar {
     public async update(signInputs: ISignInputs[], didPayload: Partial<MsgUpdateDidDocPayload>) {
         return await this.forceGetSdk()
         .updateDidTx(
+            signInputs,
+            didPayload,
+            FEE_PAYER_ADDRESS,
+            FEE,
+            undefined,
+            { sdk: this.forceGetSdk() }
+        )
+    }
+
+    public async deactivate(signInputs: ISignInputs[], didPayload: MsgDeactivateDidPayload) {
+        return await this.forceGetSdk()
+        .deactivateDidTx(
             signInputs,
             didPayload,
             FEE_PAYER_ADDRESS,

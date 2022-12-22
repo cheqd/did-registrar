@@ -31,6 +31,7 @@ export interface IResourceCreateRequest {
     jobId: string | null
     secret: {
         keys: IKeyPair[]
+        cosmosPayerMnemonic: string
     }
     data: any, 
     name: string, 

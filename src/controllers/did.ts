@@ -14,9 +14,12 @@ export class DidController {
             if (value) {
                 if(value.seed && value.keys) return false
                 else if(value.seed && value.seed.length != 32 ) return false
+                else {
+                    return value.keys.every((key: any) => key.privateKey.length == 86 && key.publicKey.length == 43
+                )}
             }
             return true
-        }).withMessage('Only one of seed or keys should be provided, Seed length should be 32')
+        }).withMessage('Only one of seed or keys should be provided, Seed length should be 32, Keypair should be valid')
     ]
 
     public static updateValidator = [
@@ -39,7 +42,7 @@ export class DidController {
         
         secret = secret || { seed: randomStr() }
         
-        await CheqdRegistrar.instance.connect(options?.network)
+        await CheqdRegistrar.instance.connect(options?.network, secret.mnemonic)
         
         let didPayload: Partial<MsgCreateDidDocPayload>, signInputs: ISignInputs[], keys: IKeyPair[]
         if (didDocument && secret.keys) {

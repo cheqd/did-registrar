@@ -32,8 +32,8 @@ class App {
 
         // did-registrar
         app.post(`${URL_PREFIX}/create`, DidController.createValidator, new DidController().create)
-        app.post(`${URL_PREFIX}/update`, DidController.updateValidator, new DidController().update)
-        app.post(`${URL_PREFIX}/deactivate`, (req,res)=>res.send('To be implemented'))
+        app.post(`${URL_PREFIX}/update`, DidController.createValidator, DidController.updateValidator, new DidController().update)
+        app.post(`${URL_PREFIX}/deactivate`, DidController.createValidator, new DidController().deactivate)
         app.post(`${URL_PREFIX}/:did/create-resource`, new ResourceController().create)
 
         // cheqd-helpers

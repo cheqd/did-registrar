@@ -171,6 +171,7 @@
                     {
                         "in": "path",
                         "name": "did",
+                        "required": true,
                         "schema": {
                             "type": "string"
                         }

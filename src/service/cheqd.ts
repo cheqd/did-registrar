@@ -35,7 +35,7 @@ export class CheqdRegistrar {
     public static instance = new CheqdRegistrar()
    
     public async connect(network?: NetworkType, mnemonic?: string, wallet?: OfflineSigner) {
-        if(!wallet || !mnemonic || !FEE_PAYER_MNEMONIC) {
+        if(!(wallet || mnemonic || FEE_PAYER_MNEMONIC)) {
             throw new Error('No signer provided')
         }
 

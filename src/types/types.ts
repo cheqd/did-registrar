@@ -13,7 +13,8 @@ export interface IDIDCreateRequest {
     }, 
     secret: {
         seed?: string,
-        keys?: IKeyPair[]
+        keys?: IKeyPair[],
+        mnemonic?: string
     },
     didDocument: Partial<MsgCreateDidDocPayload>
 }

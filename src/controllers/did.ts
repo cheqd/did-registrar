@@ -1,7 +1,7 @@
 import { IKeyPair, ISignInputs } from '@cheqd/sdk/build/types'
 import { createDidPayloadWithSignInputs, createSignInputsFromKeyPair } from '@cheqd/sdk/build/utils'
-import { MsgCreateDidPayload } from '@cheqd/ts-proto/cheqd/v1/tx'
-import { Request, Response } from 'express'
+import { MsgCreateDidDocPayload } from '@cheqd/ts-proto/cheqd/did/v2'
+import e, { Request, Response } from 'express'
 import { validationResult, check } from 'express-validator'
 import { jsonConcat, jsonSubtract, randomStr } from '../helpers/helpers'
 import { CheqdRegistrar, CheqdResolver } from '../service/cheqd'
@@ -14,9 +14,12 @@ export class DidController {
             if (value) {
                 if(value.seed && value.keys) return false
                 else if(value.seed && value.seed.length != 32 ) return false
+                else {
+                    return value.keys.every((key: any) => key.privateKey.length == 86 && key.publicKey.length == 43
+                )}
             }
             return true
-        }).withMessage('Only one of seed or keys should be provided, Seed length should be 32')
+        }).withMessage('Only one of seed or keys should be provided, Seed length should be 32, Keypair should be valid')
     ]
 
     public static updateValidator = [
@@ -39,9 +42,9 @@ export class DidController {
         
         secret = secret || { seed: randomStr() }
         
-        await CheqdRegistrar.instance.connect(options?.network)
+        await CheqdRegistrar.instance.connect(options?.network, secret.mnemonic)
         
-        let didPayload: Partial<MsgCreateDidPayload>, signInputs: ISignInputs[], keys: IKeyPair[]
+        let didPayload: Partial<MsgCreateDidDocPayload>, signInputs: ISignInputs[], keys: IKeyPair[]
         if (didDocument && secret.keys) {
             didPayload = didDocument
             signInputs = createSignInputsFromKeyPair(didDocument, secret.keys)
@@ -54,16 +57,22 @@ export class DidController {
         }
 
         try {
-            await CheqdRegistrar.instance.create(signInputs, didPayload)
-            return response.status(201).json({
-                jobId: null,
-                didState: {
-                  did: didPayload.id,
-                  state: "finished",
-                  secret: { keys },
-                  didDocument: didPayload
-                }
-            })
+            const result = await CheqdRegistrar.instance.create(signInputs, didPayload)
+            if ( result.code == 0 ) {
+                return response.status(201).json({
+                    jobId: null,
+                    didState: {
+                    did: didPayload.id,
+                    state: "finished",
+                    secret: { keys },
+                    didDocument: didPayload
+                    }
+                })
+            } else {
+                return response.status(404).json({
+                    message: `Invalid payload: ${JSON.stringify(result.rawLog)}`
+                })
+            }
         } catch (error) {
             return response.status(500).json({
                 message: `Internal server error: ${error}`
@@ -90,7 +99,7 @@ export class DidController {
                 message: `${did} DID not found`
             })
         }
-        console.log(didDocumentOperation)
+
         var i=0
         let updatedDocument = resolvedDocument.didDocument
         for (var operation of didDocumentOperation) {
@@ -112,20 +121,67 @@ export class DidController {
 
         try {
             const signInputs = createSignInputsFromKeyPair(updatedDocument, secret.keys)
-            await CheqdRegistrar.instance.update(signInputs, updatedDocument)
-            return response.status(201).json({
-                jobId: null,
-                didState: {
-                    did: updatedDocument.id,
-                    state: "finished",
-                    secret,
-                    didDocument: updatedDocument
-                }
-            })
+            const result = await CheqdRegistrar.instance.update(signInputs, updatedDocument)
+            if ( result.code == 0 ) {
+                return response.status(201).json({
+                    jobId: null,
+                    didState: {
+                        did: updatedDocument.id,
+                        state: "finished",
+                        secret,
+                        didDocument: updatedDocument
+                    }
+                })
+            } else {
+                return response.status(404).json({
+                    message: `Invalid payload: ${JSON.stringify(result.rawLog)}`
+                })
+            }
         } catch (error) {
             return response.status(500).json({
                 message: `Internal server error: ${error}`
             })
         }
+    }
+
+    public async deactivate (request: Request, response: Response) {
+        const { secret, options, did } = request.body as IDIDUpdateRequest
+        await CheqdRegistrar.instance.connect(options?.network)
+        // check if did is registered on the ledger
+        let resolvedDocument = await CheqdResolver(did)
+        if(!resolvedDocument?.didDocument) {
+            return response.status(400).send({
+                message: `${did} DID not found`
+            })
+        }
+
+        try {
+            const signInputs = createSignInputsFromKeyPair(resolvedDocument, secret.keys)
+            const result = await CheqdRegistrar.instance.deactivate(signInputs, {
+                verificationMethod: resolvedDocument.verificationMethod,
+                versionId: resolvedDocument.didDocumentMetadata.versionId,
+                id: did
+            })
+            if ( result.code == 0 ) {
+                return response.status(201).json({
+                    jobId: null,
+                    didState: {
+                        did: did,
+                        state: "finished",
+                        secret
+                    }
+                })
+            } else {
+                return response.status(404).json({
+                    message: `Invalid payload: ${JSON.stringify(result.rawLog)}`
+                })
+            }
+        } catch (error) {
+            return response.status(500).json({
+                message: `Internal server error: ${error}`
+            })
+        }
+
+
     }
 }

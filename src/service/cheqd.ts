@@ -1,7 +1,6 @@
 import { ICheqdSDKOptions, ResourceModule } from '@cheqd/sdk'
 import type { AbstractCheqdSDKModule } from '@cheqd/sdk/build/modules/_'
-import type { DidStdFee, ISignInputs, MsgDeactivateDidPayload } from '@cheqd/sdk/build/types'
-import type { MsgCreateDidDocPayload, MsgUpdateDidDocPayload } from '@cheqd/ts-proto/cheqd/did/v2'
+import type { DidStdFee, ISignInputs, MsgCreateDidPayload, MsgDeactivateDidPayload, MsgUpdateDidPayload } from '@cheqd/sdk/build/types'
 
 import { DirectSecp256k1HdWallet, OfflineSigner } from '@cosmjs/proto-signing'
 import { CheqdSDK, createCheqdSDK, DIDModule } from '@cheqd/sdk'
@@ -61,7 +60,7 @@ export class CheqdRegistrar {
         return this.sdk
     }
 
-    public async create(signInputs: ISignInputs[], didPayload: Partial<MsgCreateDidDocPayload>) {
+    public async create(signInputs: ISignInputs[], didPayload: Partial<MsgCreateDidPayload>) {
         return await this.forceGetSdk()
         .createDidTx(
             signInputs,
@@ -73,7 +72,7 @@ export class CheqdRegistrar {
         )
     }
 
-    public async update(signInputs: ISignInputs[], didPayload: Partial<MsgUpdateDidDocPayload>) {
+    public async update(signInputs: ISignInputs[], didPayload: Partial<MsgUpdateDidPayload>) {
         return await this.forceGetSdk()
         .updateDidTx(
             signInputs,

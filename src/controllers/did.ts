@@ -1,7 +1,6 @@
-import { IKeyPair, ISignInputs } from '@cheqd/sdk/build/types'
+import { IKeyPair, ISignInputs, MsgCreateDidPayload } from '@cheqd/sdk/build/types'
 import { createDidPayloadWithSignInputs, createSignInputsFromKeyPair } from '@cheqd/sdk/build/utils'
-import { MsgCreateDidDocPayload } from '@cheqd/ts-proto/cheqd/did/v2'
-import e, { Request, Response } from 'express'
+import { Request, Response } from 'express'
 import { validationResult, check } from 'express-validator'
 import { jsonConcat, jsonSubtract, randomStr } from '../helpers/helpers'
 import { CheqdRegistrar, CheqdResolver } from '../service/cheqd'
@@ -44,7 +43,7 @@ export class DidController {
         
         await CheqdRegistrar.instance.connect(options?.network, secret.mnemonic)
         
-        let didPayload: Partial<MsgCreateDidDocPayload>, signInputs: ISignInputs[], keys: IKeyPair[]
+        let didPayload: Partial<MsgCreateDidPayload>, signInputs: ISignInputs[], keys: IKeyPair[]
         if (didDocument && secret.keys) {
             didPayload = didDocument
             signInputs = createSignInputsFromKeyPair(didDocument, secret.keys)

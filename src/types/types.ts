@@ -1,4 +1,4 @@
-import { IKeyPair } from '@cheqd/sdk/build/types'
+import { IKeyPair, MsgCreateDidPayload } from '@cheqd/sdk/build/types'
 import { MsgCreateDidDocPayload, MsgUpdateDidDocPayload } from '@cheqd/ts-proto/cheqd/did/v2'
 import { AlternativeUri } from '@cheqd/ts-proto/cheqd/resource/v2'
 import { NetworkType } from '../service/cheqd'
@@ -16,7 +16,7 @@ export interface IDIDCreateRequest {
         keys?: IKeyPair[],
         mnemonic?: string
     },
-    didDocument: Partial<MsgCreateDidDocPayload>
+    didDocument: Partial<MsgCreateDidPayload>
 }
 
 export interface IDIDUpdateRequest {

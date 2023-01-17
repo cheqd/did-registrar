@@ -7,6 +7,7 @@ import { CheqdSDK, createCheqdSDK, DIDModule } from '@cheqd/sdk'
 import * as dotenv from 'dotenv'
 import fetch from 'node-fetch'
 import { MsgCreateResourcePayload } from '@cheqd/ts-proto/cheqd/resource/v2'
+import { SignInfo } from '@cheqd/ts-proto/cheqd/did/v2'
 
 dotenv.config()
 
@@ -23,7 +24,7 @@ export enum NetworkType {
 }
 
 export enum DefaultResolverUrl {
-    Cheqd = "https://resolver.cheqd.net"
+    Cheqd = "http://localhost:8080"
 }
 
 export class CheqdRegistrar {
@@ -50,7 +51,7 @@ export class CheqdRegistrar {
             throw new Error("Invalid signer")
         }
 
-        this.fee = { amount: [{ denom: 'ncheq', amount: '5000000000' }], gas: '200000', payer: this.address }
+        this.fee = { amount: [{ denom: 'ncheq', amount: '5000000' }], gas: '200000', payer: this.address }
     }
 
     public forceGetSdk(): CheqdSDK{
@@ -60,7 +61,7 @@ export class CheqdRegistrar {
         return this.sdk
     }
 
-    public async create(signInputs: ISignInputs[], didPayload: Partial<MsgCreateDidPayload>) {
+    public async create(signInputs: ISignInputs[] | SignInfo[], didPayload: Partial<MsgCreateDidPayload>) {
         return await this.forceGetSdk()
         .createDidTx(
             signInputs,
@@ -72,7 +73,7 @@ export class CheqdRegistrar {
         )
     }
 
-    public async update(signInputs: ISignInputs[], didPayload: Partial<MsgUpdateDidPayload>) {
+    public async update(signInputs: ISignInputs[] | SignInfo[], didPayload: Partial<MsgUpdateDidPayload>) {
         return await this.forceGetSdk()
         .updateDidTx(
             signInputs,
@@ -84,7 +85,7 @@ export class CheqdRegistrar {
         )
     }
 
-    public async deactivate(signInputs: ISignInputs[], didPayload: MsgDeactivateDidPayload) {
+    public async deactivate(signInputs: ISignInputs[] | SignInfo[], didPayload: MsgDeactivateDidPayload) {
         return await this.forceGetSdk()
         .deactivateDidTx(
             signInputs,
@@ -96,7 +97,7 @@ export class CheqdRegistrar {
         )
     }
 
-    public async createResource(signInputs: ISignInputs[], resourcePayload: Partial<MsgCreateResourcePayload>) {
+    public async createResource(signInputs: ISignInputs[] | SignInfo[], resourcePayload: Partial<MsgCreateResourcePayload>) {
         return await this.forceGetSdk().createResourceTx(
             signInputs,
             resourcePayload,

@@ -63,13 +63,21 @@
                     "400": {
                         "description": "A problem with the input fields has occurred. Additional state information plus metadata may be available in the response body.",
                         "content": {
-                            "application/json": {}
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/InvalidRequest"
+                                }
+                            }
                         }
                     },
                     "500": {
                         "description": "An internal error has occurred. Additional state information plus metadata may be available in the response body.",
                         "content": {
-                            "application/json": {}
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/InvalidRequest"
+                                }
+                            }
                         }
                     }
                 }
@@ -106,13 +114,21 @@
                     "400": {
                         "description": "A problem with the input fields has occurred. Additional state information plus metadata may be available in the response body.",
                         "content": {
-                            "application/json": {}
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/InvalidRequest"
+                                }
+                            }
                         }
                     },
                     "500": {
                         "description": "An internal error has occurred. Additional state information plus metadata may be available in the response body.",
                         "content": {
-                            "application/json": {}
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/InvalidRequest"
+                                }
+                            }
                         }
                     }
                 }
@@ -149,13 +165,21 @@
                     "400": {
                         "description": "A problem with the input fields has occurred. Additional state information plus metadata may be available in the response body.",
                         "content": {
-                            "application/json": {}
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/InvalidRequest"
+                                }
+                            }
                         }
                     },
                     "500": {
                         "description": "An internal error has occurred. Additional state information plus metadata may be available in the response body.",
                         "content": {
-                            "application/json": {}
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/InvalidRequest"
+                                }
+                            }
                         }
                     }
                 }
@@ -235,7 +259,8 @@
                             "type": "string",
                             "enum": [
                                 "Ed25519VerificationKey2020",
-                                "JsonWebKey2020"
+                                "JsonWebKey2020",
+                                "Ed25519VerificationKey2018"
                             ],
                             "default": "Ed25519VerificationKey2020"
                         }
@@ -278,9 +303,9 @@
                     },
                     {
                         "in": "query",
-                        "name": "keyPair",
+                        "name": "seed",
                         "schema": {
-                            "$ref": "#/components/schemas/KeyPair"
+                            "type": "string"
                         }
                     }
                 ],
@@ -319,13 +344,20 @@
                                 "items": {
                                     "$ref": "#/components/schemas/KeyPair"
                                 }
+                            },
+                            "signingResponse": {
+                                "type": "array",
+                                "items": {
+                                    "$ref": "#/components/schemas/SigningResponse"
+                                }
                             }
                         },
                         "example": {
                             "keys": [
                                 {
-                                    "privateKey": "",
-                                    "publicKey": ""
+                                    "verificationMethodId": "",
+                                    "privateKeyHex": "",
+                                    "publicKeyHex": ""
                                 }
                             ]
                         }
@@ -367,14 +399,17 @@
                     "secret": {
                         "description": "This input field requires a keyPair</a>.",
                         "type": "object",
-                        "required": [
-                            "keys"
-                        ],
                         "properties": {
                             "keys": {
                                 "type": "array",
                                 "items": {
                                     "$ref": "#/components/schemas/KeyPair"
+                                }
+                            },
+                            "signingResponse": {
+                                "type": "array",
+                                "items": {
+                                    "$ref": "#/components/schemas/SigningResponse"
                                 }
                             }
                         }
@@ -435,14 +470,17 @@
                     "secret": {
                         "description": "This input field requires a keyPair</a>.",
                         "type": "object",
-                        "required": [
-                            "keys"
-                        ],
                         "properties": {
                             "keys": {
                                 "type": "array",
                                 "items": {
                                     "$ref": "#/components/schemas/KeyPair"
+                                }
+                            },
+                            "signingResponse": {
+                                "type": "array",
+                                "items": {
+                                    "$ref": "#/components/schemas/SigningResponse"
                                 }
                             }
                         }
@@ -462,14 +500,17 @@
                     "secret": {
                         "description": "This input field requires a keyPair</a>.",
                         "type": "object",
-                        "required": [
-                            "keys"
-                        ],
                         "properties": {
                             "keys": {
                                 "type": "array",
                                 "items": {
                                     "$ref": "#/components/schemas/KeyPair"
+                                }
+                            },
+                            "signingResponse": {
+                                "type": "array",
+                                "items": {
+                                    "$ref": "#/components/schemas/SigningResponse"
                                 }
                             }
                         }
@@ -645,6 +686,12 @@
                         "items": {
                             "$ref": "#/components/schemas/KeyPair"
                         }
+                    },
+                    "sigingResponse": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/SigningResponse"
+                        }
                     }
                 }
             },
@@ -663,10 +710,24 @@
             "KeyPair": {
                 "type": "object",
                 "properties": {
-                    "publicKey": {
+                    "verificationMethodId": {
                         "type": "string"
                     },
-                    "privateKey": {
+                    "privateKeyHex": {
+                        "type": "string"
+                    },
+                    "publicKeyHex": {
+                        "type": "string"
+                    }
+                }
+            },
+            "SigningResponse": {
+                "type": "object",
+                "properties": {
+                    "verificationMethodId": {
+                        "type": "string"
+                    },
+                    "signature": {
                         "type": "string"
                     }
                 }
@@ -782,6 +843,35 @@
                     "serviceEndpoint": {
                         "type": "string",
                         "example": "https://rand.in"
+                    }
+                }
+            },
+            "InvalidRequest": {
+                "type": "object",
+                "properties": {
+                    "jobId": {
+                        "type": "string"
+                    },
+                    "didState": {
+                        "type": "object",
+                        "properties": {
+                            "state": {
+                                "type": "string",
+                                "example": "failed"
+                            },
+                            "reason": {
+                                "type": "string"
+                            },
+                            "description": {
+                                "type": "string"
+                            },
+                            "secret": {
+                                "$ref": "#/components/schemas/Secret"
+                            },
+                            "didDocument": {
+                                "$ref": "#/components/schemas/DidDocument"
+                            }
+                        }
                     }
                 }
             }

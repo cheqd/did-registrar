@@ -1,5 +1,6 @@
-import { createDidPayload, createDidVerificationMethod, createKeyPairBase64, createVerificationKeys } from '@cheqd/sdk'
+import { createDidPayload, createDidVerificationMethod, createKeyPairBase64, createKeyPairHex, createVerificationKeys } from '@cheqd/sdk'
 import { CheqdNetwork, IKeyPair, MethodSpecificIdAlgo, VerificationMethods } from '@cheqd/sdk/build/types'
+import { convertKeyPairtoTImportableEd25519Key } from '@cheqd/sdk/build/utils'
 import { Request, Response } from 'express'
 import { validationResult, query } from 'express-validator'
 import { NetworkType } from '../service/cheqd'
@@ -7,14 +8,21 @@ import { NetworkType } from '../service/cheqd'
 export class CheqdController {
 
     public static didDocValidator = [
-        query('verificationMethod').isString().isIn([VerificationMethods.Base58, VerificationMethods.JWK]).withMessage('Invalid verificationMethod'),
+        query('verificationMethod').isString().isIn([VerificationMethods.Ed255192020, VerificationMethods.Ed255192018, VerificationMethods.JWK]).withMessage('Invalid verificationMethod'),
         query('methodSpecificIdAlgo').isString().isIn([MethodSpecificIdAlgo.Base58, MethodSpecificIdAlgo.Uuid]).withMessage('Invalid methodSpecificIdAlgo'),
         query('methodSpecificIdLength').isNumeric().isIn([16, 32]).withMessage('Invalid methodSpecificIdLength length'),
-        query('network').optional().isString().isIn([NetworkType.Mainnet, NetworkType.Testnet]).withMessage('Invalid network')
+        query('network').optional().isString().isIn([NetworkType.Mainnet, NetworkType.Testnet]).withMessage('Invalid network'),
+        query('seed').optional().isString().isLength({min:32, max:32}).withMessage('Seed should be of length 32')
     ]
     
     public generateKeys(request: Request<{},{},{},{seed?: string}>, response: Response) {
-        return response.json(createKeyPairBase64(request.query?.seed))
+        const keyPair = createKeyPairHex(request.query?.seed)
+        
+        return response.json({
+            verificationMethodId: 'key-1',
+            privateKeyHex: keyPair.privateKey,
+            publicKeyHex: keyPair.publicKey
+        })
     }
 
     public generateDidDoc(request: Request<{},{},{},IDidDocRequest>, response: Response) {
@@ -26,14 +34,19 @@ export class CheqdController {
             })
         }
 
-        const { verificationMethod, methodSpecificIdAlgo, methodSpecificIdLength, network, keyPair=createKeyPairBase64() } = request.query
-
+        const { verificationMethod, methodSpecificIdAlgo, methodSpecificIdLength, network, seed } = request.query
+        const keyPair = createKeyPairBase64(seed)
         const verificationKeys = createVerificationKeys(keyPair, methodSpecificIdAlgo, 'key-1', methodSpecificIdLength, network)
         const verificationMethods = createDidVerificationMethod([verificationMethod], [verificationKeys])
+        const keyPairHex = convertKeyPairtoTImportableEd25519Key(keyPair)
 
         return response.json({
             didDoc: createDidPayload(verificationMethods, [verificationKeys]),
-            key: keyPair
+            key: {
+                verificationMethodId: (verificationMethods[0]).id,
+                privateKeyHex: keyPairHex.privateKeyHex,
+                publicKeyHex: keyPairHex.publicKeyHex
+            }
         })
     }
 }
@@ -44,5 +57,5 @@ export interface IDidDocRequest {
     methodSpecificIdAlgo: MethodSpecificIdAlgo
     methodSpecificIdLength: number
     network: CheqdNetwork
-    keyPair: IKeyPair
+    seed?: string
 }

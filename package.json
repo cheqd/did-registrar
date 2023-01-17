@@ -19,15 +19,17 @@
     "build": "esbuild src/index.ts --platform=node --bundle --minify --outdir=dist --external:swagger-ui-express"
   },
   "dependencies": {
-    "@cheqd/sdk": "git://github.com/cheqd/sdk.git#b71fdad3002b5c011920197ddf338ab2f2e6cd02",
+    "@cheqd/sdk": "git://github.com/cheqd/sdk.git#e9dcf663354cbecd76c1e10ec1868f6f625d6825",
     "@cheqd/ts-proto": "^1.0.16-develop.2",
     "@cosmjs/proto-signing": "^0.29.2",
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
     "express-validator": "^6.14.2",
     "helmet": "^6.0.0",
+    "mongoose": "^6.8.3",
     "node-fetch": "^3.2.10",
-    "swagger-ui-express": "^4.5.0"
+    "swagger-ui-express": "^4.5.0",
+    "uuid": "^9.0.0"
   },
   "devDependencies": {
     "@semantic-release/changelog": "^6.0.1",

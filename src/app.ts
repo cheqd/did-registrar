@@ -6,6 +6,7 @@ import * as swagger from 'swagger-ui-express'
 import * as swaggerJson from '../swagger.json'
 import { CheqdController } from './controllers/cheqd'
 import { ResourceController } from './controllers/resource'
+import { Mongo } from './database/mongo'
 
 class App {
     public express: express.Application
@@ -14,7 +15,12 @@ class App {
         this.express = express()
         this.middleware()
         this.routes()
+        this.initializeService()
         CheqdRegistrar.instance
+    }
+
+    private async initializeService() {
+        // await Mongo.instance.connect()
     }
 
     private middleware() {

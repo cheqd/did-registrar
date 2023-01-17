@@ -1,9 +1,9 @@
-import { IKeyPair, MsgCreateDidPayload } from '@cheqd/sdk/build/types'
-import { MsgCreateDidDocPayload, MsgUpdateDidDocPayload } from '@cheqd/ts-proto/cheqd/did/v2'
+import { IKeyPair, ISignInputs, MsgCreateDidPayload, VerificationMethods } from '@cheqd/sdk/build/types'
+import {  SignInfo } from '@cheqd/ts-proto/cheqd/did/v2'
 import { AlternativeUri } from '@cheqd/ts-proto/cheqd/resource/v2'
 import { NetworkType } from '../service/cheqd'
 
-export type IdentifierPayload = Partial<MsgCreateDidDocPayload> | Partial<MsgUpdateDidDocPayload>
+export type IdentifierPayload = Partial<MsgCreateDidPayload>
 
 export interface IDIDCreateRequest {
     jobId: string | null
@@ -13,26 +13,29 @@ export interface IDIDCreateRequest {
     }, 
     secret: {
         seed?: string,
-        keys?: IKeyPair[],
-        mnemonic?: string
+        keys?: ISignInputs[],
+        signingResponse?: SignInfo[]
     },
-    didDocument: Partial<MsgCreateDidPayload>
+    didDocument: IdentifierPayload
 }
 
 export interface IDIDUpdateRequest {
     jobId: string | null
     did: string
     options: Record<string, any>, 
-    secret: Record<string, any>,
+    secret:{
+        keys?: ISignInputs[],
+        signingResponse?: SignInfo[]
+    },
     didDocumentOperation: DidDocumentOperation[]
-    didDocument: Partial<MsgUpdateDidDocPayload>[]
+    didDocument: IdentifierPayload[]
 }
 
 export interface IResourceCreateRequest {
     jobId: string | null
     secret: {
-        keys: IKeyPair[]
-        cosmosPayerMnemonic: string
+        keys: ISignInputs[],
+        signingResponse?: SignInfo[]
     }
     data: any, 
     name: string, 
@@ -63,8 +66,23 @@ export interface IDidResponse {
 }
 
 export interface IDidState {
-    state: any
+    state: IState
+    action?: IAction
     did: string
     secret: Record<string, any>
     didDocument: Record<string, any>
+}
+
+export enum IState {
+    Init = "init",
+    Finished = "finished",
+    Action = "action",
+    Failed = "failed"
+}
+
+export enum IAction {
+    GetVerificationMethod = "getVerificationMethod",
+    GetSignature = "signPayload",
+    Redirect = "redirect",
+    Wait = "wait"
 }

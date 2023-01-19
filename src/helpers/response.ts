@@ -4,9 +4,9 @@ import { IAction, IdentifierPayload, IState } from "../types/types";
 
 export class Responses {
 
-    static GetSuccessResponse(didDocument: IdentifierPayload, secret: Record<string, any>) {
+    static GetSuccessResponse(jobId: string, didDocument: IdentifierPayload, secret: Record<string, any>) {
         return {
-            jobId: null,
+            jobId,
             didState: {
                 did: didDocument.id,
                 state: "finished",
@@ -58,6 +58,16 @@ export class Responses {
                 description: Messages.TryAgain + error,
                 secret,
                 didDocument
+            }
+        }
+    }
+
+    static GetJobExpiredResponse(jobId: string) {
+        return {
+            jobId,
+            didState: {
+                state: IState.Failed,
+                reason: Messages.InvalidJob
             }
         }
     }

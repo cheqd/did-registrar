@@ -1,4 +1,4 @@
-import { IKeyPair, ISignInputs, MsgCreateDidPayload, VerificationMethods } from '@cheqd/sdk/build/types'
+import { ISignInputs, MsgCreateDidPayload } from '@cheqd/sdk/build/types'
 import {  SignInfo } from '@cheqd/ts-proto/cheqd/did/v2'
 import { AlternativeUri } from '@cheqd/ts-proto/cheqd/resource/v2'
 import { NetworkType } from '../service/cheqd'
@@ -16,7 +16,7 @@ export interface IDIDCreateRequest {
         keys?: ISignInputs[],
         signingResponse?: SignInfo[]
     },
-    didDocument: IdentifierPayload
+    didDocument?: IdentifierPayload
 }
 
 export interface IDIDUpdateRequest {

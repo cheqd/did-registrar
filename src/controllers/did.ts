@@ -2,7 +2,7 @@ import { ISignInputs, MsgCreateDidPayload } from '@cheqd/sdk/build/types'
 import { SignInfo } from '@cheqd/ts-proto/cheqd/did/v2'
 import { Request, Response } from 'express'
 import { validationResult, check } from 'express-validator'
-import { jsonConcat, jsonSubtract, randomStr } from '../helpers/helpers'
+import { convertToSignInfo, jsonConcat, jsonSubtract, randomStr } from '../helpers/helpers'
 import { Responses } from '../helpers/response'
 import { CheqdRegistrar, CheqdResolver } from '../service/cheqd'
 import { Messages } from '../types/constants'
@@ -62,7 +62,7 @@ export class DidController {
         let signInputs: ISignInputs[] | SignInfo[]
         
         if (secret.signingResponse ||  secret.keys) {
-            signInputs = secret.signingResponse || secret.keys!
+            signInputs = secret.signingResponse ? convertToSignInfo(secret.signingResponse) : secret.keys!
         } else {
             LocalStore.instance.setItem(jobId, {didDocument, state: IState.Action})
             return response.status(200).json(Responses.GetDIDActionSignatureResponse(didDocument))
@@ -151,7 +151,7 @@ export class DidController {
 
         let signInputs: ISignInputs[] | SignInfo[]
         if (secret.signingResponse ||  secret.keys) {
-            signInputs = secret.signingResponse || secret.keys!
+            signInputs = secret.signingResponse ? convertToSignInfo(secret.signingResponse) : secret.keys!
         } else {
             LocalStore.instance.setItem(jobId, {didDocument: updatedDocument, state: IState.Action})
             return response.status(200).json(Responses.GetDIDActionSignatureResponse(updatedDocument))
@@ -201,7 +201,7 @@ export class DidController {
 
         let signInputs: ISignInputs[] | SignInfo[]
         if (secret.signingResponse ||  secret.keys) {
-            signInputs = secret.signingResponse || secret.keys!
+            signInputs = secret.signingResponse ? convertToSignInfo(secret.signingResponse) : secret.keys!
         } else {
             LocalStore.instance.setItem(jobId, {didDocument: resolvedDocument, state: IState.Action})
             return response.status(200).json(Responses.GetDIDActionSignatureResponse(resolvedDocument))

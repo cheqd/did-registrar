@@ -1,4 +1,6 @@
 import { MsgCreateDidPayload } from "@cheqd/sdk/build/types";
+import { MsgCreateDidDocPayload } from "@cheqd/ts-proto/cheqd/did/v2";
+import { bytesToBase64 } from "did-jwt/lib/util";
 import { Messages } from "../types/constants";
 import { IAction, IdentifierPayload, IState } from "../types/types";
 
@@ -26,6 +28,7 @@ export class Responses {
                 description: Messages.GetSignature,
                 signingRequest: {
                     payload: MsgCreateDidPayload.transformPayload(didDocument),
+                    serializedPayload: bytesToBase64(MsgCreateDidDocPayload.encode(MsgCreateDidPayload.transformPayload(didDocument)).finish()),
                     alg: "EdDSA"
                 },
                 secret: {

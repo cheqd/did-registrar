@@ -14,7 +14,7 @@ export interface IDIDCreateRequest {
     secret: {
         seed?: string,
         keys?: ISignInputs[],
-        signingResponse?: SignInfo[]
+        signingResponse?: ISignInfo[]
     },
     didDocument?: IdentifierPayload
 }
@@ -25,7 +25,7 @@ export interface IDIDUpdateRequest {
     options: Record<string, any>, 
     secret:{
         keys?: ISignInputs[],
-        signingResponse?: SignInfo[]
+        signingResponse?: ISignInfo[]
     },
     didDocumentOperation: DidDocumentOperation[]
     didDocument: IdentifierPayload[]
@@ -35,7 +35,7 @@ export interface IResourceCreateRequest {
     jobId: string | null
     secret: {
         keys: ISignInputs[],
-        signingResponse?: SignInfo[]
+        signingResponse?: ISignInfo[]
     }
     data: any, 
     name: string, 
@@ -85,4 +85,9 @@ export enum IAction {
     GetSignature = "signPayload",
     Redirect = "redirect",
     Wait = "wait"
+}
+
+export interface ISignInfo {
+    verificationMethodId: string,
+    signature: string
 }

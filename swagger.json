@@ -412,6 +412,15 @@
                                     "$ref": "#/components/schemas/SigningResponse"
                                 }
                             }
+                        },
+                        "example": {
+                            "keys": [
+                                {
+                                    "verificationMethodId": "",
+                                    "privateKeyHex": "",
+                                    "publicKeyHex": ""
+                                }
+                            ]
                         }
                     },
                     "didDocumentOperation": {
@@ -420,7 +429,7 @@
                             "type": "string"
                         },
                         "example": [
-                            "addToDidDocument"
+                            "setToDidDocument"
                         ],
                         "default": [
                             "setToDidDocument"
@@ -433,6 +442,28 @@
                         },
                         "example": [
                             {
+                                "context": [],
+                                "id": "did:cheqd:testnet:zApY6E8Prv1rWcjRtBKENGaVm2kRk1VQ",
+                                "controller": [
+                                    "did:cheqd:testnet:zApY6E8Prv1rWcjRtBKENGaVm2kRk1VQ"
+                                ],
+                                "authentication": [
+                                    "did:cheqd:testnet:zApY6E8Prv1rWcjRtBKENGaVm2kRk1VQ#key-0"
+                                ],
+                                "assertionMethod": [],
+                                "capabilityInvocation": [],
+                                "capabilityDelegation": [],
+                                "keyAgreement": [],
+                                "alsoKnownAs": [],
+                                "verificationMethod": [
+                                    {
+                                        "id": "did:cheqd:testnet:zApY6E8Prv1rWcjRtBKENGaVm2kRk1VQ#key-0",
+                                        "type": "Ed25519VerificationKey2020",
+                                        "controller": "did:cheqd:testnet:zApY6E8Prv1rWcjRtBKENGaVm2kRk1VQ",
+                                        "publicKeyMultibase": "zApY6E8Prv1rWcjRtBKENGaVm2kRk1VQsFzQoQNbAoVdp",
+                                        "publicKeyJwk": []
+                                    }
+                                ],
                                 "service": [
                                     {
                                         "id": "did:cheqd:testnet:zApY6E8Prv1rWcjRtBKENGaVm2kRk1VQ#rand",
@@ -483,6 +514,15 @@
                                     "$ref": "#/components/schemas/SigningResponse"
                                 }
                             }
+                        },
+                        "example": {
+                            "keys": [
+                                {
+                                    "verificationMethodId": "",
+                                    "privateKeyHex": "",
+                                    "publicKeyHex": ""
+                                }
+                            ]
                         }
                     }
                 }
@@ -513,6 +553,15 @@
                                     "$ref": "#/components/schemas/SigningResponse"
                                 }
                             }
+                        },
+                        "example": {
+                            "keys": [
+                                {
+                                    "verificationMethodId": "",
+                                    "privateKeyHex": "",
+                                    "publicKeyHex": ""
+                                }
+                            ]
                         }
                     },
                     "data": {
@@ -637,8 +686,9 @@
                         "example": {
                             "keys": [
                                 {
-                                    "publicKey": "keaiUef4jaPvupBpC2IK9/H/yd/OPsgxCADOgftuLQc",
-                                    "privateKey": "Z0FhWmllZzNtbExTZVJId1RzNUhTa1dIOG5TWnNpRkSR5qJR5"
+                                    "verificationMethodId": "did:cheqd:testnet:zApY6E8Prv1rWcjRtBKENGaVm2kRk1VQ",
+                                    "publicKeyHex": "keaiUef4jaPvupBpC2IK9/H/yd/OPsgxCADOgftuLQc",
+                                    "privateKeyHex": "Z0FhWmllZzNtbExTZVJId1RzNUhTa1dIOG5TWnNpRkSR5qJR5"
                                 }
                             ]
                         }

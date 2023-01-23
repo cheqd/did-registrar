@@ -6,5 +6,6 @@ export enum Messages {
     DidNotFound = "The DID does not exist",
     DidDocument = "DID Document is required",
     InvalidJob = "The jobId is either expired or not found",
-    SecretValidation = "Only one of seed,keys and signingResponse should be provided, Seed length should be 32, Keypair should be valid"
+    SecretValidation = "Only one of seed,keys and signingResponse should be provided, Seed length should be 32, Keypair should be valid",
+    InvalidResource = "Resource Data is invalid"
 }

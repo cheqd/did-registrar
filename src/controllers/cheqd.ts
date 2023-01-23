@@ -1,8 +1,10 @@
-import { createDidPayload, createDidVerificationMethod, createKeyPairBase64, createKeyPairHex, createVerificationKeys } from '@cheqd/sdk'
-import { CheqdNetwork, IKeyPair, MethodSpecificIdAlgo, VerificationMethods } from '@cheqd/sdk/build/types'
-import { convertKeyPairtoTImportableEd25519Key } from '@cheqd/sdk/build/utils'
 import { Request, Response } from 'express'
 import { validationResult, query } from 'express-validator'
+
+import { createDidPayload, createDidVerificationMethod, createKeyPairBase64, createKeyPairHex, createVerificationKeys } from '@cheqd/sdk'
+import { CheqdNetwork, MethodSpecificIdAlgo, VerificationMethods } from '@cheqd/sdk/build/types'
+import { convertKeyPairtoTImportableEd25519Key } from '@cheqd/sdk/build/utils'
+
 import { NetworkType } from '../service/cheqd'
 
 export class CheqdController {

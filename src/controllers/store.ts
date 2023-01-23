@@ -1,3 +1,4 @@
+import { MsgCreateResourcePayload } from '@cheqd/ts-proto/cheqd/resource/v2';
 import NodeCache from 'node-cache'
 import { IdentifierPayload, IState } from '../types/types';
 
@@ -10,17 +11,30 @@ export class LocalStore {
         this.cache = new NodeCache(); 
     }
 
-    setItem(key: string, data: ILocalData) {
-        this.cache.set(key, data, 30000)
+    setItem(key: string, data: IDidDocData) {
+        this.cache.set(key, data, 600)
     }
 
-    getItem(path: string) {
-        return this.cache.get(path) as ILocalData | undefined     
+    getItem(key: string) {
+        return this.cache.get(key) as IDidDocData | undefined     
+    }
+
+    setResource(key: string, data: IResourceData) {
+        this.cache.set(key, data, 600)
+    }
+
+    getResource(key: string) {
+        return this.cache.get(key) as IResourceData | undefined 
     }
 }
 
 
-export interface ILocalData {
+export interface IDidDocData {
     didDocument: IdentifierPayload
+    state: IState
+}
+
+export interface IResourceData {
+    resource: MsgCreateResourcePayload 
     state: IState
 }

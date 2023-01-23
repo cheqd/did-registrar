@@ -1,13 +1,13 @@
-import { ICheqdSDKOptions, ResourceModule } from '@cheqd/sdk'
+import type { ICheqdSDKOptions } from '@cheqd/sdk'
+import { CheqdSDK, createCheqdSDK, DIDModule, ResourceModule } from '@cheqd/sdk'
 import type { AbstractCheqdSDKModule } from '@cheqd/sdk/build/modules/_'
 import type { DidStdFee, ISignInputs, MsgCreateDidPayload, MsgDeactivateDidPayload, MsgUpdateDidPayload } from '@cheqd/sdk/build/types'
-
-import { DirectSecp256k1HdWallet, OfflineSigner } from '@cosmjs/proto-signing'
-import { CheqdSDK, createCheqdSDK, DIDModule } from '@cheqd/sdk'
-import * as dotenv from 'dotenv'
-import fetch from 'node-fetch'
 import { MsgCreateResourcePayload } from '@cheqd/ts-proto/cheqd/resource/v2'
 import { SignInfo } from '@cheqd/ts-proto/cheqd/did/v2'
+import { DirectSecp256k1HdWallet, OfflineSigner } from '@cosmjs/proto-signing'
+
+import * as dotenv from 'dotenv'
+import fetch from 'node-fetch'
 
 dotenv.config()
 
@@ -27,22 +27,27 @@ export enum DefaultResolverUrl {
     Cheqd = "http://localhost:8080"
 }
 
+export enum Fee {
+    CreateDid = '50000000000',
+    UpdateDid = '25000000000',
+    DeactivateDid = '10000000000'
+}
+
 export class CheqdRegistrar {
     private sdk?: CheqdSDK
     private address?: string
-    private fee?: DidStdFee
 
     public static instance = new CheqdRegistrar()
    
-    public async connect(network?: NetworkType, mnemonic?: string, wallet?: OfflineSigner) {
-        if(!(wallet || mnemonic || FEE_PAYER_MNEMONIC)) {
+    public async connect(network?: NetworkType) {
+        if(!FEE_PAYER_MNEMONIC) {
             throw new Error('No signer provided')
         }
 
         const sdkOptions: ICheqdSDKOptions = {
             modules: [DIDModule as unknown as AbstractCheqdSDKModule, ResourceModule as unknown as AbstractCheqdSDKModule],
             rpcUrl: network === NetworkType.Mainnet ? DefaultRPCUrl.Mainnet : DefaultRPCUrl.Testnet,
-            wallet: wallet || await DirectSecp256k1HdWallet.fromMnemonic(mnemonic || FEE_PAYER_MNEMONIC, {prefix: 'cheqd'})
+            wallet: await DirectSecp256k1HdWallet.fromMnemonic(FEE_PAYER_MNEMONIC, {prefix: 'cheqd'})
         }
         this.sdk = await createCheqdSDK(sdkOptions)
 
@@ -51,7 +56,6 @@ export class CheqdRegistrar {
             throw new Error("Invalid signer")
         }
 
-        this.fee = { amount: [{ denom: 'ncheq', amount: '5000000' }], gas: '200000', payer: this.address }
     }
 
     public forceGetSdk(): CheqdSDK{
@@ -67,7 +71,7 @@ export class CheqdRegistrar {
             signInputs,
             didPayload,
             this.address!,
-            this.fee!,
+            { amount: [{ denom: 'ncheq', amount: Fee.CreateDid }], gas: '200000', payer: this.address },
             undefined,
             { sdk: this.forceGetSdk() }
         )
@@ -79,7 +83,7 @@ export class CheqdRegistrar {
             signInputs,
             didPayload,
             this.address!,
-            this.fee!,
+            { amount: [{ denom: 'ncheq', amount: Fee.UpdateDid }], gas: '200000', payer: this.address },
             undefined,
             { sdk: this.forceGetSdk() }
         )
@@ -91,7 +95,7 @@ export class CheqdRegistrar {
             signInputs,
             didPayload,
             this.address!,
-            this.fee!,
+            { amount: [{ denom: 'ncheq', amount: Fee.DeactivateDid }], gas: '200000', payer: this.address },
             undefined,
             { sdk: this.forceGetSdk() }
         )
@@ -102,7 +106,7 @@ export class CheqdRegistrar {
             signInputs,
             resourcePayload,
             this.address!,
-            this.fee!,
+            { amount: [{ denom: 'ncheq', amount: Fee.CreateDid }], gas: '200000', payer: this.address },
             undefined,
             { sdk: this.forceGetSdk() }
         )

@@ -1,37 +1,41 @@
-import { ISignInputs, MsgCreateDidPayload } from '@cheqd/sdk/build/types'
-import { SignInfo } from '@cheqd/ts-proto/cheqd/did/v2'
 import { Request, Response } from 'express'
 import { validationResult, check } from 'express-validator'
-import { convertToSignInfo, jsonConcat, jsonSubtract, randomStr } from '../helpers/helpers'
+
+import { ISignInputs } from '@cheqd/sdk/build/types'
+import { SignInfo } from '@cheqd/ts-proto/cheqd/did/v2'
+import { v4 } from 'uuid'
+
+import { convertToSignInfo } from '../helpers/helpers'
 import { Responses } from '../helpers/response'
 import { CheqdRegistrar, CheqdResolver } from '../service/cheqd'
 import { Messages } from '../types/constants'
 import { DidDocumentOperation, IDIDCreateRequest, IDIDUpdateRequest, IState } from '../types/types'
-import { v4 } from 'uuid'
 import { LocalStore } from './store'
 
 export class DidController {
 
-    public static createValidator = [
-        check('secret').custom((value)=>{
+    public static secretValidator = [
+        check('secret').optional().custom((value)=>{
             if (value) {
                 if(value.seed && value.keys) return false
                 else if (value.seed && value.signingResponse) return false
                 else if (value.keys && value.sigingResponse) return false
                 else if(value.seed && value.seed.length != 32 ) return false
-                else {
+                else if(value.keys) {
                     return value.keys.every((key: any) => key.privateKeyHex.length == 128
-                )}
+                )} else {
+                    return true
+                }
             }
+
             return true
         }).withMessage(Messages.SecretValidation)
     ]
 
     public static updateValidator = [
         check('didDocument').isArray().withMessage('didDocument is required'),
-        check('secret').isObject().custom((value) => value.keys || value.signingResponse).withMessage('secret with keys or signingResponse is required'),
         check('did').isString().contains('did:cheqd:').withMessage('cheqd DID is required'),
-        check('didDocumentOperation').optional().isArray().custom((value) => value.includes(DidDocumentOperation.Set) ? value.length==1 : value.length<=2 ).withMessage('Set operation can\'t be used with Add/Remove')
+        check('didDocumentOperation').optional().isArray().custom((value) => value[0] === DidDocumentOperation.Set && value.length == 1 ).withMessage('Set operation can\'t be used with Add/Remove')
     ]
 
     public async create(request: Request, response: Response) {
@@ -41,7 +45,7 @@ export class DidController {
             return response.status(400).json(Responses.GetInvalidResponse(request.body.didDocument, request.body.secret, result.array()[0].msg))
         }
         
-        let {jobId, secret, options, didDocument} = request.body as IDIDCreateRequest
+        let {jobId, secret={}, options, didDocument} = request.body as IDIDCreateRequest
 
         // Validate and get store data if any
         if(jobId) {
@@ -49,11 +53,11 @@ export class DidController {
             if(!storeData) {
                 return response.status(400).json(Responses.GetJobExpiredResponse(jobId))
             } else if (storeData.state == IState.Finished) {
-                return response.status(200).json(Responses.GetSuccessResponse(jobId, storeData.didDocument, secret))
+                return response.status(201).json(Responses.GetSuccessResponse(jobId, storeData.didDocument, secret))
             }
 
             didDocument = storeData.didDocument
-        } if (!didDocument) {
+        } else if (!didDocument) {
             return response.status(400).json(Responses.GetInvalidResponse({}, secret, Messages.DidDocument))
         } else {
             jobId = v4()
@@ -65,7 +69,7 @@ export class DidController {
             signInputs = secret.signingResponse ? convertToSignInfo(secret.signingResponse) : secret.keys!
         } else {
             LocalStore.instance.setItem(jobId, {didDocument, state: IState.Action})
-            return response.status(200).json(Responses.GetDIDActionSignatureResponse(didDocument))
+            return response.status(200).json(Responses.GetDIDActionSignatureResponse(jobId, didDocument))
         }
 
         await CheqdRegistrar.instance.connect(options?.network)
@@ -121,21 +125,8 @@ export class DidController {
             var i=0
             updatedDocument= resolvedDocument.didDocument
             updatedDocument.context = []
-            for (var operation of didDocumentOperation) {
-                switch (operation) {
-                    case DidDocumentOperation.Set:
-                        // TODO: validate didDocument schema
-                        updatedDocument = didDocument[i]
-                        break
-                    case DidDocumentOperation.Add:
-                        updatedDocument = jsonConcat(updatedDocument, didDocument[i])
-                        break
-                    case DidDocumentOperation.Remove:
-                        updatedDocument = jsonSubtract(updatedDocument, didDocument[i])
-                        break
-                }
-                i++
-            }
+
+            updatedDocument = didDocument[0]
             updatedDocument.versionId = v4()
             jobId = v4()
         } else {
@@ -154,7 +145,7 @@ export class DidController {
             signInputs = secret.signingResponse ? convertToSignInfo(secret.signingResponse) : secret.keys!
         } else {
             LocalStore.instance.setItem(jobId, {didDocument: updatedDocument, state: IState.Action})
-            return response.status(200).json(Responses.GetDIDActionSignatureResponse(updatedDocument))
+            return response.status(200).json(Responses.GetDIDActionSignatureResponse(jobId, updatedDocument))
         }
 
         try {
@@ -191,7 +182,7 @@ export class DidController {
             if(!storeData) {
                 return response.status(400).json(Responses.GetJobExpiredResponse(jobId))
             } else if (storeData.state == IState.Finished) {
-                return response.status(200).json(Responses.GetSuccessResponse(jobId, storeData.didDocument, secret))
+                return response.status(201).json(Responses.GetSuccessResponse(jobId, storeData.didDocument, secret))
             }
 
             resolvedDocument = storeData.didDocument
@@ -204,7 +195,7 @@ export class DidController {
             signInputs = secret.signingResponse ? convertToSignInfo(secret.signingResponse) : secret.keys!
         } else {
             LocalStore.instance.setItem(jobId, {didDocument: resolvedDocument, state: IState.Action})
-            return response.status(200).json(Responses.GetDIDActionSignatureResponse(resolvedDocument))
+            return response.status(200).json(Responses.GetDIDActionSignatureResponse(jobId, resolvedDocument))
         }
 
         try {

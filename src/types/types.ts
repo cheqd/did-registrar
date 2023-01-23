@@ -1,5 +1,4 @@
 import { ISignInputs, MsgCreateDidPayload } from '@cheqd/sdk/build/types'
-import {  SignInfo } from '@cheqd/ts-proto/cheqd/did/v2'
 import { AlternativeUri } from '@cheqd/ts-proto/cheqd/resource/v2'
 import { NetworkType } from '../service/cheqd'
 

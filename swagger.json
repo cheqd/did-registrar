@@ -279,18 +279,6 @@
                     },
                     {
                         "in": "query",
-                        "name": "methodSpecificIdLength",
-                        "schema": {
-                            "type": "number",
-                            "enum": [
-                                16,
-                                32
-                            ],
-                            "default": 16
-                        }
-                    },
-                    {
-                        "in": "query",
                         "name": "network",
                         "schema": {
                             "type": "string",
@@ -303,7 +291,7 @@
                     },
                     {
                         "in": "query",
-                        "name": "seed",
+                        "name": "publicKeyHex",
                         "schema": {
                             "type": "string"
                         }

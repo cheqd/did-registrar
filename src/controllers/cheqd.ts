@@ -11,9 +11,8 @@ export class CheqdController {
     public static didDocValidator = [
         query('verificationMethod').isString().isIn([VerificationMethods.Ed255192020, VerificationMethods.Ed255192018, VerificationMethods.JWK]).withMessage('Invalid verificationMethod'),
         query('methodSpecificIdAlgo').isString().isIn([MethodSpecificIdAlgo.Base58, MethodSpecificIdAlgo.Uuid]).withMessage('Invalid methodSpecificIdAlgo'),
-        query('methodSpecificIdLength').isNumeric().isIn([16, 32]).withMessage('Invalid methodSpecificIdLength length'),
         query('network').optional().isString().isIn([NetworkType.Mainnet, NetworkType.Testnet]).withMessage('Invalid network'),
-        query('seed').optional().isString().isLength({min:32, max:32}).withMessage('Seed should be of length 32')
+        query('publicKeyHex').optional().isString().isLength({min:64, max:64}).withMessage('PublicKeyHex should be of length 64')
     ]
     
     public generateKeys(request: Request<{},{},{},{seed?: string}>, response: Response) {

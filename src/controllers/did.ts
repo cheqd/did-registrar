@@ -3,6 +3,7 @@ import { validationResult, check } from 'express-validator'
 
 import { ISignInputs } from '@cheqd/sdk/build/types'
 import { SignInfo } from '@cheqd/ts-proto/cheqd/did/v2'
+
 import { v4 } from 'uuid'
 
 import { convertToSignInfo } from '../helpers/helpers'
@@ -122,7 +123,6 @@ export class DidController {
 
         let updatedDocument: any
         if (!jobId) {
-            var i=0
             updatedDocument= resolvedDocument.didDocument
             updatedDocument.context = []
 

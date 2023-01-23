@@ -6,7 +6,6 @@ import { ISignInputs } from '@cheqd/sdk/build/types'
 import { SignInfo } from '@cheqd/ts-proto/cheqd/did/v2'
 
 import { v4 } from 'uuid'
-import { toString } from 'uint8arrays'
 
 import { CheqdRegistrar, CheqdResolver, NetworkType } from '../service/cheqd'
 import { IResourceCreateRequest, IState } from '../types/types'

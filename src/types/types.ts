@@ -1,5 +1,6 @@
 import { ISignInputs, MsgCreateDidPayload } from '@cheqd/sdk/build/types'
 import { AlternativeUri } from '@cheqd/ts-proto/cheqd/resource/v2'
+
 import { NetworkType } from '../service/cheqd'
 
 export type IdentifierPayload = Partial<MsgCreateDidPayload>

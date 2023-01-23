@@ -1,9 +1,8 @@
 import { Request, Response } from 'express'
 import { validationResult, query } from 'express-validator'
 
-import { createDidPayload, createDidVerificationMethod, createKeyPairBase64, createKeyPairHex, createVerificationKeys } from '@cheqd/sdk'
+import { createDidPayload, createDidVerificationMethod, createKeyPairHex, createVerificationKeys } from '@cheqd/sdk'
 import { CheqdNetwork, MethodSpecificIdAlgo, VerificationMethods } from '@cheqd/sdk/build/types'
-import { convertKeyPairtoTImportableEd25519Key } from '@cheqd/sdk/build/utils'
 
 import { NetworkType } from '../service/cheqd'
 
@@ -36,28 +35,32 @@ export class CheqdController {
             })
         }
 
-        const { verificationMethod, methodSpecificIdAlgo, methodSpecificIdLength, network, seed } = request.query
-        const keyPair = createKeyPairBase64(seed)
-        const verificationKeys = createVerificationKeys(keyPair, methodSpecificIdAlgo, 'key-1', methodSpecificIdLength, network)
+        const { verificationMethod, methodSpecificIdAlgo, network, publicKeyHex } = request.query
+        const verificationKeys = createVerificationKeys(publicKeyHex, methodSpecificIdAlgo, 'key-1', network)
         const verificationMethods = createDidVerificationMethod([verificationMethod], [verificationKeys])
-        const keyPairHex = convertKeyPairtoTImportableEd25519Key(keyPair)
 
         return response.json({
             didDoc: createDidPayload(verificationMethods, [verificationKeys]),
             key: {
                 verificationMethodId: (verificationMethods[0]).id,
-                privateKeyHex: keyPairHex.privateKeyHex,
-                publicKeyHex: keyPairHex.publicKeyHex
+                publicKeyHex
             }
         })
     }
+
 }
 
 
 export interface IDidDocRequest {
     verificationMethod: VerificationMethods
     methodSpecificIdAlgo: MethodSpecificIdAlgo
-    methodSpecificIdLength: number
     network: CheqdNetwork
-    seed?: string
+    publicKeyHex: string
+}
+
+export interface IVerificationMethodRequest {
+    verificationMethod: VerificationMethods
+    methodSpecificIdAlgo: MethodSpecificIdAlgo
+    network: CheqdNetwork
+    publicKey: string
 }

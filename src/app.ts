@@ -1,11 +1,12 @@
 import express from 'express'
 import Helmet from 'helmet'
-import { DidController } from './controllers/did'
-import { CheqdRegistrar } from './service/cheqd'
 import * as swagger from 'swagger-ui-express'
 import * as swaggerJson from '../swagger.json'
+
+import { DidController } from './controllers/did'
 import { CheqdController } from './controllers/cheqd'
 import { ResourceController } from './controllers/resource'
+import { CheqdRegistrar } from './service/cheqd'
 
 class App {
     public express: express.Application
@@ -14,12 +15,7 @@ class App {
         this.express = express()
         this.middleware()
         this.routes()
-        this.initializeService()
         CheqdRegistrar.instance
-    }
-
-    private async initializeService() {
-        // await Mongo.instance.connect()
     }
 
     private middleware() {

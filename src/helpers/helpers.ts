@@ -1,4 +1,5 @@
 import { SignInfo } from "@cheqd/ts-proto/cheqd/did/v2";
+
 import { base64ToBytes } from "did-jwt";
 
 import { ISignInfo } from "../types/types";

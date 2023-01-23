@@ -1,10 +1,10 @@
 import type { ICheqdSDKOptions } from '@cheqd/sdk'
 import { CheqdSDK, createCheqdSDK, DIDModule, ResourceModule } from '@cheqd/sdk'
 import type { AbstractCheqdSDKModule } from '@cheqd/sdk/build/modules/_'
-import type { DidStdFee, ISignInputs, MsgCreateDidPayload, MsgDeactivateDidPayload, MsgUpdateDidPayload } from '@cheqd/sdk/build/types'
+import type { ISignInputs, MsgCreateDidPayload, MsgDeactivateDidPayload, MsgUpdateDidPayload } from '@cheqd/sdk/build/types'
 import { MsgCreateResourcePayload } from '@cheqd/ts-proto/cheqd/resource/v2'
 import { SignInfo } from '@cheqd/ts-proto/cheqd/did/v2'
-import { DirectSecp256k1HdWallet, OfflineSigner } from '@cosmjs/proto-signing'
+import { DirectSecp256k1HdWallet } from '@cosmjs/proto-signing'
 
 import * as dotenv from 'dotenv'
 import fetch from 'node-fetch'

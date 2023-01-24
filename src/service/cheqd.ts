@@ -15,7 +15,7 @@ const { FEE_PAYER_MNEMONIC } = process.env
 
 export enum DefaultRPCUrl {
 	Mainnet = 'https://rpc.cheqd.net',
-	Testnet = 'http://localhost:26657'
+	Testnet = 'http://rpc.cheqd.network'
 }
 
 export enum NetworkType {
@@ -24,7 +24,7 @@ export enum NetworkType {
 }
 
 export enum DefaultResolverUrl {
-    Cheqd = "http://localhost:8080"
+    Cheqd = "https://resolver.cheqd.net"
 }
 
 export enum Fee {

@@ -12,14 +12,13 @@ export class CheqdController {
         query('verificationMethod').isString().isIn([VerificationMethods.Ed255192020, VerificationMethods.Ed255192018, VerificationMethods.JWK]).withMessage('Invalid verificationMethod'),
         query('methodSpecificIdAlgo').isString().isIn([MethodSpecificIdAlgo.Base58, MethodSpecificIdAlgo.Uuid]).withMessage('Invalid methodSpecificIdAlgo'),
         query('network').optional().isString().isIn([NetworkType.Mainnet, NetworkType.Testnet]).withMessage('Invalid network'),
-        query('publicKeyHex').optional().isString().isLength({min:64, max:64}).withMessage('PublicKeyHex should be of length 64')
+        query('publicKeyHex').isString().withMessage('PublicKeyHex is required').isLength({min:64, max:64}).withMessage('PublicKeyHex should be of length 64')
     ]
     
     public generateKeys(request: Request<{},{},{},{seed?: string}>, response: Response) {
         const keyPair = createKeyPairHex(request.query?.seed)
         
         return response.json({
-            verificationMethodId: 'key-1',
             privateKeyHex: keyPair.privateKey,
             publicKeyHex: keyPair.publicKey
         })

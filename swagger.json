@@ -314,8 +314,7 @@
                 "properties": {
                     "jobId": {
                         "description": "This input field is used to keep track of an ongoing DID creation process. See <a href=\"https://identity.foundation/did-registration/#jobid\">https://identity.foundation/did-registration/#jobid</a>.",
-                        "type": "string",
-                        "example": "null"
+                        "type": "string"
                     },
                     "options": {
                         "$ref": "#/components/schemas/Options"
@@ -356,8 +355,39 @@
                             "service": {
                                 "$ref": "#/components/schemas/Service"
                             }
-                        },
-                        "example": {}
+                        }
+                    }
+                },
+                "example": {
+                    "options": {
+                        "network": "testnet"
+                    },
+                    "secret": {
+                        "keys": [
+                            {
+                                "verificationMethodId": "",
+                                "privateKeyHex": "",
+                                "publicKeyHex": ""
+                            }
+                        ]
+                    },
+                    "didDocument": {
+                        "id": "did:cheqd:testnet:ca9ff47c-0286-4614-a4be-8ffa83911e09",
+                        "controller": [
+                            "did:cheqd:testnet:ca9ff47c-0286-4614-a4be-8ffa83911e09"
+                        ],
+                        "verificationMethod": [
+                            {
+                                "id": "did:cheqd:testnet:ca9ff47c-0286-4614-a4be-8ffa83911e09#key-1",
+                                "type": "Ed25519VerificationKey2020",
+                                "controller": "did:cheqd:testnet:ca9ff47c-0286-4614-a4be-8ffa83911e09",
+                                "publicKeyMultibase": "z6Mkt9Vg1a1Jbg5a1NkToUeWH23Z33TwGUua5MrqAYUz2AL3"
+                            }
+                        ],
+                        "authentication": [
+                            "did:cheqd:testnet:ca9ff47c-0286-4614-a4be-8ffa83911e09#key-1"
+                        ],
+                        "versionId": "0e184437-b498-4961-978f-116ffba7962c"
                     }
                 }
             },
@@ -373,13 +403,12 @@
                 "properties": {
                     "jobId": {
                         "description": "This input field is used to keep track of an ongoing DID update process. See <a href=\"https://identity.foundation/did-registration/#jobid\">https://identity.foundation/did-registration/#jobid</a>.",
-                        "type": "string",
-                        "example": "null"
+                        "type": "string"
                     },
                     "did": {
                         "description": "This input field indicates the DID that is the target of the DID update operation.",
                         "type": "string",
-                        "example": "did:cheqd:testnet:zApY6E8Prv1rWcjRtBKENGaVm2kRk1VQ"
+                        "example": "did:cheqd:testnet:ca9ff47c-0286-4614-a4be-8ffa83911e09"
                     },
                     "options": {
                         "$ref": "#/components/schemas/Options"
@@ -400,15 +429,6 @@
                                     "$ref": "#/components/schemas/SigningResponse"
                                 }
                             }
-                        },
-                        "example": {
-                            "keys": [
-                                {
-                                    "verificationMethodId": "",
-                                    "privateKeyHex": "",
-                                    "publicKeyHex": ""
-                                }
-                            ]
                         }
                     },
                     "didDocumentOperation": {
@@ -416,52 +436,51 @@
                         "items": {
                             "type": "string"
                         },
-                        "example": [
-                            "setToDidDocument"
-                        ],
                         "default": [
-                            "setToDidDocument"
+                            "setDidDocument"
                         ]
                     },
                     "didDocument": {
                         "type": "array",
                         "items": {
                             "$ref": "#/components/schemas/DidDocument"
-                        },
-                        "example": [
-                            {
-                                "context": [],
-                                "id": "did:cheqd:testnet:zApY6E8Prv1rWcjRtBKENGaVm2kRk1VQ",
-                                "controller": [
-                                    "did:cheqd:testnet:zApY6E8Prv1rWcjRtBKENGaVm2kRk1VQ"
-                                ],
-                                "authentication": [
-                                    "did:cheqd:testnet:zApY6E8Prv1rWcjRtBKENGaVm2kRk1VQ#key-0"
-                                ],
-                                "assertionMethod": [],
-                                "capabilityInvocation": [],
-                                "capabilityDelegation": [],
-                                "keyAgreement": [],
-                                "alsoKnownAs": [],
-                                "verificationMethod": [
-                                    {
-                                        "id": "did:cheqd:testnet:zApY6E8Prv1rWcjRtBKENGaVm2kRk1VQ#key-0",
-                                        "type": "Ed25519VerificationKey2020",
-                                        "controller": "did:cheqd:testnet:zApY6E8Prv1rWcjRtBKENGaVm2kRk1VQ",
-                                        "publicKeyMultibase": "zApY6E8Prv1rWcjRtBKENGaVm2kRk1VQsFzQoQNbAoVdp",
-                                        "publicKeyJwk": []
-                                    }
-                                ],
-                                "service": [
-                                    {
-                                        "id": "did:cheqd:testnet:zApY6E8Prv1rWcjRtBKENGaVm2kRk1VQ#rand",
-                                        "type": "rand",
-                                        "serviceEndpoint": "https://rand.in"
-                                    }
-                                ]
-                            }
-                        ]
+                        }
                     }
+                },
+                "example": {
+                    "did": "did:cheqd:testnet:ca9ff47c-0286-4614-a4be-8ffa83911e09",
+                    "didDocumentOperation": [
+                        "setDidDocument"
+                    ],
+                    "didDocument": [
+                        {
+                            "id": "did:cheqd:testnet:ca9ff47c-0286-4614-a4be-8ffa83911e09",
+                            "controller": [
+                                "did:cheqd:testnet:ca9ff47c-0286-4614-a4be-8ffa83911e09"
+                            ],
+                            "verificationMethod": [
+                                {
+                                    "id": "did:cheqd:testnet:ca9ff47c-0286-4614-a4be-8ffa83911e09#key-1",
+                                    "type": "Ed25519VerificationKey2020",
+                                    "controller": "did:cheqd:testnet:ca9ff47c-0286-4614-a4be-8ffa83911e09",
+                                    "publicKeyMultibase": "z6Mkt9Vg1a1Jbg5a1NkToUeWH23Z33TwGUua5MrqAYUz2AL3"
+                                }
+                            ],
+                            "authentication": [
+                                "did:cheqd:testnet:ca9ff47c-0286-4614-a4be-8ffa83911e09#key-1"
+                            ],
+                            "versionId": "978f4437-b498-4961-978f-116ffba7962c",
+                            "service": [
+                                {
+                                    "id": "did:cheqd:testnet:ca9ff47c-0286-4614-a4be-8ffa83911e09#rand",
+                                    "type": "rand",
+                                    "serviceEndpoint": [
+                                        "https://rand.in"
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
                 }
             },
             "DeactivateRequest": {
@@ -475,13 +494,11 @@
                 "properties": {
                     "jobId": {
                         "description": "This input field is used to keep track of an ongoing DID deactivation process. See <a href=\"https://identity.foundation/did-registration/#jobid\">https://identity.foundation/did-registration/#jobid</a>.",
-                        "type": "string",
-                        "example": "null"
+                        "type": "string"
                     },
                     "did": {
                         "description": "This input field indicates the DID that is the target of the DID deactivation operation.",
-                        "type": "string",
-                        "example": "did:cheqd:testnet:zApY6E8Prv1rWcjRtBKENGaVm2kRk1VQ"
+                        "type": "string"
                     },
                     "options": {
                         "$ref": "#/components/schemas/Options"
@@ -502,17 +519,18 @@
                                     "$ref": "#/components/schemas/SigningResponse"
                                 }
                             }
-                        },
-                        "example": {
-                            "keys": [
-                                {
-                                    "verificationMethodId": "",
-                                    "privateKeyHex": "",
-                                    "publicKeyHex": ""
-                                }
-                            ]
                         }
                     }
+                },
+                "example": {
+                    "did": "did:cheqd:testnet:ca9ff47c-0286-4614-a4be-8ffa83911e09",
+                    "keys": [
+                        {
+                            "verificationMethodId": "",
+                            "privateKeyHex": "",
+                            "publicKeyHex": ""
+                        }
+                    ]
                 }
             },
             "CreateResourceRequest": {
@@ -522,8 +540,7 @@
                 "properties": {
                     "jobId": {
                         "description": "This input field is used to keep track of an ongoing DID deactivation process. See <a href=\"https://identity.foundation/did-registration/#jobid\">https://identity.foundation/did-registration/#jobid</a>.",
-                        "type": "string",
-                        "example": "null"
+                        "type": "string"
                     },
                     "secret": {
                         "description": "This input field requires a keyPair</a>.",
@@ -541,31 +558,15 @@
                                     "$ref": "#/components/schemas/SigningResponse"
                                 }
                             }
-                        },
-                        "example": {
-                            "keys": [
-                                {
-                                    "verificationMethodId": "",
-                                    "privateKeyHex": "",
-                                    "publicKeyHex": ""
-                                }
-                            ]
                         }
                     },
                     "data": {
-                        "oneOf": [
-                            {
-                                "type": "string"
-                            },
-                            {
-                                "type": "object"
-                            }
-                        ]
+                        "type": "string"
                     },
                     "name": {
                         "type": "string"
                     },
-                    "mimeType": {
+                    "type": {
                         "type": "string"
                     },
                     "alsoKnownAs": {
@@ -584,6 +585,20 @@
                     },
                     "version": {
                         "type": "string"
+                    }
+                },
+                "example": {
+                    "data": "SGVsbG8gV29ybGQ=",
+                    "name": "ResourceName",
+                    "type": "TextDocument",
+                    "secret": {
+                        "keys": [
+                            {
+                                "verificationMethodId": "",
+                                "privateKeyHex": "",
+                                "publicKeyHex": ""
+                            }
+                        ]
                     }
                 }
             },
@@ -667,14 +682,14 @@
                     },
                     "did": {
                         "type": "string",
-                        "example": "did:cheqd:testnet:zApY6E8Prv1rWcjRtBKENGaVm2kRk1VQ"
+                        "example": "did:cheqd:testnet:ca9ff47c-0286-4614-a4be-8ffa83911e09"
                     },
                     "secret": {
                         "type": "object",
                         "example": {
                             "keys": [
                                 {
-                                    "verificationMethodId": "did:cheqd:testnet:zApY6E8Prv1rWcjRtBKENGaVm2kRk1VQ",
+                                    "verificationMethodId": "did:cheqd:testnet:ca9ff47c-0286-4614-a4be-8ffa83911e09",
                                     "publicKeyHex": "keaiUef4jaPvupBpC2IK9/H/yd/OPsgxCADOgftuLQc",
                                     "privateKeyHex": "Z0FhWmllZzNtbExTZVJId1RzNUhTa1dIOG5TWnNpRkSR5qJR5"
                                 }
@@ -685,28 +700,28 @@
                         "type": "object",
                         "example": {
                             "context": [],
-                            "id": "did:cheqd:testnet:zApY6E8Prv1rWcjRtBKENGaVm2kRk1VQ",
+                            "id": "did:cheqd:testnet:ca9ff47c-0286-4614-a4be-8ffa83911e09",
                             "controller": [
-                                "did:cheqd:testnet:zApY6E8Prv1rWcjRtBKENGaVm2kRk1VQ"
+                                "did:cheqd:testnet:ca9ff47c-0286-4614-a4be-8ffa83911e09"
+                            ],
+                            "verificationMethod": [
+                                {
+                                    "id": "did:cheqd:testnet:ca9ff47c-0286-4614-a4be-8ffa83911e09#key-1",
+                                    "type": "Ed25519VerificationKey2020",
+                                    "controller": "did:cheqd:testnet:ca9ff47c-0286-4614-a4be-8ffa83911e09",
+                                    "publicKeyMultibase": "z6Mkt9Vg1a1Jbg5a1NkToUeWH23Z33TwGUua5MrqAYUz2AL3"
+                                }
                             ],
                             "authentication": [
-                                "did:cheqd:testnet:zApY6E8Prv1rWcjRtBKENGaVm2kRk1VQ#key-0"
+                                "did:cheqd:testnet:ca9ff47c-0286-4614-a4be-8ffa83911e09#key-1"
                             ],
                             "assertionMethod": [],
                             "capabilityInvocation": [],
                             "capabilityDelegation": [],
                             "keyAgreement": [],
                             "alsoKnownAs": [],
-                            "verificationMethod": [
-                                {
-                                    "id": "did:cheqd:testnet:zApY6E8Prv1rWcjRtBKENGaVm2kRk1VQ#key-0",
-                                    "type": "Ed25519VerificationKey2020",
-                                    "controller": "did:cheqd:testnet:zApY6E8Prv1rWcjRtBKENGaVm2kRk1VQ",
-                                    "publicKeyMultibase": "zApY6E8Prv1rWcjRtBKENGaVm2kRk1VQsFzQoQNbAoVdp",
-                                    "publicKeyJwk": []
-                                }
-                            ],
-                            "service": []
+                            "service": [],
+                            "versionId": "0e184437-b498-4961-978f-116ffba7962c"
                         }
                     }
                 }
@@ -782,7 +797,7 @@
                     },
                     "id": {
                         "type": "string",
-                        "example": "did:cheqd:testnet:zApY6E8Prv1rWcjRtBKENGaVm2kRk1VQ"
+                        "example": "did:cheqd:testnet:ca9ff47c-0286-4614-a4be-8ffa83911e09"
                     },
                     "controller": {
                         "type": "array",
@@ -790,7 +805,7 @@
                             "type": "string"
                         },
                         "example": [
-                            "did:cheqd:testnet:zApY6E8Prv1rWcjRtBKENGaVm2kRk1VQ"
+                            "did:cheqd:testnet:ca9ff47c-0286-4614-a4be-8ffa83911e09"
                         ]
                     },
                     "authentication": {
@@ -799,7 +814,7 @@
                             "type": "string"
                         },
                         "example": [
-                            "did:cheqd:testnet:zApY6E8Prv1rWcjRtBKENGaVm2kRk1VQ#key-0"
+                            "did:cheqd:testnet:ca9ff47c-0286-4614-a4be-8ffa83911e09#key-0"
                         ]
                     },
                     "assertionMethod": {
@@ -845,7 +860,7 @@
                 "properties": {
                     "id": {
                         "type": "string",
-                        "example": "did:cheqd:testnet:zApY6E8Prv1rWcjRtBKENGaVm2kRk1VQ#key-0"
+                        "example": "did:cheqd:testnet:ca9ff47c-0286-4614-a4be-8ffa83911e09#key-0"
                     },
                     "type": {
                         "type": "string",
@@ -853,11 +868,11 @@
                     },
                     "controller": {
                         "type": "string",
-                        "example": "did:cheqd:testnet:zApY6E8Prv1rWcjRtBKENGaVm2kRk1VQ"
+                        "example": "did:cheqd:testnet:ca9ff47c-0286-4614-a4be-8ffa83911e09"
                     },
                     "publicKeyMultibase": {
                         "type": "string",
-                        "example": "zApY6E8Prv1rWcjRtBKENGaVm2kRk1VQsFzQoQNbAoVdp"
+                        "example": "z6Mkt9Vg1a1Jbg5a1NkToUeWH23Z33TwGUua5MrqAYUz2AL3"
                     },
                     "publicKeyJwk": {
                         "type": "array",
@@ -872,7 +887,7 @@
                 "properties": {
                     "id": {
                         "type": "string",
-                        "example": "did:cheqd:testnet:zH7YZn7RcjdaTLBtEkvU9B5rVtrP6cMo#rand,"
+                        "example": "did:cheqd:testnet:ca9ff47c-0286-4614-a4be-8ffa83911e09#rand,"
                     },
                     "type": {
                         "type": "string",
@@ -880,7 +895,9 @@
                     },
                     "serviceEndpoint": {
                         "type": "string",
-                        "example": "https://rand.in"
+                        "example": [
+                            "https://rand.in"
+                        ]
                     }
                 }
             },

@@ -1,5 +1,5 @@
-import { MsgCreateDidPayload, VerificationMethodPayload } from "@cheqd/sdk/build/types";
-import { MsgCreateDidDocPayload } from "@cheqd/ts-proto/cheqd/did/v2";
+import { MsgCreateDidPayload, MsgDeactivateDidPayload, VerificationMethodPayload } from "@cheqd/sdk/build/types";
+import { MsgCreateDidDocPayload, MsgDeactivateDidDocPayload } from "@cheqd/ts-proto/cheqd/did/v2";
 import { MsgCreateResourcePayload } from "@cheqd/ts-proto/cheqd/resource/v2";
 
 import { toString } from "uint8arrays"
@@ -46,10 +46,43 @@ export class Responses {
                 description: Messages.GetSignature,
                 signingRequest,
                 secret: {
-                    signingResponse: ["<Place the signature json array here> e.g. { verificationMethodId: did:cheqd:testnet:qsqdcansoica#key-1, signature: aca1s12q14213casdvaadcfas }" ]
+                    signingResponse: [Messages.SigingResponse]
                 }
             }
         }
+    }
+
+    static GetDeactivateDidSignatureResponse(jobId: string, payload: MsgDeactivateDidPayload) {
+        const signingRequest =  payload.verificationMethod!.map((method)=> {
+            return {
+                kid: method.id,
+                type: method.type,
+                alg: 'EdDSA',
+                serializedPayload: toString(
+                    (
+                        MsgDeactivateDidDocPayload.encode({
+                            id: payload.id,
+                            versionId: payload.versionId
+                        } as MsgCreateDidDocPayload).finish()
+                    ),
+                    'base64pad'
+                )          
+            }
+        })
+
+        return {
+            jobId,
+            didState: {
+                did: payload.id,
+                state: IState.Action,
+                action: IAction.GetSignature,
+                description: Messages.GetSignature,
+                signingRequest,
+                secret: {
+                    signingResponse: [Messages.SigingResponse]
+                }
+            }
+        }       
     }
 
     static GetResourceActionSignatureResponse(jobId: string, verificationMethod: VerificationMethodPayload[], resource: Partial<MsgCreateResourcePayload>) {
@@ -76,20 +109,20 @@ export class Responses {
                 description: Messages.GetSignature,
                 signingRequest,
                 secret: {
-                    signingResponse: ["<Place the signature json array here> e.g. { verificationMethodId: did:cheqd:testnet:qsqdcansoica#key-1, signature: aca1s12q14213casdvaadcfas }" ]
+                    signingResponse: [Messages.SigingResponse]
                 }
             }
         }
     }
 
-    static GetInvalidResponse(didDocument: IdentifierPayload, secret: Record<string, any>, error: string) {
+    static GetInvalidResponse(didDocument: IdentifierPayload = {}, secret: Record<string, any> = {}, error: string) {
         return {
             jobId: null,
             didState: {
-                did: didDocument.id,
+                did: didDocument.id || '',
                 state: IState.Failed,
                 reason: Messages.Invalid,
-                description: Messages.Invalid + error,
+                description: Messages.Invalid + ": " + error,
                 secret,
                 didDocument
             }
@@ -102,7 +135,7 @@ export class Responses {
             didState: {
                 state: IState.Failed,
                 reason: Messages.Internal,
-                description: Messages.TryAgain + error,
+                description: Messages.TryAgain + ": " + error,
                 secret,
                 didDocument
             }
@@ -123,7 +156,7 @@ export class Responses {
         return {
             jobId,
             resourceState: {
-                resourceId: resourcePayload.id,
+                resourceId: resourcePayload.id || '',
                 state: "finished",
                 secret,
                 resource: resourcePayload
@@ -131,14 +164,14 @@ export class Responses {
         }
     }
 
-    static GetInvalidResourceResponse(resourcePayload: Partial<MsgCreateResourcePayload>, secret: Record<string, any>, error: string) {
+    static GetInvalidResourceResponse(resourcePayload: Partial<MsgCreateResourcePayload> = {}, secret: Record<string, any> = {}, error: string) {
         return {
             jobId: null,
             resourceState: {
                 resourceId: resourcePayload.id,
                 state: IState.Failed,
                 reason: Messages.Invalid,
-                description: Messages.Invalid + error,
+                description: Messages.Invalid + ": " + error,
                 secret,
                 resourcePayload
             }

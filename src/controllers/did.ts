@@ -1,16 +1,16 @@
 import { Request, Response } from 'express'
 import { validationResult, check } from 'express-validator'
 
-import { ISignInputs } from '@cheqd/sdk/build/types'
-import { SignInfo } from '@cheqd/ts-proto/cheqd/did/v2'
+import { ISignInputs, MsgCreateDidPayload, MsgDeactivateDidPayload } from '@cheqd/sdk/build/types'
+import { MsgCreateDidDocPayload, SignInfo } from '@cheqd/ts-proto/cheqd/did/v2'
 
 import { v4 } from 'uuid'
 
 import { convertToSignInfo } from '../helpers/helpers'
 import { Responses } from '../helpers/response'
-import { CheqdRegistrar, CheqdResolver } from '../service/cheqd'
+import { CheqdRegistrar, CheqdResolver, NetworkType } from '../service/cheqd'
 import { Messages } from '../types/constants'
-import { DidDocumentOperation, IDIDCreateRequest, IDIDUpdateRequest, IState } from '../types/types'
+import { DidDocumentOperation, IdentifierPayload, IDIDCreateRequest, IDIDUpdateRequest, IState } from '../types/types'
 import { LocalStore } from './store'
 
 export class DidController {
@@ -30,20 +30,41 @@ export class DidController {
             }
 
             return true
-        }).withMessage(Messages.SecretValidation)
+        }).withMessage(Messages.SecretValidation),
+    ]
+
+    public static createValidator = [
+        check('didDocument').custom((value, {req})=>{
+            if((!value || !value.verificationMethod?.length) && !req.body.jobId) return false
+            return true
+        }).withMessage(Messages.InvalidDidDocument)
     ]
 
     public static updateValidator = [
-        check('didDocument').isArray().withMessage('didDocument is required'),
-        check('did').isString().contains('did:cheqd:').withMessage('cheqd DID is required'),
-        check('didDocumentOperation').optional().isArray().custom((value) => value[0] === DidDocumentOperation.Set && value.length == 1 ).withMessage('Set operation can\'t be used with Add/Remove')
+        check('didDocument').custom((value, {req})=>{
+            if((!value || !value.length || !value[0].verificationMethod.length) && !req.body.jobId) return false
+            return true
+        }).withMessage(Messages.InvalidDidDocument),
+        check('did').optional().isString().withMessage(Messages.InvalidDid).contains('did:cheqd:').withMessage(Messages.InvalidDid),
+        check('didDocumentOperation').optional().isArray().custom((value) => value[0] === DidDocumentOperation.Set && value.length == 1 ).withMessage('Only Set operation is supported')
+    ]
+
+    public static deactivateValidator = [
+        check('did').custom((value, {req})=>{
+            if(!value && !req.body.jobId) return false
+            return true
+        }).withMessage(Messages.InvalidDid)
     ]
 
     public async create(request: Request, response: Response) {
         // validate body
         const result = validationResult(request);
         if (!result.isEmpty()) {
-            return response.status(400).json(Responses.GetInvalidResponse(request.body.didDocument, request.body.secret, result.array()[0].msg))
+            return response.status(400).json(Responses.GetInvalidResponse(
+                request.body.didDocument, 
+                request.body.secret, 
+                result.array()[0].msg
+            ))
         }
         
         let {jobId, secret={}, options, didDocument} = request.body as IDIDCreateRequest
@@ -58,8 +79,6 @@ export class DidController {
             }
 
             didDocument = storeData.didDocument
-        } else if (!didDocument) {
-            return response.status(400).json(Responses.GetInvalidResponse({}, secret, Messages.DidDocument))
         } else {
             jobId = v4()
         }
@@ -73,9 +92,10 @@ export class DidController {
             return response.status(200).json(Responses.GetDIDActionSignatureResponse(jobId, didDocument))
         }
 
-        await CheqdRegistrar.instance.connect(options?.network)
+        const networkType = options?.network || ((didDocument.id!.split(':'))[2] === NetworkType.Testnet ? NetworkType.Testnet : NetworkType.Mainnet)
 
         try {
+            await CheqdRegistrar.instance.connect(networkType)
             const result = await CheqdRegistrar.instance.create(signInputs, didDocument)
             if ( result.code == 0 ) {
                 LocalStore.instance.setItem(jobId, {didDocument, state: IState.Finished})
@@ -107,48 +127,46 @@ export class DidController {
             ))
         }
 
-        let { jobId, secret, options, didDocument, didDocumentOperation=[DidDocumentOperation.Set], did } = request.body as IDIDUpdateRequest 
-        await CheqdRegistrar.instance.connect(options?.network)
-        
-        // check if did is registered on the ledger
-        let resolvedDocument = await CheqdResolver(did)
-        
-        if(!resolvedDocument?.didDocument) {
-            return response.status(400).send(Responses.GetInvalidResponse(
-                {id: did}, 
-                secret, 
-                Messages.DidNotFound
-            ))
-        }
+        let { jobId, secret={}, options, didDocument, did } = request.body as IDIDUpdateRequest 
 
-        let updatedDocument: any
-        if (!jobId) {
-            updatedDocument= resolvedDocument.didDocument
-            updatedDocument.context = []
+        let updatedDocument: IdentifierPayload = {}
+        try {
+            if (!jobId) {
+                // check if did is registered on the ledger
+                let resolvedDocument = await CheqdResolver(did)
+                
+                if(!resolvedDocument?.didDocument) {
+                    return response.status(400).send(Responses.GetInvalidResponse(
+                        {id: did}, 
+                        secret, 
+                        Messages.DidNotFound
+                    ))
+                }
 
-            updatedDocument = didDocument[0]
-            updatedDocument.versionId = v4()
-            jobId = v4()
-        } else {
-            const storeData = LocalStore.instance.getItem(jobId)
-            if(!storeData) {
-                return response.status(400).json(Responses.GetJobExpiredResponse(jobId))
-            } else if (storeData.state == IState.Finished) {
-                return response.status(200).json(Responses.GetSuccessResponse(jobId, storeData.didDocument, secret))
+                updatedDocument = didDocument[0]
+                updatedDocument.versionId = v4()
+                jobId = v4()
+            } else {
+                const storeData = LocalStore.instance.getItem(jobId)
+                if(!storeData) {
+                    return response.status(400).json(Responses.GetJobExpiredResponse(jobId))
+                } else if (storeData.state == IState.Finished) {
+                    return response.status(200).json(Responses.GetSuccessResponse(jobId, storeData.didDocument, secret))
+                }
+
+                updatedDocument = storeData.didDocument
+                did = updatedDocument.id!
             }
 
-            updatedDocument = storeData.didDocument
-        }
+            let signInputs: ISignInputs[] | SignInfo[]
+            if (secret.signingResponse ||  secret.keys) {
+                signInputs = secret.signingResponse ? convertToSignInfo(secret.signingResponse) : secret.keys!
+            } else {
+                LocalStore.instance.setItem(jobId, {didDocument: updatedDocument, state: IState.Action})
+                return response.status(200).json(Responses.GetDIDActionSignatureResponse(jobId, updatedDocument))
+            }
 
-        let signInputs: ISignInputs[] | SignInfo[]
-        if (secret.signingResponse ||  secret.keys) {
-            signInputs = secret.signingResponse ? convertToSignInfo(secret.signingResponse) : secret.keys!
-        } else {
-            LocalStore.instance.setItem(jobId, {didDocument: updatedDocument, state: IState.Action})
-            return response.status(200).json(Responses.GetDIDActionSignatureResponse(jobId, updatedDocument))
-        }
-
-        try {
+            await CheqdRegistrar.instance.connect(options?.network || (did.split(':'))[2])
             const result = await CheqdRegistrar.instance.update(signInputs, updatedDocument)
             if ( result.code == 0 ) {
                 return response.status(201).json(Responses.GetSuccessResponse(jobId, updatedDocument, secret))
@@ -165,45 +183,61 @@ export class DidController {
     }
 
     public async deactivate (request: Request, response: Response) {
-        let { jobId, secret, options, did } = request.body as IDIDUpdateRequest
-        await CheqdRegistrar.instance.connect(options?.network)
-        // check if did is registered on the ledger
-        let resolvedDocument = await CheqdResolver(did)
-        if(!resolvedDocument?.didDocument) {
-            return response.status(400).send(Responses.GetInvalidResponse(
-                {id: did}, 
-                secret, 
-                Messages.DidNotFound
+        // validate body
+        const result = validationResult(request);
+        if (!result.isEmpty()) {
+            return response.status(400).json(Responses.GetInvalidResponse(
+                {}, 
+                request.body.secret, 
+                result.array()[0].msg
             ))
         }
 
-        if(jobId) {
-            const storeData = LocalStore.instance.getItem(jobId)
-            if(!storeData) {
-                return response.status(400).json(Responses.GetJobExpiredResponse(jobId))
-            } else if (storeData.state == IState.Finished) {
-                return response.status(201).json(Responses.GetSuccessResponse(jobId, storeData.didDocument, secret))
+        let { jobId, secret={}, options, did } = request.body as IDIDUpdateRequest
+
+        let payload: MsgDeactivateDidPayload
+        try {
+            if(jobId) {
+                const storeData = LocalStore.instance.getItem(jobId)
+                if(!storeData) {
+                    return response.status(400).json(Responses.GetJobExpiredResponse(jobId))
+                } else if (storeData.state == IState.Finished) {
+                    return response.status(201).json(Responses.GetSuccessResponse(jobId, storeData.didDocument, secret))
+                }
+
+                payload = storeData.didDocument as MsgDeactivateDidPayload
+                did =  storeData.didDocument.id!
+            } else {
+                jobId = v4()
+                
+                // check if did is registered on the ledger
+                let resolvedDocument = await CheqdResolver(did)
+                
+                if(!resolvedDocument?.didDocument) {
+                    return response.status(400).send(Responses.GetInvalidResponse(
+                        {id: did}, 
+                        secret, 
+                        Messages.DidNotFound
+                    ))
+                }
+
+                payload = {
+                    verificationMethod: resolvedDocument.didDocument.verificationMethod,
+                    versionId: v4(),
+                    id: resolvedDocument.didDocument.id
+                }
             }
 
-            resolvedDocument = storeData.didDocument
-        } else {
-            jobId = v4()
-        }
+            let signInputs: ISignInputs[] | SignInfo[]
+            if (secret.signingResponse ||  secret.keys) {
+                signInputs = secret.signingResponse ? convertToSignInfo(secret.signingResponse) : secret.keys!
+            } else {
+                LocalStore.instance.setItem(jobId, {didDocument: payload, state: IState.Action})
+                return response.status(200).json(Responses.GetDeactivateDidSignatureResponse(jobId, payload))
+            }
 
-        let signInputs: ISignInputs[] | SignInfo[]
-        if (secret.signingResponse ||  secret.keys) {
-            signInputs = secret.signingResponse ? convertToSignInfo(secret.signingResponse) : secret.keys!
-        } else {
-            LocalStore.instance.setItem(jobId, {didDocument: resolvedDocument, state: IState.Action})
-            return response.status(200).json(Responses.GetDIDActionSignatureResponse(jobId, resolvedDocument))
-        }
-
-        try {
-            const result = await CheqdRegistrar.instance.deactivate(signInputs, {
-                verificationMethod: resolvedDocument.didDocument.verificationMethod,
-                versionId: v4(),
-                id: did
-            })
+            await CheqdRegistrar.instance.connect(options?.network || (did.split(':'))[2])
+            const result = await CheqdRegistrar.instance.deactivate(signInputs, payload)
             if ( result.code == 0 ) {
                 return response.status(201).json(Responses.GetSuccessResponse(
                     jobId,

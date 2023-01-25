@@ -16,7 +16,7 @@ export interface IDIDCreateRequest {
         keys?: ISignInputs[],
         signingResponse?: ISignInfo[]
     },
-    didDocument?: IdentifierPayload
+    didDocument: IdentifierPayload
 }
 
 export interface IDIDUpdateRequest {
@@ -34,7 +34,7 @@ export interface IDIDUpdateRequest {
 export interface IResourceCreateRequest {
     jobId: string | null
     secret: {
-        keys: ISignInputs[],
+        keys?: ISignInputs[],
         signingResponse?: ISignInfo[]
     }
     data: any, 

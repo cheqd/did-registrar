@@ -1,11 +1,12 @@
 import express from 'express'
 import Helmet from 'helmet'
-import { DidController } from './controllers/did'
-import { CheqdRegistrar } from './service/cheqd'
 import * as swagger from 'swagger-ui-express'
 import * as swaggerJson from '../swagger.json'
+
+import { DidController } from './controllers/did'
 import { CheqdController } from './controllers/cheqd'
 import { ResourceController } from './controllers/resource'
+import { CheqdRegistrar } from './service/cheqd'
 
 class App {
     public express: express.Application
@@ -31,10 +32,10 @@ class App {
         app.get('/', (req, res) => res.redirect('api-docs'))
 
         // did-registrar
-        app.post(`${URL_PREFIX}/create`, DidController.createValidator, new DidController().create)
-        app.post(`${URL_PREFIX}/update`, DidController.createValidator, DidController.updateValidator, new DidController().update)
-        app.post(`${URL_PREFIX}/deactivate`, DidController.createValidator, new DidController().deactivate)
-        app.post(`${URL_PREFIX}/:did/create-resource`, new ResourceController().create)
+        app.post(`${URL_PREFIX}/create`, DidController.createValidator, DidController.secretValidator, new DidController().create)
+        app.post(`${URL_PREFIX}/update`, DidController.updateValidator, DidController.secretValidator, new DidController().update)
+        app.post(`${URL_PREFIX}/deactivate`, DidController.deactivateValidator, DidController.secretValidator, new DidController().deactivate)
+        app.post(`${URL_PREFIX}/:did/create-resource`, ResourceController.createValidator, new ResourceController().create)
 
         // cheqd-helpers
         app.get(`${URL_PREFIX}/key-pair`, new CheqdController().generateKeys)

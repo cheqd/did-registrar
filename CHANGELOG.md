@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.0-develop.2](https://github.com/cheqd/did-registrar/compare/1.2.0-develop.1...1.2.0-develop.2) (2023-01-25)
+
+
+### Features
+
+* Support Client managed secret mode ([#66](https://github.com/cheqd/did-registrar/issues/66)) ([a8fe2b4](https://github.com/cheqd/did-registrar/commit/a8fe2b493abda38e967ab9af30f1b4f51ae61f8c))
+
 ## [1.2.0-develop.1](https://github.com/cheqd/did-registrar/compare/1.1.3-develop.1...1.2.0-develop.1) (2023-01-03)
 
 

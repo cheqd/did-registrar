@@ -13,8 +13,8 @@ import { Messages } from '../types/constants'
 
 dotenv.config()
 
-const { 
-    FEE_PAYER_TESTNET_MNEMONIC=Messages.TestnetFaucet, 
+let { 
+    FEE_PAYER_TESTNET_MNEMONIC, 
     FEE_PAYER_MAINNET_MNEMONIC 
 } = process.env
 
@@ -48,6 +48,8 @@ export class CheqdRegistrar {
     public async connect(network?: NetworkType) {
         if(network === NetworkType.Mainnet && !FEE_PAYER_MAINNET_MNEMONIC) {
             throw new Error('No signer provided')
+        } else if(!FEE_PAYER_TESTNET_MNEMONIC) {
+            FEE_PAYER_TESTNET_MNEMONIC = Messages.TestnetFaucet
         }
 
         const sdkOptions: ICheqdSDKOptions = {

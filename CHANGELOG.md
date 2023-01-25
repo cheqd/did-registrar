@@ -1,5 +1,16 @@
 # Changelog
 
+## [1.2.0-develop.1](https://github.com/cheqd/did-registrar/compare/1.1.3-develop.1...1.2.0-develop.1) (2023-01-03)
+
+
+### Features
+
+* Create address from mnemonic ([f706427](https://github.com/cheqd/did-registrar/commit/f7064272b95d7486e97aa6293ef8122823128923))
+* integrate v2 protos && support resource creation ([53d9f20](https://github.com/cheqd/did-registrar/commit/53d9f2065e2163a2958e4b505458b68c3b32a5c6))
+* Integrate v2protos ([#53](https://github.com/cheqd/did-registrar/issues/53)) ([4b416a1](https://github.com/cheqd/did-registrar/commit/4b416a18d6174dd06edc9f20b2ffe99c2056f38e))
+* Support deactivate did tx ([ea4b28f](https://github.com/cheqd/did-registrar/commit/ea4b28f7a42f666e75f377595a79ac443dec39ac))
+* Support mnemonic secret && Update validation and swagger ([c5bafed](https://github.com/cheqd/did-registrar/commit/c5bafed3f294637f3389789d21740d25634951f9))
+
 ## [1.1.3-develop.1](https://github.com/cheqd/did-registrar/compare/1.1.2...1.1.3-develop.1) (2022-10-26)
 
 ## [1.1.2](https://github.com/cheqd/did-registrar/compare/1.1.1...1.1.2) (2022-10-21)

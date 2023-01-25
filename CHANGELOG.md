@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.0-develop.3](https://github.com/cheqd/did-registrar/compare/1.2.0-develop.2...1.2.0-develop.3) (2023-01-25)
+
+
+### Bug Fixes
+
+* Env change ([#67](https://github.com/cheqd/did-registrar/issues/67)) ([c3dcef9](https://github.com/cheqd/did-registrar/commit/c3dcef99c2c598f05d8502af724beef3034f0d92))
+
 ## [1.2.0-develop.2](https://github.com/cheqd/did-registrar/compare/1.2.0-develop.1...1.2.0-develop.2) (2023-01-25)
 
 

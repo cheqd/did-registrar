@@ -395,11 +395,6 @@
                 "description": "Input fields for the update operation.",
                 "type": "object",
                 "additionalProperties": false,
-                "required": [
-                    "did",
-                    "secret",
-                    "didDocument"
-                ],
                 "properties": {
                     "jobId": {
                         "description": "This input field is used to keep track of an ongoing DID update process. See <a href=\"https://identity.foundation/did-registration/#jobid\">https://identity.foundation/did-registration/#jobid</a>.",
@@ -487,10 +482,6 @@
                 "description": "Input fields for the deactivate operation.",
                 "type": "object",
                 "additionalProperties": false,
-                "required": [
-                    "did",
-                    "secret"
-                ],
                 "properties": {
                     "jobId": {
                         "description": "This input field is used to keep track of an ongoing DID deactivation process. See <a href=\"https://identity.foundation/did-registration/#jobid\">https://identity.foundation/did-registration/#jobid</a>.",
@@ -524,13 +515,15 @@
                 },
                 "example": {
                     "did": "did:cheqd:testnet:ca9ff47c-0286-4614-a4be-8ffa83911e09",
-                    "keys": [
-                        {
-                            "verificationMethodId": "",
-                            "privateKeyHex": "",
-                            "publicKeyHex": ""
-                        }
-                    ]
+                    "secret": {
+                        "keys": [
+                            {
+                                "verificationMethodId": "",
+                                "privateKeyHex": "",
+                                "publicKeyHex": ""
+                            }
+                        ]
+                    }
                 }
             },
             "CreateResourceRequest": {
@@ -894,7 +887,10 @@
                         "example": "rand,"
                     },
                     "serviceEndpoint": {
-                        "type": "string",
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
                         "example": [
                             "https://rand.in"
                         ]

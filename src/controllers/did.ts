@@ -1,7 +1,7 @@
 import { Request, Response } from 'express'
 import { validationResult, check } from 'express-validator'
 
-import { ISignInputs, DIDDocument } from '@cheqd/sdk/build/types'
+import { DIDDocument } from '@cheqd/sdk/build/types'
 import { SignInfo } from '@cheqd/ts-proto/cheqd/did/v2'
 
 import { v4 } from 'uuid'
@@ -15,19 +15,6 @@ import { LocalStore } from './store'
 import { DIDModule } from '@cheqd/sdk'
 
 export class DidController {
-
-    public static secretValidator = [
-        check('secret').optional().custom((value)=>{
-            if (value) {
-                if(value.signingResponse && value.keys) return false
-                else if(value.keys) {
-                    return value.keys.every((key: any) => key.privateKeyHex.length == 128
-                )}
-            }
-
-            return true
-        }).withMessage(Messages.SecretValidation),
-    ]
 
     public static didDocValidator = [
         check('didDocument').custom(async (value, {req})=>{
@@ -82,10 +69,10 @@ export class DidController {
             versionId = v4()
         }
         
-        let signInputs: ISignInputs[] | SignInfo[]
+        let signInputs: SignInfo[]
         
-        if (secret.signingResponse ||  secret.keys) {
-            signInputs = secret.signingResponse ? convertToSignInfo(secret.signingResponse) : secret.keys!
+        if (secret.signingResponse) {
+            signInputs = convertToSignInfo(secret.signingResponse)
         } else {
             LocalStore.instance.setItem(jobId, {didDocument, state: IState.Action, versionId})
             return response.status(200).json(await Responses.GetDIDActionSignatureResponse(jobId, didDocument, versionId))
@@ -159,9 +146,9 @@ export class DidController {
                 did = updatedDocument.id!
             }
 
-            let signInputs: ISignInputs[] | SignInfo[]
-            if (secret.signingResponse ||  secret.keys) {
-                signInputs = secret.signingResponse ? convertToSignInfo(secret.signingResponse) : secret.keys!
+            let signInputs: SignInfo[]
+            if (secret.signingResponse) {
+                signInputs = convertToSignInfo(secret.signingResponse)
             } else {
                 LocalStore.instance.setItem(jobId, {didDocument: updatedDocument, state: IState.Action, versionId})
                 return response.status(200).json(await Responses.GetDIDActionSignatureResponse(jobId, updatedDocument, versionId))
@@ -230,9 +217,9 @@ export class DidController {
                 }
             }
 
-            let signInputs: ISignInputs[] | SignInfo[]
-            if (secret.signingResponse ||  secret.keys) {
-                signInputs = secret.signingResponse ? convertToSignInfo(secret.signingResponse) : secret.keys!
+            let signInputs: SignInfo[]
+            if (secret.signingResponse) {
+                signInputs = convertToSignInfo(secret.signingResponse)
             } else {
                 LocalStore.instance.setItem(jobId, {didDocument: payload, state: IState.Action, versionId})
                 return response.status(200).json(Responses.GetDeactivateDidSignatureResponse(jobId, payload, versionId))

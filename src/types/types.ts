@@ -9,32 +9,22 @@ export interface IDIDCreateRequest {
         network: NetworkType,
         keytype: string
     }, 
-    secret: {
-        seed?: string,
-        keys?: ISignInputs[],
-        signingResponse?: ISignInfo[]
-    },
+    secret: ISecret
     didDocument: DIDDocument
 }
 
 export interface IDIDUpdateRequest {
     jobId: string | null
     did: string
-    options: Record<string, any>, 
-    secret:{
-        keys?: ISignInputs[],
-        signingResponse?: ISignInfo[]
-    },
+    options: Record<string, any>
+    secret: ISecret
     didDocumentOperation: DidDocumentOperation[]
     didDocument: DIDDocument[]
 }
 
 export interface IResourceCreateRequest {
     jobId: string | null
-    secret: {
-        keys?: ISignInputs[],
-        signingResponse?: ISignInfo[]
-    }
+    secret: ISecret
     data: any, 
     name: string, 
     type: string, 
@@ -53,7 +43,7 @@ export interface IDIDDeactivateRequest {
     jobId: string | null
     did: string
     options: Record<string, any>, 
-    secret: Record<string, any>
+    secret: ISecret
 }
 
 export interface IDidResponse {
@@ -67,7 +57,7 @@ export interface IDidState {
     state: IState
     action?: IAction
     did: string
-    secret: Record<string, any>
+    secret: ISecret
     didDocument: DIDDocument
 }
 
@@ -88,4 +78,8 @@ export enum IAction {
 export interface ISignInfo {
     verificationMethodId: string,
     signature: string
+}
+
+export interface ISecret {
+    signingResponse?: ISignInfo[]
 }

@@ -1,9 +1,7 @@
-import { ISignInputs, MsgCreateDidPayload } from '@cheqd/sdk/build/types'
+import { DIDDocument, ISignInputs } from '@cheqd/sdk/build/types'
 import { AlternativeUri } from '@cheqd/ts-proto/cheqd/resource/v2'
 
 import { NetworkType } from '../service/cheqd'
-
-export type IdentifierPayload = Partial<MsgCreateDidPayload>
 
 export interface IDIDCreateRequest {
     jobId: string | null
@@ -16,7 +14,7 @@ export interface IDIDCreateRequest {
         keys?: ISignInputs[],
         signingResponse?: ISignInfo[]
     },
-    didDocument: IdentifierPayload
+    didDocument: DIDDocument
 }
 
 export interface IDIDUpdateRequest {
@@ -28,7 +26,7 @@ export interface IDIDUpdateRequest {
         signingResponse?: ISignInfo[]
     },
     didDocumentOperation: DidDocumentOperation[]
-    didDocument: IdentifierPayload[]
+    didDocument: DIDDocument[]
 }
 
 export interface IResourceCreateRequest {
@@ -70,7 +68,7 @@ export interface IDidState {
     action?: IAction
     did: string
     secret: Record<string, any>
-    didDocument: Record<string, any>
+    didDocument: DIDDocument
 }
 
 export enum IState {

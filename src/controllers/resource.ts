@@ -61,7 +61,7 @@ export class ResourceController {
                         jobId,
                         resourceState: {
                             resourceId: storeData.resource.id,
-                            state: "finished",
+                            state: IState.Finished,
                             secret,
                             resource: storeData.resource
                         }

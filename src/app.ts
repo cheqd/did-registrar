@@ -32,8 +32,8 @@ class App {
         app.get('/', (req, res) => res.redirect('api-docs'))
 
         // did-registrar
-        app.post(`${URL_PREFIX}/create`, DidController.createValidator, DidController.secretValidator, new DidController().create)
-        app.post(`${URL_PREFIX}/update`, DidController.updateValidator, DidController.secretValidator, new DidController().update)
+        app.post(`${URL_PREFIX}/create`, DidController.didDocValidator, DidController.secretValidator, new DidController().create)
+        app.post(`${URL_PREFIX}/update`, DidController.updateValidator, DidController.didDocValidator, DidController.secretValidator, new DidController().update)
         app.post(`${URL_PREFIX}/deactivate`, DidController.deactivateValidator, DidController.secretValidator, new DidController().deactivate)
         app.post(`${URL_PREFIX}/:did/create-resource`, ResourceController.createValidator, new ResourceController().create)
 

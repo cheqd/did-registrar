@@ -1,15 +1,16 @@
-import { MsgCreateDidPayload, MsgDeactivateDidPayload, VerificationMethodPayload } from "@cheqd/sdk/build/types";
+import { DIDModule } from "@cheqd/sdk";
+import { DIDDocument, VerificationMethod } from "@cheqd/sdk/build/types";
 import { MsgCreateDidDocPayload, MsgDeactivateDidDocPayload } from "@cheqd/ts-proto/cheqd/did/v2";
 import { MsgCreateResourcePayload } from "@cheqd/ts-proto/cheqd/resource/v2";
 
 import { toString } from "uint8arrays"
 
 import { Messages } from "../types/constants";
-import { IAction, IdentifierPayload, IState } from "../types/types";
+import { IAction, IState } from "../types/types";
 
 export class Responses {
 
-    static GetSuccessResponse(jobId: string, didDocument: IdentifierPayload, secret: Record<string, any>) {
+    static GetSuccessResponse(jobId: string, didDocument: DIDDocument, secret: Record<string, any>) {
         return {
             jobId,
             didState: {
@@ -21,16 +22,29 @@ export class Responses {
         }
     }
 
-    static GetDIDActionSignatureResponse(jobId: string, didDocument: IdentifierPayload) {
-        const signingRequest =  didDocument.verificationMethod!.map((method)=> {
+    static async GetDIDActionSignatureResponse(jobId: string, didPayload: DIDDocument, versionId: string) {
+        const { protobufVerificationMethod, protobufService } = await DIDModule.validateSpecCompliantPayload(didPayload)
+        const signingRequest =  didPayload.verificationMethod!.map((method)=> {
             return {
                 kid: method.id,
                 type: method.type,
                 alg: 'EdDSA',
                 serializedPayload: toString(
                     (
-                        MsgCreateDidDocPayload.encode(
-                        MsgCreateDidPayload.transformPayload(didDocument)).finish()
+                        MsgCreateDidDocPayload.encode(MsgCreateDidDocPayload.fromPartial({
+                            context: <string[]>didPayload?.['@context'],
+                            id: didPayload.id,
+                            controller: <string[]>didPayload.controller,
+                            verificationMethod: protobufVerificationMethod,
+                            authentication: <string[]>didPayload.authentication,
+                            assertionMethod: <string[]>didPayload.assertionMethod,
+                            capabilityInvocation: <string[]>didPayload.capabilityInvocation,
+                            capabilityDelegation: <string[]>didPayload.capabilityDelegation,
+                            keyAgreement: <string[]>didPayload.keyAgreement,
+                            service: protobufService,
+                            alsoKnownAs: <string[]>didPayload.alsoKnownAs,
+                            versionId: versionId
+                        })).finish()
                     ),
                     'base64pad'
                 )          
@@ -40,7 +54,7 @@ export class Responses {
         return {
             jobId,
             didState: {
-                did: didDocument.id,
+                did: didPayload.id,
                 state: IState.Action,
                 action: IAction.GetSignature,
                 description: Messages.GetSignature,
@@ -52,7 +66,7 @@ export class Responses {
         }
     }
 
-    static GetDeactivateDidSignatureResponse(jobId: string, payload: MsgDeactivateDidPayload) {
+    static GetDeactivateDidSignatureResponse(jobId: string, payload: DIDDocument, versionId: string) {
         const signingRequest =  payload.verificationMethod!.map((method)=> {
             return {
                 kid: method.id,
@@ -62,8 +76,8 @@ export class Responses {
                     (
                         MsgDeactivateDidDocPayload.encode({
                             id: payload.id,
-                            versionId: payload.versionId
-                        } as MsgCreateDidDocPayload).finish()
+                            versionId: versionId
+                        }).finish()
                     ),
                     'base64pad'
                 )          
@@ -85,7 +99,7 @@ export class Responses {
         }       
     }
 
-    static GetResourceActionSignatureResponse(jobId: string, verificationMethod: VerificationMethodPayload[], resource: Partial<MsgCreateResourcePayload>) {
+    static GetResourceActionSignatureResponse(jobId: string, verificationMethod: VerificationMethod[], resource: Partial<MsgCreateResourcePayload>) {
         const signingRequest =  verificationMethod.map((method)=> {
             return {
                 kid: method.id,
@@ -96,7 +110,7 @@ export class Responses {
                         MsgCreateResourcePayload.encode(MsgCreateResourcePayload.fromPartial(resource)).finish()
                     ),
                     'base64pad'
-                )          
+                )
             }
         })
 
@@ -115,11 +129,11 @@ export class Responses {
         }
     }
 
-    static GetInvalidResponse(didDocument: IdentifierPayload = {}, secret: Record<string, any> = {}, error: string) {
+    static GetInvalidResponse(didDocument: DIDDocument | undefined, secret: Record<string, any> = {}, error: string) {
         return {
             jobId: null,
             didState: {
-                did: didDocument.id || '',
+                did: didDocument?.id || '',
                 state: IState.Failed,
                 reason: Messages.Invalid,
                 description: Messages.Invalid + ": " + error,
@@ -129,7 +143,7 @@ export class Responses {
         }
     }
 
-    static GetInternalErrorResponse(didDocument: IdentifierPayload, secret: Record<string, any>, error?: string) {
+    static GetInternalErrorResponse(didDocument: DIDDocument | undefined, secret: Record<string, any>, error?: string) {
         return {
             jobId: null,
             didState: {
@@ -157,7 +171,7 @@ export class Responses {
             jobId,
             resourceState: {
                 resourceId: resourcePayload.id || '',
-                state: "finished",
+                state: IState.Finished,
                 secret,
                 resource: resourcePayload
             }

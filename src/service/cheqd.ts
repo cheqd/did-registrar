@@ -1,7 +1,7 @@
 import type { ICheqdSDKOptions } from '@cheqd/sdk'
 import { CheqdSDK, createCheqdSDK, DIDModule, ResourceModule } from '@cheqd/sdk'
 import type { AbstractCheqdSDKModule } from '@cheqd/sdk/build/modules/_'
-import type { ISignInputs, MsgCreateDidPayload, MsgDeactivateDidPayload, MsgUpdateDidPayload } from '@cheqd/sdk/build/types'
+import type { ISignInputs, DIDDocument } from '@cheqd/sdk/build/types'
 import { MsgCreateResourcePayload } from '@cheqd/ts-proto/cheqd/resource/v2'
 import { SignInfo } from '@cheqd/ts-proto/cheqd/did/v2'
 import { DirectSecp256k1HdWallet } from '@cosmjs/proto-signing'
@@ -73,7 +73,7 @@ export class CheqdRegistrar {
         return this.sdk
     }
 
-    public async create(signInputs: ISignInputs[] | SignInfo[], didPayload: Partial<MsgCreateDidPayload>) {
+    public async create(signInputs: ISignInputs[] | SignInfo[], didPayload: DIDDocument, versionId: string | undefined) {
         return await this.forceGetSdk()
         .createDidTx(
             signInputs,
@@ -81,11 +81,12 @@ export class CheqdRegistrar {
             this.address!,
             { amount: [{ denom: 'ncheq', amount: Fee.CreateDid }], gas: Fee.Gas, payer: this.address },
             undefined,
+            versionId,
             { sdk: this.forceGetSdk() }
         )
     }
 
-    public async update(signInputs: ISignInputs[] | SignInfo[], didPayload: Partial<MsgUpdateDidPayload>) {
+    public async update(signInputs: ISignInputs[] | SignInfo[], didPayload: DIDDocument, versionId: string | undefined) {
         return await this.forceGetSdk()
         .updateDidTx(
             signInputs,
@@ -93,11 +94,12 @@ export class CheqdRegistrar {
             this.address!,
             { amount: [{ denom: 'ncheq', amount: Fee.UpdateDid }], gas: Fee.Gas, payer: this.address },
             undefined,
+            versionId,
             { sdk: this.forceGetSdk() }
         )
     }
 
-    public async deactivate(signInputs: ISignInputs[] | SignInfo[], didPayload: MsgDeactivateDidPayload) {
+    public async deactivate(signInputs: ISignInputs[] | SignInfo[], didPayload: DIDDocument, versionId: string | undefined) {
         return await this.forceGetSdk()
         .deactivateDidTx(
             signInputs,
@@ -105,6 +107,7 @@ export class CheqdRegistrar {
             this.address!,
             { amount: [{ denom: 'ncheq', amount: Fee.DeactivateDid }], gas: Fee.Gas, payer: this.address },
             undefined,
+            versionId,
             { sdk: this.forceGetSdk() }
         )
     }

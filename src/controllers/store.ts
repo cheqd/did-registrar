@@ -1,9 +1,9 @@
-import { MsgDeactivateDidPayload } from '@cheqd/sdk/build/types';
+import { DIDDocument } from '@cheqd/sdk/build/types';
 import { MsgCreateResourcePayload } from '@cheqd/ts-proto/cheqd/resource/v2';
 
 import NodeCache from 'node-cache'
 
-import { IdentifierPayload, IState } from '../types/types';
+import { IState } from '../types/types';
 
 export class LocalStore {
     private cache: NodeCache
@@ -33,8 +33,9 @@ export class LocalStore {
 
 
 export interface IDidDocData {
-    didDocument: IdentifierPayload | MsgDeactivateDidPayload
+    didDocument: DIDDocument
     state: IState
+    versionId: string
 }
 
 export interface IResourceData {

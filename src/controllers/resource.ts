@@ -2,7 +2,6 @@ import { Request, Response } from 'express'
 import { check, param, validationResult } from 'express-validator'
 
 import { MsgCreateResourcePayload } from '@cheqd/ts-proto/cheqd/resource/v2'
-import { ISignInputs } from '@cheqd/sdk/build/types'
 import { SignInfo } from '@cheqd/ts-proto/cheqd/did/v2'
 
 import { v4 } from 'uuid'
@@ -86,10 +85,10 @@ export class ResourceController {
                 }
             }
             
-            let signInputs: ISignInputs[] | SignInfo[]
+            let signInputs: SignInfo[]
             
-            if (secret.signingResponse ||  secret.keys) {
-                signInputs = secret.signingResponse ? convertToSignInfo(secret.signingResponse) : secret.keys!
+            if (secret.signingResponse) {
+                signInputs = convertToSignInfo(secret.signingResponse)
             } else {
                 LocalStore.instance.setResource(jobId, {resource: resourcePayload, state: IState.Action})
                 return response.status(200).json(Responses.GetResourceActionSignatureResponse(

@@ -1,7 +1,7 @@
 import type { ICheqdSDKOptions } from '@cheqd/sdk'
 import { CheqdSDK, createCheqdSDK, DIDModule, ResourceModule } from '@cheqd/sdk'
 import type { AbstractCheqdSDKModule } from '@cheqd/sdk/build/modules/_'
-import type { ISignInputs, DIDDocument } from '@cheqd/sdk/build/types'
+import type { DIDDocument } from '@cheqd/sdk/build/types'
 import { MsgCreateResourcePayload } from '@cheqd/ts-proto/cheqd/resource/v2'
 import { SignInfo } from '@cheqd/ts-proto/cheqd/did/v2'
 import { DirectSecp256k1HdWallet } from '@cosmjs/proto-signing'
@@ -73,7 +73,7 @@ export class CheqdRegistrar {
         return this.sdk
     }
 
-    public async create(signInputs: ISignInputs[] | SignInfo[], didPayload: DIDDocument, versionId: string | undefined) {
+    public async create(signInputs: SignInfo[], didPayload: DIDDocument, versionId: string | undefined) {
         return await this.forceGetSdk()
         .createDidTx(
             signInputs,
@@ -86,7 +86,7 @@ export class CheqdRegistrar {
         )
     }
 
-    public async update(signInputs: ISignInputs[] | SignInfo[], didPayload: DIDDocument, versionId: string | undefined) {
+    public async update(signInputs: SignInfo[], didPayload: DIDDocument, versionId: string | undefined) {
         return await this.forceGetSdk()
         .updateDidTx(
             signInputs,
@@ -99,7 +99,7 @@ export class CheqdRegistrar {
         )
     }
 
-    public async deactivate(signInputs: ISignInputs[] | SignInfo[], didPayload: DIDDocument, versionId: string | undefined) {
+    public async deactivate(signInputs: SignInfo[], didPayload: DIDDocument, versionId: string | undefined) {
         return await this.forceGetSdk()
         .deactivateDidTx(
             signInputs,
@@ -112,7 +112,7 @@ export class CheqdRegistrar {
         )
     }
 
-    public async createResource(signInputs: ISignInputs[] | SignInfo[], resourcePayload: Partial<MsgCreateResourcePayload>) {
+    public async createResource(signInputs: SignInfo[], resourcePayload: Partial<MsgCreateResourcePayload>) {
         return await this.forceGetSdk().createResourceTx(
             signInputs,
             resourcePayload,

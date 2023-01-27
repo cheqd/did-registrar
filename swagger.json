@@ -320,74 +320,10 @@
                         "$ref": "#/components/schemas/Options"
                     },
                     "secret": {
-                        "description": "This input field accepts a seed or an array of keyPairs</a>.",
-                        "type": "object",
-                        "properties": {
-                            "seed": {
-                                "type": "string"
-                            },
-                            "keys": {
-                                "type": "array",
-                                "items": {
-                                    "$ref": "#/components/schemas/KeyPair"
-                                }
-                            },
-                            "signingResponse": {
-                                "type": "array",
-                                "items": {
-                                    "$ref": "#/components/schemas/SigningResponse"
-                                }
-                            }
-                        },
-                        "example": {
-                            "keys": [
-                                {
-                                    "verificationMethodId": "",
-                                    "privateKeyHex": "",
-                                    "publicKeyHex": ""
-                                }
-                            ]
-                        }
+                        "$ref": "#/components/schemas/SigningResponse"
                     },
                     "didDocument": {
-                        "type": "object",
-                        "properties": {
-                            "service": {
-                                "$ref": "#/components/schemas/Service"
-                            }
-                        }
-                    }
-                },
-                "example": {
-                    "options": {
-                        "network": "testnet"
-                    },
-                    "secret": {
-                        "keys": [
-                            {
-                                "verificationMethodId": "",
-                                "privateKeyHex": "",
-                                "publicKeyHex": ""
-                            }
-                        ]
-                    },
-                    "didDocument": {
-                        "id": "did:cheqd:testnet:ca9ff47c-0286-4614-a4be-8ffa83911e09",
-                        "controller": [
-                            "did:cheqd:testnet:ca9ff47c-0286-4614-a4be-8ffa83911e09"
-                        ],
-                        "verificationMethod": [
-                            {
-                                "id": "did:cheqd:testnet:ca9ff47c-0286-4614-a4be-8ffa83911e09#key-1",
-                                "type": "Ed25519VerificationKey2020",
-                                "controller": "did:cheqd:testnet:ca9ff47c-0286-4614-a4be-8ffa83911e09",
-                                "publicKeyMultibase": "z6Mkt9Vg1a1Jbg5a1NkToUeWH23Z33TwGUua5MrqAYUz2AL3"
-                            }
-                        ],
-                        "authentication": [
-                            "did:cheqd:testnet:ca9ff47c-0286-4614-a4be-8ffa83911e09#key-1"
-                        ],
-                        "versionId": "0e184437-b498-4961-978f-116ffba7962c"
+                        "$ref": "#/components/schemas/DidDocument"
                     }
                 }
             },
@@ -409,22 +345,7 @@
                         "$ref": "#/components/schemas/Options"
                     },
                     "secret": {
-                        "description": "This input field requires a keyPair</a>.",
-                        "type": "object",
-                        "properties": {
-                            "keys": {
-                                "type": "array",
-                                "items": {
-                                    "$ref": "#/components/schemas/KeyPair"
-                                }
-                            },
-                            "signingResponse": {
-                                "type": "array",
-                                "items": {
-                                    "$ref": "#/components/schemas/SigningResponse"
-                                }
-                            }
-                        }
+                        "$ref": "#/components/schemas/SigningResponse"
                     },
                     "didDocumentOperation": {
                         "type": "array",
@@ -495,35 +416,11 @@
                         "$ref": "#/components/schemas/Options"
                     },
                     "secret": {
-                        "description": "This input field requires a keyPair</a>.",
-                        "type": "object",
-                        "properties": {
-                            "keys": {
-                                "type": "array",
-                                "items": {
-                                    "$ref": "#/components/schemas/KeyPair"
-                                }
-                            },
-                            "signingResponse": {
-                                "type": "array",
-                                "items": {
-                                    "$ref": "#/components/schemas/SigningResponse"
-                                }
-                            }
-                        }
+                        "$ref": "#/components/schemas/Secret"
                     }
                 },
                 "example": {
-                    "did": "did:cheqd:testnet:ca9ff47c-0286-4614-a4be-8ffa83911e09",
-                    "secret": {
-                        "keys": [
-                            {
-                                "verificationMethodId": "",
-                                "privateKeyHex": "",
-                                "publicKeyHex": ""
-                            }
-                        ]
-                    }
+                    "did": "did:cheqd:testnet:ca9ff47c-0286-4614-a4be-8ffa83911e09"
                 }
             },
             "CreateResourceRequest": {
@@ -583,16 +480,7 @@
                 "example": {
                     "data": "SGVsbG8gV29ybGQ=",
                     "name": "ResourceName",
-                    "type": "TextDocument",
-                    "secret": {
-                        "keys": [
-                            {
-                                "verificationMethodId": "",
-                                "privateKeyHex": "",
-                                "publicKeyHex": ""
-                            }
-                        ]
-                    }
+                    "type": "TextDocument"
                 }
             },
             "CreateState": {
@@ -678,44 +566,10 @@
                         "example": "did:cheqd:testnet:ca9ff47c-0286-4614-a4be-8ffa83911e09"
                     },
                     "secret": {
-                        "type": "object",
-                        "example": {
-                            "keys": [
-                                {
-                                    "verificationMethodId": "did:cheqd:testnet:ca9ff47c-0286-4614-a4be-8ffa83911e09",
-                                    "publicKeyHex": "keaiUef4jaPvupBpC2IK9/H/yd/OPsgxCADOgftuLQc",
-                                    "privateKeyHex": "Z0FhWmllZzNtbExTZVJId1RzNUhTa1dIOG5TWnNpRkSR5qJR5"
-                                }
-                            ]
-                        }
+                        "$ref": "#/components/schemas/Secret"
                     },
                     "didDocument": {
-                        "type": "object",
-                        "example": {
-                            "context": [],
-                            "id": "did:cheqd:testnet:ca9ff47c-0286-4614-a4be-8ffa83911e09",
-                            "controller": [
-                                "did:cheqd:testnet:ca9ff47c-0286-4614-a4be-8ffa83911e09"
-                            ],
-                            "verificationMethod": [
-                                {
-                                    "id": "did:cheqd:testnet:ca9ff47c-0286-4614-a4be-8ffa83911e09#key-1",
-                                    "type": "Ed25519VerificationKey2020",
-                                    "controller": "did:cheqd:testnet:ca9ff47c-0286-4614-a4be-8ffa83911e09",
-                                    "publicKeyMultibase": "z6Mkt9Vg1a1Jbg5a1NkToUeWH23Z33TwGUua5MrqAYUz2AL3"
-                                }
-                            ],
-                            "authentication": [
-                                "did:cheqd:testnet:ca9ff47c-0286-4614-a4be-8ffa83911e09#key-1"
-                            ],
-                            "assertionMethod": [],
-                            "capabilityInvocation": [],
-                            "capabilityDelegation": [],
-                            "keyAgreement": [],
-                            "alsoKnownAs": [],
-                            "service": [],
-                            "versionId": "0e184437-b498-4961-978f-116ffba7962c"
-                        }
+                        "$ref": "#/components/schemas/DidDocument"
                     }
                 }
             },
@@ -723,21 +577,17 @@
                 "description": "This input field contains an object with DID controller keys and other secrets needed for performing the DID deactivate operation. See <a href=\"https://identity.foundation/did-registration/#secret\">https://identity.foundation/did-registration/#secret</a>.",
                 "type": "object",
                 "properties": {
-                    "seed": {
-                        "type": "string",
-                        "example": "72WGp7NgFR1Oqdi8zlt7jQQ434XR0cNQ"
-                    },
-                    "keys": {
-                        "type": "array",
-                        "items": {
-                            "$ref": "#/components/schemas/KeyPair"
-                        }
-                    },
                     "sigingResponse": {
                         "type": "array",
                         "items": {
                             "$ref": "#/components/schemas/SigningResponse"
-                        }
+                        },
+                        "example": [
+                            {
+                                "verificationMethodId": "did:cheqd:testnet:ca9ff47c-0286-4614-a4be-8ffa83911e09",
+                                "signature": "keaiUef4jaPvupBpC2IK9/H/yd/OPsgxCADOgftuLQc"
+                            }
+                        ]
                     }
                 }
             },
@@ -846,6 +696,23 @@
                             "$ref": "#/components/schemas/Service"
                         }
                     }
+                },
+                "example": {
+                    "id": "did:cheqd:testnet:ca9ff47c-0286-4614-a4be-8ffa83911e09",
+                    "controller": [
+                        "did:cheqd:testnet:ca9ff47c-0286-4614-a4be-8ffa83911e09"
+                    ],
+                    "verificationMethod": [
+                        {
+                            "id": "did:cheqd:testnet:ca9ff47c-0286-4614-a4be-8ffa83911e09#key-1",
+                            "type": "Ed25519VerificationKey2020",
+                            "controller": "did:cheqd:testnet:ca9ff47c-0286-4614-a4be-8ffa83911e09",
+                            "publicKeyMultibase": "z6Mkt9Vg1a1Jbg5a1NkToUeWH23Z33TwGUua5MrqAYUz2AL3"
+                        }
+                    ],
+                    "authentication": [
+                        "did:cheqd:testnet:ca9ff47c-0286-4614-a4be-8ffa83911e09#key-1"
+                    ]
                 }
             },
             "VerificationMethod": {

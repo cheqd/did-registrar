@@ -185,7 +185,7 @@ export class DidController {
             ))
         }
 
-        let { jobId, secret={}, options, did } = request.body as IDIDUpdateRequest
+        let { jobId, secret={}, options={}, did } = request.body as IDIDUpdateRequest
 
         let payload: DIDDocument
         let versionId: string
@@ -199,7 +199,7 @@ export class DidController {
                 }
 
                 payload = storeData.didDocument
-                did =  storeData.didDocument.id!
+                did =  storeData.didDocument.id
                 versionId = storeData.versionId
             } else {
                 jobId = v4()
@@ -231,7 +231,7 @@ export class DidController {
 
             options.network = options?.network || ((did!.split(':'))[2] as NetworkType)
             await CheqdRegistrar.instance.connect(options)
-            const result = await CheqdRegistrar.instance.deactivate(signInputs, payload, v4())
+            const result = await CheqdRegistrar.instance.deactivate(signInputs, payload, versionId)
             if ( result.code == 0 ) {
                 return response.status(201).json(Responses.GetSuccessResponse(
                     jobId,

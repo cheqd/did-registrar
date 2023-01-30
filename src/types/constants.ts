@@ -4,7 +4,7 @@ export enum Messages {
     TryAgain = "The operation failed due to an internal error. Please try again",
     GetSignature = "Please sign the following payload with the keys in verificationMethod and Add the signingResponse in secret",
     DidNotFound = "The DID does not exist or Deactivated",
-    InvalidDidDocument = "Provide a valid DID Document with atleast one verification method",
+    InvalidDidDocument = "Provide a DID Document with atleast one valid verification method",
     InvalidDid = "The DID is not valid",
     InvalidJob = "The jobId is either expired or not found",
     SecretValidation = "Provide either a valid KeyPair or Signature",

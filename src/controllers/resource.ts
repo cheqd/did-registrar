@@ -32,14 +32,12 @@ export class ResourceController {
         }
 
         const { did } = request.params
-        
-        let { jobId, data, name, type, alsoKnownAs, version, secret={} } = request.body as IResourceCreateRequest
+        let { jobId, data, name, type, alsoKnownAs, version, secret={}, options={} } = request.body as IResourceCreateRequest
         
         let resourcePayload: Partial<MsgCreateResourcePayload> = {}
         try {
             // check if did is registered on the ledger
             let resolvedDocument = await CheqdResolver(did)
-
             if(!resolvedDocument?.didDocument) {
                 return response.status(400).send(Responses.GetInvalidResponse(
                     {id: did}, 
@@ -98,7 +96,8 @@ export class ResourceController {
                 ))
             }
 
-            await CheqdRegistrar.instance.connect((did.split(':'))[2] == NetworkType.Mainnet ? NetworkType.Mainnet : NetworkType.Testnet)
+            options.network = options.network || (did.split(':'))[2] as NetworkType
+            await CheqdRegistrar.instance.connect(options)
             const result = await CheqdRegistrar.instance.createResource(signInputs, resourcePayload)      
             if ( result.code == 0 ) {
                 return response.status(201).json(Responses.GetResourceSuccessResponse(jobId, secret, resourcePayload))

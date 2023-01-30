@@ -38,7 +38,7 @@ export class ResourceController {
         try {
             // check if did is registered on the ledger
             let resolvedDocument = await CheqdResolver(did)
-            if(!resolvedDocument?.didDocument) {
+            if(!resolvedDocument?.didDocument || resolvedDocument.didDocumentMetadata.deactivated) {
                 return response.status(400).send(Responses.GetInvalidResponse(
                     {id: did}, 
                     secret, 

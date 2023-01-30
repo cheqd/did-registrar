@@ -10,5 +10,7 @@ export enum Messages {
     SecretValidation = "Provide either a valid KeyPair or Signature",
     InvalidResource = "Resource Data is invalid",
     TestnetFaucet = "sketch mountain erode window enact net enrich smoke claim kangaroo another visual write meat latin bacon pulp similar forum guilt father state erase bright",
-    SigingResponse = "e.g. { verificationMethodId: did:cheqd:testnet:qsqdcansoica#key-1, signature: aca1s12q14213casdvaadcfas }"
+    SigingResponse = "e.g. { verificationMethodId: did:cheqd:testnet:qsqdcansoica#key-1, signature: aca1s12q14213casdvaadcfas }",
+    InvalidOptions = "The provided options are invalid",
+    InvalidSecret = "The provided secret is invalid"
 }

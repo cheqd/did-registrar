@@ -22,7 +22,11 @@ export class DidController {
                 return valid
             }
             return true
-        }).withMessage(Messages.InvalidDidDocument)
+        }).withMessage(Messages.InvalidDidDocument),
+        check('options.versionId').optional().isString().withMessage(Messages.InvalidOptions),
+        check('secret.signingResponse').optional().isArray().withMessage(Messages.InvalidSecret),
+        check('secret.signingResponse.*.signature').isString().withMessage(Messages.InvalidSecret),
+        check('secret.signingResponse.*.verificationMethodId').isString().withMessage(Messages.InvalidSecret)
     ]
 
     public static updateValidator = [
@@ -35,7 +39,8 @@ export class DidController {
         check('did').custom((value, {req})=>{
             if(!value && !req.body.jobId) return false
             return true
-        }).withMessage(Messages.InvalidDid)
+        }).withMessage(Messages.InvalidDid),
+        check('did').optional().isString().withMessage(Messages.InvalidDid).contains('did:cheqd:').withMessage(Messages.InvalidDid)
     ]
 
     public async create(request: Request, response: Response) {
@@ -64,7 +69,7 @@ export class DidController {
             versionId = storeData.versionId
         } else {
             jobId = v4()
-            versionId = v4()
+            versionId = options.versionId || v4()
         }
         
         let signInputs: SignInfo[]
@@ -130,7 +135,7 @@ export class DidController {
 
                 updatedDocument = didDocument[0]
                 jobId = v4()
-                versionId = v4()
+                versionId = options.versionId || v4()
             } else {
                 const storeData = LocalStore.instance.getItem(jobId)
                 if(!storeData) {
@@ -180,7 +185,7 @@ export class DidController {
             ))
         }
 
-        let { jobId, secret={}, options, did } = request.body as IDIDUpdateRequest
+        let { jobId, secret={}, options={}, did } = request.body as IDIDUpdateRequest
 
         let payload: DIDDocument
         let versionId: string
@@ -194,11 +199,11 @@ export class DidController {
                 }
 
                 payload = storeData.didDocument
-                did =  storeData.didDocument.id!
+                did =  storeData.didDocument.id
                 versionId = storeData.versionId
             } else {
                 jobId = v4()
-                versionId = v4()
+                versionId = options.versionId || v4()
                 // check if did is registered on the ledger
                 let resolvedDocument = await CheqdResolver(did)
                 
@@ -226,7 +231,7 @@ export class DidController {
 
             options.network = options?.network || ((did!.split(':'))[2] as NetworkType)
             await CheqdRegistrar.instance.connect(options)
-            const result = await CheqdRegistrar.instance.deactivate(signInputs, payload, v4())
+            const result = await CheqdRegistrar.instance.deactivate(signInputs, payload, versionId)
             if ( result.code == 0 ) {
                 return response.status(201).json(Responses.GetSuccessResponse(
                     jobId,
@@ -243,7 +248,5 @@ export class DidController {
         } catch (error) {
             return response.status(500).json(Responses.GetInternalErrorResponse({id: did}, secret, error as string))
         }
-
-
     }
 }

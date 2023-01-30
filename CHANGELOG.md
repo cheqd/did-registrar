@@ -1,5 +1,18 @@
 # Changelog
 
+## [2.0.0-develop.1](https://github.com/cheqd/did-registrar/compare/1.2.0-develop.3...2.0.0-develop.1) (2023-01-30)
+
+
+### ⚠ BREAKING CHANGES
+
+* Refactor code according to latest sdk
+
+### Features
+
+* Refactor code according to latest sdk ([efcc992](https://github.com/cheqd/did-registrar/commit/efcc9923ec8285a082caf09020c5cbfb453746e6))
+* Remove internal secret mode ([1978583](https://github.com/cheqd/did-registrar/commit/1978583e434c08b6e31e37f6d2342d9df09f138d))
+* Upgrade sdk && refactor ([8854932](https://github.com/cheqd/did-registrar/commit/8854932a8b8cf33d5aef5ab19770a8052b197846))
+
 ## [1.2.0-develop.3](https://github.com/cheqd/did-registrar/compare/1.2.0-develop.2...1.2.0-develop.3) (2023-01-25)
 
 

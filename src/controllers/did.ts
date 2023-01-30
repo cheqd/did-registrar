@@ -6,21 +6,19 @@ import { SignInfo } from '@cheqd/ts-proto/cheqd/did/v2'
 
 import { v4 } from 'uuid'
 
-import { convertToSignInfo } from '../helpers/helpers'
+import { convertToSignInfo, validateSpecCompliantPayload } from '../helpers/helpers'
 import { Responses } from '../helpers/response'
 import { CheqdRegistrar, CheqdResolver, NetworkType } from '../service/cheqd'
 import { Messages } from '../types/constants'
 import { DidDocumentOperation, IDIDCreateRequest, IDIDUpdateRequest, IState } from '../types/types'
 import { LocalStore } from './store'
-import { DIDModule } from '@cheqd/sdk'
 
 export class DidController {
 
     public static didDocValidator = [
-        check('didDocument').custom(async (value, {req})=>{
-            if((!value || !value.verificationMethod?.length) && !req.body.jobId) return false
-            else if(value) {
-                const { valid } = await DIDModule.validateSpecCompliantPayload(value)
+        check('didDocument').custom((value, {req})=>{
+            if(!req.body.jobId && value) {
+                const {valid} = validateSpecCompliantPayload(value)
                 return valid
             }
             return true
@@ -51,7 +49,7 @@ export class DidController {
             ))
         }
         
-        let {jobId, secret={}, options, didDocument} = request.body as IDIDCreateRequest
+        let {jobId, secret={}, options={}, didDocument} = request.body as IDIDCreateRequest
         let versionId: string
         // Validate and get store data if any
         if(jobId) {
@@ -78,10 +76,10 @@ export class DidController {
             return response.status(200).json(await Responses.GetDIDActionSignatureResponse(jobId, didDocument, versionId))
         }
 
-        const networkType = options?.network || ((didDocument.id!.split(':'))[2] === NetworkType.Testnet ? NetworkType.Testnet : NetworkType.Mainnet)
-
+        options.network = options?.network || ((didDocument.id!.split(':'))[2] as NetworkType)
+        
         try {
-            await CheqdRegistrar.instance.connect(networkType)
+            await CheqdRegistrar.instance.connect(options)
             const result = await CheqdRegistrar.instance.create(signInputs, didDocument, versionId)
             if ( result.code == 0 ) {
                 LocalStore.instance.setItem(jobId, {didDocument, state: IState.Finished, versionId})
@@ -113,7 +111,7 @@ export class DidController {
             ))
         }
 
-        let { jobId, secret={}, options, didDocument, did } = request.body as IDIDUpdateRequest 
+        let { jobId, secret={}, options={}, didDocument, did } = request.body as IDIDUpdateRequest 
 
         let updatedDocument: DIDDocument | undefined
         let versionId: string
@@ -154,7 +152,8 @@ export class DidController {
                 return response.status(200).json(await Responses.GetDIDActionSignatureResponse(jobId, updatedDocument, versionId))
             }
 
-            await CheqdRegistrar.instance.connect(options?.network || (did.split(':'))[2])
+            options.network = options?.network || (did!.split(':'))[2] as NetworkType
+            await CheqdRegistrar.instance.connect(options)
             const result = await CheqdRegistrar.instance.update(signInputs, updatedDocument, versionId)
             if ( result.code == 0 ) {
                 return response.status(201).json(Responses.GetSuccessResponse(jobId, updatedDocument, secret))
@@ -225,7 +224,8 @@ export class DidController {
                 return response.status(200).json(Responses.GetDeactivateDidSignatureResponse(jobId, payload, versionId))
             }
 
-            await CheqdRegistrar.instance.connect(options?.network || (did.split(':'))[2])
+            options.network = options?.network || ((did!.split(':'))[2] as NetworkType)
+            await CheqdRegistrar.instance.connect(options)
             const result = await CheqdRegistrar.instance.deactivate(signInputs, payload, v4())
             if ( result.code == 0 ) {
                 return response.status(201).json(Responses.GetSuccessResponse(

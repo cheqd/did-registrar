@@ -1,14 +1,11 @@
-import { DIDDocument, ISignInputs } from '@cheqd/sdk/build/types'
+import { DIDDocument, DidStdFee, ISignInputs } from '@cheqd/sdk/build/types'
 import { AlternativeUri } from '@cheqd/ts-proto/cheqd/resource/v2'
 
 import { NetworkType } from '../service/cheqd'
 
 export interface IDIDCreateRequest {
     jobId: string | null
-    options?: {
-        network: NetworkType,
-        keytype: string
-    }, 
+    options?: IOptions, 
     secret: ISecret
     didDocument: DIDDocument
 }
@@ -16,7 +13,7 @@ export interface IDIDCreateRequest {
 export interface IDIDUpdateRequest {
     jobId: string | null
     did: string
-    options: Record<string, any>
+    options: IOptions
     secret: ISecret
     didDocumentOperation: DidDocumentOperation[]
     didDocument: DIDDocument[]
@@ -25,6 +22,7 @@ export interface IDIDUpdateRequest {
 export interface IResourceCreateRequest {
     jobId: string | null
     secret: ISecret
+    options: IOptions
     data: any, 
     name: string, 
     type: string, 
@@ -82,4 +80,11 @@ export interface ISignInfo {
 
 export interface ISecret {
     signingResponse?: ISignInfo[]
+}
+
+export interface IOptions {
+    network?: NetworkType,
+    keytype?: string,
+    rpcUrl?: string,
+    fee?: DidStdFee
 }

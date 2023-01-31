@@ -14,16 +14,55 @@ The purpose of this service is to provide a [Universal Registrar driver](https:/
 
 - `/create`
 - `/update`
+- `/deactivate`
+- `/create-resource`
 - `/api-docs`
 
 ## 🧑‍💻🛠 Developer Guide
 
 ### Setup
 
-To build and run in Docker, use the [Dockerfile](Dockerfile) provided.
+#### Environment variable configuration
+
+Environment variables needed for the Registrar are
+
+1. `FEE_PAYER_TESTNET_MNEMONIC` : The cosmos payer mnemonic for the Cheqd Mainnet
+2. `FEE_PAYER_MAINNET_MNEMONIC` : The cosmos payer mnemonic for the Cheqd Tesnet, By default it's the Testnet Faucet
+3. `LOCAL_STORE_TTL` (default: `600`): The time in seconds for the registrar to store data in cache
+4. `PORT` (default: `3000`): The port number
+
+
+Clone the repository
 
 ```bash
-docker build -t cheqd-did-registrar .
+git clone git@github.com:cheqd/did-registrar.git
+cd did-registrar
+```
+
+***
+
+### Running a DID Registrar Using Docker
+
+Build Docker container image using Dockerfile:
+
+```bash
+docker build --target cheqd-did-registrar . --tag did-registrar:local
+```
+
+Run the Docker container (modify according to your own build tags and other desired parameters):
+
+```bash
+docker run -it did-registrar:local
+```
+
+***
+
+### Running a DID Registrar Locally
+
+```bash
+npm install
+npm run build
+npm start 
 ```
 
 ## 🐞 Bug reports & 🤔 feature requests

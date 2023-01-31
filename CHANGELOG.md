@@ -45,7 +45,11 @@
 * Support deactivate did tx ([ea4b28f](https://github.com/cheqd/did-registrar/commit/ea4b28f7a42f666e75f377595a79ac443dec39ac))
 * Support mnemonic secret && Update validation and swagger ([c5bafed](https://github.com/cheqd/did-registrar/commit/c5bafed3f294637f3389789d21740d25634951f9))
 
-## [1.1.3-develop.1](https://github.com/cheqd/did-registrar/compare/1.1.2...1.1.3-develop.1) (2022-10-26)
+## [1.1.5](https://github.com/cheqd/did-registrar/compare/1.1.4...1.1.5) (2022-11-29)
+
+## [1.1.4](https://github.com/cheqd/did-registrar/compare/1.1.3...1.1.4) (2022-11-09)
+
+## [1.1.3](https://github.com/cheqd/did-registrar/compare/1.1.2...1.1.3) (2022-11-03)
 
 ## [1.1.2](https://github.com/cheqd/did-registrar/compare/1.1.1...1.1.2) (2022-10-21)
 

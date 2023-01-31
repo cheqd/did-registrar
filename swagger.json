@@ -320,7 +320,7 @@
                         "$ref": "#/components/schemas/Options"
                     },
                     "secret": {
-                        "$ref": "#/components/schemas/SigningResponse"
+                        "$ref": "#/components/schemas/Secret"
                     },
                     "didDocument": {
                         "$ref": "#/components/schemas/DidDocument"

@@ -32,10 +32,10 @@ class App {
         app.get('/', (req, res) => res.redirect('api-docs'))
 
         // did-registrar
-        app.post(`${URL_PREFIX}/create`, DidController.didDocValidator, new DidController().create)
-        app.post(`${URL_PREFIX}/update`, DidController.updateValidator, DidController.didDocValidator, new DidController().update)
-        app.post(`${URL_PREFIX}/deactivate`, DidController.deactivateValidator, new DidController().deactivate)
-        app.post(`${URL_PREFIX}/:did/create-resource`, ResourceController.createValidator, new ResourceController().create)
+        app.post(`${URL_PREFIX}/create`, DidController.createValidator, DidController.commonValidator, new DidController().create)
+        app.post(`${URL_PREFIX}/update`, DidController.updateValidator, DidController.commonValidator, new DidController().update)
+        app.post(`${URL_PREFIX}/deactivate`, DidController.deactivateValidator, DidController.commonValidator, new DidController().deactivate)
+        app.post(`${URL_PREFIX}/:did/create-resource`, ResourceController.createValidator, DidController.commonValidator, new ResourceController().create)
 
         // cheqd-helpers
         app.get(`${URL_PREFIX}/key-pair`, new CheqdController().generateKeys)

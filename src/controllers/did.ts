@@ -15,14 +15,17 @@ import { LocalStore } from './store'
 
 export class DidController {
 
-    public static didDocValidator = [
+    public static createValidator = [
         check('didDocument').custom((value, {req})=>{
             if(!req.body.jobId && value) {
                 const {valid} = validateSpecCompliantPayload(value)
                 return valid
             }
             return true
-        }).withMessage(Messages.InvalidDidDocument),
+        }).withMessage(Messages.InvalidDidDocument)
+    ]
+
+    public static commonValidator = [
         check('options.versionId').optional().isString().withMessage(Messages.InvalidOptions),
         check('secret.signingResponse').optional().isArray().withMessage(Messages.InvalidSecret),
         check('secret.signingResponse.*.signature').isString().withMessage(Messages.InvalidSecret),
@@ -30,6 +33,10 @@ export class DidController {
     ]
 
     public static updateValidator = [
+        check('didDocument').optional().isArray().custom((value, {req})=>{
+            const {valid} = validateSpecCompliantPayload(value[0])
+            return valid
+        }).withMessage(Messages.InvalidDidDocument),
         check('jobId').custom((value, {req})=>value || (req.body.did && req.body.didDocument)).withMessage(Messages.Invalid),
         check('did').optional().isString().withMessage(Messages.InvalidDid).contains('did:cheqd:').withMessage(Messages.InvalidDid),
         check('didDocumentOperation').optional().isArray().custom((value) => value[0] === DidDocumentOperation.Set && value.length == 1 ).withMessage('Only Set operation is supported')

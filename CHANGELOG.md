@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.0.0-develop.2](https://github.com/cheqd/did-registrar/compare/2.0.0-develop.1...2.0.0-develop.2) (2023-01-31)
+
+
+### Bug Fixes
+
+* DID Document validation ([#73](https://github.com/cheqd/did-registrar/issues/73)) ([c963e78](https://github.com/cheqd/did-registrar/commit/c963e78535aa3c63901b865db9705e7c29da7d49))
+
 ## [2.0.0-develop.1](https://github.com/cheqd/did-registrar/compare/1.2.0-develop.3...2.0.0-develop.1) (2023-01-30)
 
 

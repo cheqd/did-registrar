@@ -21,7 +21,13 @@ export class ResourceController {
         check('jobId').custom((value, {req})=>{
             if(!value && !(req.body.name && req.body.type && req.body.data)) return false
             return true
-        }).withMessage('name, type and data are required')
+        }).withMessage('name, type and data are required'),
+        check('name').optional().isString().withMessage(Messages.Invalid),
+        check('type').optional().isString().withMessage(Messages.Invalid),
+        check('data').optional().isString().withMessage(Messages.Invalid),
+        check('alsoKnownAs').optional().isArray().withMessage(Messages.Invalid),
+        check('alsoKnownAs.*.uri').isString().withMessage(Messages.Invalid),
+        check('alsoKnownAs.*.description').isString().withMessage(Messages.Invalid)
     ]
 
     public async create(request: Request, response: Response) {

@@ -17,7 +17,7 @@ RUN npm ci
 RUN npm run build
 
 ###############################################################
-###             STAGE 2: Run did-registar app            ###
+###         STAGE 2: Run did-registar app              ###
 ###############################################################
 
 FROM node:18-alpine AS runner

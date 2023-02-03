@@ -15,7 +15,6 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       VERSION: ${{ steps.set-version.outputs.VERSION }}
-    if: ${{ ( github.ref_name == 'main' ) }}
     steps:
       - uses: actions/checkout@v3
         with:

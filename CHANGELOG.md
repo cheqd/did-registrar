@@ -1,5 +1,14 @@
 # Changelog
 
+## [2.0.0-develop.2](https://github.com/cheqd/did-registrar/compare/2.0.0-develop.1...2.0.0-develop.2) (2023-02-03)
+
+
+### Bug Fixes
+
+* DID Document validation ([#73](https://github.com/cheqd/did-registrar/issues/73)) ([c963e78](https://github.com/cheqd/did-registrar/commit/c963e78535aa3c63901b865db9705e7c29da7d49))
+* Resource validation ([91d968a](https://github.com/cheqd/did-registrar/commit/91d968a85954227b543615143e0a922dbaef5ee1))
+* **workflows:** Resolve semantic release issues [DEV-2194] ([#83](https://github.com/cheqd/did-registrar/issues/83)) ([167cbff](https://github.com/cheqd/did-registrar/commit/167cbfff31a658fc0fb19b39a4da3f64f532cbde))
+
 ## [2.0.0-develop.1](https://github.com/cheqd/did-registrar/compare/1.2.0-develop.3...2.0.0-develop.1) (2023-01-30)
 
 

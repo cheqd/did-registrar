@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.0.0-develop.4](https://github.com/cheqd/did-registrar/compare/2.0.0-develop.3...2.0.0-develop.4) (2023-02-09)
+
+
+### Bug Fixes
+
+* Create Validator ([#88](https://github.com/cheqd/did-registrar/issues/88)) ([d209213](https://github.com/cheqd/did-registrar/commit/d209213361a2375d839f00b9e5c334f82a5e2ab8))
+
 ## [2.0.0-develop.3](https://github.com/cheqd/did-registrar/compare/2.0.0-develop.2...2.0.0-develop.3) (2023-02-09)
 
 ## [2.0.0-develop.2](https://github.com/cheqd/did-registrar/compare/2.0.0-develop.1...2.0.0-develop.2) (2023-02-03)

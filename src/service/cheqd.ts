@@ -33,16 +33,8 @@ export enum DefaultResolverUrl {
     Cheqd = "https://resolver.cheqd.net"
 }
 
-export enum Fee {
-    CreateDid = '50000000000',
-    UpdateDid = '25000000000',
-    DeactivateDid = '10000000000',
-    Gas = '400000'
-}
-
 export class CheqdRegistrar {
     private sdk?: CheqdSDK
-    private address?: string
     private fee?: DidStdFee
 
     public static instance = new CheqdRegistrar()
@@ -62,11 +54,6 @@ export class CheqdRegistrar {
 
         this.sdk = await createCheqdSDK(sdkOptions)
         this.fee = options.fee
-        this.address = (await sdkOptions.wallet.getAccounts())[0].address
-
-        if(!this.address) {
-            throw new Error("Invalid signer")
-        }
 
     }
 
@@ -82,7 +69,7 @@ export class CheqdRegistrar {
         .createDidTx(
             signInputs,
             didPayload,
-            this.address!,
+            '',
             this?.fee,
             undefined,
             versionId,
@@ -95,7 +82,7 @@ export class CheqdRegistrar {
         .updateDidTx(
             signInputs,
             didPayload,
-            this.address!,
+            '',
             this?.fee,
             undefined,
             versionId,
@@ -108,7 +95,7 @@ export class CheqdRegistrar {
         .deactivateDidTx(
             signInputs,
             didPayload,
-            this.address!,
+            '',
             this?.fee,
             undefined,
             versionId,
@@ -120,7 +107,7 @@ export class CheqdRegistrar {
         return await this.forceGetSdk().createResourceTx(
             signInputs,
             resourcePayload,
-            this.address!,
+            '',
             this?.fee,
             undefined,
             { sdk: this.forceGetSdk() }

@@ -33,16 +33,8 @@ export enum DefaultResolverUrl {
     Cheqd = "https://resolver.cheqd.net"
 }
 
-export enum Fee {
-    CreateDid = '50000000000',
-    UpdateDid = '25000000000',
-    DeactivateDid = '10000000000',
-    Gas = '400000'
-}
-
 export class CheqdRegistrar {
     private sdk?: CheqdSDK
-    private address?: string
     private fee?: DidStdFee
 
     public static instance = new CheqdRegistrar()
@@ -62,11 +54,6 @@ export class CheqdRegistrar {
 
         this.sdk = await createCheqdSDK(sdkOptions)
         this.fee = options.fee
-        this.address = (await sdkOptions.wallet.getAccounts())[0].address
-
-        if(!this.address) {
-            throw new Error("Invalid signer")
-        }
 
     }
 
@@ -79,10 +66,10 @@ export class CheqdRegistrar {
 
     public async create(signInputs: SignInfo[], didPayload: DIDDocument, versionId: string | undefined) {
         return await this.forceGetSdk()
-        .createDidTx(
+        .createDidDocTx(
             signInputs,
             didPayload,
-            this.address!,
+            '',
             this?.fee,
             undefined,
             versionId,
@@ -92,10 +79,10 @@ export class CheqdRegistrar {
 
     public async update(signInputs: SignInfo[], didPayload: DIDDocument, versionId: string | undefined) {
         return await this.forceGetSdk()
-        .updateDidTx(
+        .updateDidDocTx(
             signInputs,
             didPayload,
-            this.address!,
+            '',
             this?.fee,
             undefined,
             versionId,
@@ -105,10 +92,10 @@ export class CheqdRegistrar {
 
     public async deactivate(signInputs: SignInfo[], didPayload: DIDDocument, versionId: string | undefined) {
         return await this.forceGetSdk()
-        .deactivateDidTx(
+        .deactivateDidDocTx(
             signInputs,
             didPayload,
-            this.address!,
+            '',
             this?.fee,
             undefined,
             versionId,
@@ -117,10 +104,10 @@ export class CheqdRegistrar {
     }
 
     public async createResource(signInputs: SignInfo[], resourcePayload: Partial<MsgCreateResourcePayload>) {
-        return await this.forceGetSdk().createResourceTx(
+        return await this.forceGetSdk().createLinkedResourceTx(
             signInputs,
             resourcePayload,
-            this.address!,
+            '',
             this?.fee,
             undefined,
             { sdk: this.forceGetSdk() }

@@ -66,7 +66,7 @@ export class CheqdRegistrar {
 
     public async create(signInputs: SignInfo[], didPayload: DIDDocument, versionId: string | undefined) {
         return await this.forceGetSdk()
-        .createDidTx(
+        .createDidDocTx(
             signInputs,
             didPayload,
             '',
@@ -79,7 +79,7 @@ export class CheqdRegistrar {
 
     public async update(signInputs: SignInfo[], didPayload: DIDDocument, versionId: string | undefined) {
         return await this.forceGetSdk()
-        .updateDidTx(
+        .updateDidDocTx(
             signInputs,
             didPayload,
             '',
@@ -92,7 +92,7 @@ export class CheqdRegistrar {
 
     public async deactivate(signInputs: SignInfo[], didPayload: DIDDocument, versionId: string | undefined) {
         return await this.forceGetSdk()
-        .deactivateDidTx(
+        .deactivateDidDocTx(
             signInputs,
             didPayload,
             '',
@@ -104,7 +104,7 @@ export class CheqdRegistrar {
     }
 
     public async createResource(signInputs: SignInfo[], resourcePayload: Partial<MsgCreateResourcePayload>) {
-        return await this.forceGetSdk().createResourceTx(
+        return await this.forceGetSdk().createLinkedResourceTx(
             signInputs,
             resourcePayload,
             '',

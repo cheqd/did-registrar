@@ -15,7 +15,6 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       VERSION: ${{ steps.set-version.outputs.VERSION }}
-
     steps:
       - uses: actions/checkout@v3
         with:
@@ -51,7 +50,7 @@ jobs:
         id: set-version
         run: |
           VERSION=$( git describe --tags ${{ github.sha }})
-          echo ::set-output name=VERSION::"$VERSION"
+          echo "VERSION=$VERSION" >> "$GITHUB_OUTPUT"
 
 
   release-docker:

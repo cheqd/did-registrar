@@ -1,18 +1,23 @@
 import type { ICheqdSDKOptions } from '@cheqd/sdk'
+import { CheqdSDK, createCheqdSDK, DIDModule, ResourceModule } from '@cheqd/sdk'
 import type { AbstractCheqdSDKModule } from '@cheqd/sdk/build/modules/_'
-import type { ISignInputs } from '@cheqd/sdk/build/types'
-import type { MsgCreateDidPayload, MsgUpdateDidPayload } from '@cheqd/ts-proto/cheqd/v1/tx'
-
+import type { DIDDocument, DidStdFee } from '@cheqd/sdk/build/types'
+import { MsgCreateResourcePayload } from '@cheqd/ts-proto/cheqd/resource/v2'
+import { SignInfo } from '@cheqd/ts-proto/cheqd/did/v2'
 import { DirectSecp256k1HdWallet } from '@cosmjs/proto-signing'
-import { CheqdSDK, createCheqdSDK, DIDModule } from '@cheqd/sdk'
+
 import * as dotenv from 'dotenv'
 import fetch from 'node-fetch'
 
+import { Messages } from '../types/constants'
+import { IOptions } from '../types/types'
+
 dotenv.config()
 
-const { FEE_PAYER_MNEMONIC, FEE_PAYER_ADDRESS } = process.env
-
-const FEE = { amount: [{ denom: 'ncheq', amount: '5000000' }], gas: '200000', payer: FEE_PAYER_ADDRESS }
+let { 
+    FEE_PAYER_TESTNET_MNEMONIC, 
+    FEE_PAYER_MAINNET_MNEMONIC 
+} = process.env
 
 export enum DefaultRPCUrl {
 	Mainnet = 'https://rpc.cheqd.net',
@@ -30,23 +35,26 @@ export enum DefaultResolverUrl {
 
 export class CheqdRegistrar {
     private sdk?: CheqdSDK
+    private fee?: DidStdFee
 
     public static instance = new CheqdRegistrar()
+   
+    public async connect(options: IOptions) {
+        if(options.network === NetworkType.Mainnet && !FEE_PAYER_MAINNET_MNEMONIC) {
+            throw new Error('No signer provided')
+        } else if(!FEE_PAYER_TESTNET_MNEMONIC) {
+            FEE_PAYER_TESTNET_MNEMONIC = Messages.TestnetFaucet
+        }
 
-    constructor() {
-        if(!FEE_PAYER_MNEMONIC && !FEE_PAYER_ADDRESS) {
-            throw new Error('No faucet address provided')
-        }
-    }
-    
-    public async connect(network?: NetworkType) {
-        if (this.sdk) return
         const sdkOptions: ICheqdSDKOptions = {
-            modules: [DIDModule as unknown as AbstractCheqdSDKModule],
-            rpcUrl: network === NetworkType.Mainnet ? DefaultRPCUrl.Mainnet : DefaultRPCUrl.Testnet,
-            wallet: await DirectSecp256k1HdWallet.fromMnemonic(FEE_PAYER_MNEMONIC!, {prefix: 'cheqd'})
+            modules: [DIDModule as unknown as AbstractCheqdSDKModule, ResourceModule as unknown as AbstractCheqdSDKModule],
+            rpcUrl: options.rpcUrl ? options.rpcUrl : (options.network === NetworkType.Testnet ? DefaultRPCUrl.Testnet : DefaultRPCUrl.Mainnet),
+            wallet: await DirectSecp256k1HdWallet.fromMnemonic(options.network === NetworkType.Mainnet ? FEE_PAYER_MAINNET_MNEMONIC : FEE_PAYER_TESTNET_MNEMONIC, {prefix: 'cheqd'})
         }
+
         this.sdk = await createCheqdSDK(sdkOptions)
+        this.fee = options.fee
+
     }
 
     public forceGetSdk(): CheqdSDK{
@@ -56,25 +64,51 @@ export class CheqdRegistrar {
         return this.sdk
     }
 
-    public async create(signInputs: ISignInputs[], didPayload: Partial<MsgCreateDidPayload>) {
+    public async create(signInputs: SignInfo[], didPayload: DIDDocument, versionId: string | undefined) {
         return await this.forceGetSdk()
-        .createDidTx(
+        .createDidDocTx(
             signInputs,
             didPayload,
-            FEE_PAYER_ADDRESS,
-            FEE,
+            '',
+            this?.fee,
             undefined,
+            versionId,
             { sdk: this.forceGetSdk() }
         )
     }
 
-    public async update(signInputs: ISignInputs[], didPayload: Partial<MsgUpdateDidPayload>) {
+    public async update(signInputs: SignInfo[], didPayload: DIDDocument, versionId: string | undefined) {
         return await this.forceGetSdk()
-        .updateDidTx(
+        .updateDidDocTx(
             signInputs,
             didPayload,
-            FEE_PAYER_ADDRESS,
-            FEE,
+            '',
+            this?.fee,
+            undefined,
+            versionId,
+            { sdk: this.forceGetSdk() }
+        )
+    }
+
+    public async deactivate(signInputs: SignInfo[], didPayload: DIDDocument, versionId: string | undefined) {
+        return await this.forceGetSdk()
+        .deactivateDidDocTx(
+            signInputs,
+            didPayload,
+            '',
+            this?.fee,
+            undefined,
+            versionId,
+            { sdk: this.forceGetSdk() }
+        )
+    }
+
+    public async createResource(signInputs: SignInfo[], resourcePayload: Partial<MsgCreateResourcePayload>) {
+        return await this.forceGetSdk().createLinkedResourceTx(
+            signInputs,
+            resourcePayload,
+            '',
+            this?.fee,
             undefined,
             { sdk: this.forceGetSdk() }
         )

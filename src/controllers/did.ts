@@ -20,8 +20,10 @@ export class DidController {
             if(!req.body.jobId && value) {
                 const {valid} = validateSpecCompliantPayload(value)
                 return valid
-            }
-            return true
+            } else if (req.body.jobId) {
+                return true
+            } 
+            return false
         }).withMessage(Messages.InvalidDidDocument)
     ]
 

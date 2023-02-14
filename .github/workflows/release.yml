@@ -115,6 +115,9 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=min
+      
+      - name: Push image to GitHub Container Registry
+        run: docker image push --all-tags ghcr.io/${{ github.repository}}
 
       - name: Push image to DigitalOcean Container Registry
         run: docker image push --all-tags ${{ env.IMAGE_NAME }}

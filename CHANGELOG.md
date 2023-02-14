@@ -1,5 +1,16 @@
 # Changelog
 
+## [2.0.0](https://github.com/cheqd/did-registrar/compare/1.1.5...2.0.0) (2023-02-14)
+
+
+### ⚠ BREAKING CHANGES
+
+* Release v2 cheqd registrar (#89)
+
+### Features
+
+* Release v2 cheqd registrar ([#89](https://github.com/cheqd/did-registrar/issues/89)) ([9597db5](https://github.com/cheqd/did-registrar/commit/9597db58e205f2d3f87f0412ba48bed78a1a6000)), closes [#22](https://github.com/cheqd/did-registrar/issues/22) [#53](https://github.com/cheqd/did-registrar/issues/53) [#66](https://github.com/cheqd/did-registrar/issues/66) [#66](https://github.com/cheqd/did-registrar/issues/66) [#67](https://github.com/cheqd/did-registrar/issues/67) [#67](https://github.com/cheqd/did-registrar/issues/67) [#73](https://github.com/cheqd/did-registrar/issues/73) [#73](https://github.com/cheqd/did-registrar/issues/73) [#74](https://github.com/cheqd/did-registrar/issues/74) [#83](https://github.com/cheqd/did-registrar/issues/83) [#73](https://github.com/cheqd/did-registrar/issues/73) [#83](https://github.com/cheqd/did-registrar/issues/83) [#87](https://github.com/cheqd/did-registrar/issues/87) [#88](https://github.com/cheqd/did-registrar/issues/88) [#88](https://github.com/cheqd/did-registrar/issues/88)
+
 ## [2.0.0-develop.4](https://github.com/cheqd/did-registrar/compare/2.0.0-develop.3...2.0.0-develop.4) (2023-02-09)
 
 

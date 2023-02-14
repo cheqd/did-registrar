@@ -59,7 +59,7 @@ jobs:
     runs-on: ubuntu-latest
     if: ${{ ( github.ref_name == 'main' ) }}
     env:
-      IMAGE_NAME: registry.digitalocean.com/${{ github.repository }}
+      IMAGE_NAME: ${{ github.repository }}
     environment: 
       name: production
       url: https://did-registrar.cheqd.net/api-docs
@@ -81,6 +81,13 @@ jobs:
         with:
           token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
 
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Login to DOCR
         run: doctl registry login --expiry-seconds 600
       
@@ -89,7 +96,8 @@ jobs:
         uses: docker/metadata-action@v4
         with:
           images: |
-            ${{ env.IMAGE_NAME }}
+            ghcr.io/${{ env.IMAGE_NAME }}
+            registry.digitalocean.com/${{ env.IMAGE_NAME }}
           flavor: |
             latest=auto
           tags: |
@@ -115,6 +123,9 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=min
+      
+      - name: Push image to GitHub Container Registry
+        run: docker image push --all-tags ghcr.io/${{ env.IMAGE_NAME }}
 
       - name: Push image to DigitalOcean Container Registry
-        run: docker image push --all-tags ${{ env.IMAGE_NAME }}
+        run: docker image push --all-tags registry.digitalocean.com/${{ env.IMAGE_NAME }}

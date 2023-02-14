@@ -59,7 +59,7 @@ jobs:
     runs-on: ubuntu-latest
     if: ${{ ( github.ref_name == 'main' ) }}
     env:
-      IMAGE_NAME: registry.digitalocean.com/${{ github.repository }}
+      IMAGE_NAME: ${{ github.repository }}
     environment: 
       name: production
       url: https://did-registrar.cheqd.net/api-docs
@@ -89,7 +89,8 @@ jobs:
         uses: docker/metadata-action@v4
         with:
           images: |
-            ${{ env.IMAGE_NAME }}
+            ghcr.io/${{ env.IMAGE_NAME }}
+            registry.digitalocean.com/${{ env.IMAGE_NAME }}
           flavor: |
             latest=auto
           tags: |
@@ -117,7 +118,7 @@ jobs:
           cache-to: type=gha,mode=min
       
       - name: Push image to GitHub Container Registry
-        run: docker image push --all-tags ghcr.io/${{ github.repository}}
+        run: docker image push --all-tags ghcr.io/${{ env.IMAGE_NAME }}
 
       - name: Push image to DigitalOcean Container Registry
-        run: docker image push --all-tags ${{ env.IMAGE_NAME }}
+        run: docker image push --all-tags registry.digitalocean.com/${{ env.IMAGE_NAME }}

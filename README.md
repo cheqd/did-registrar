@@ -8,7 +8,7 @@
 
 ## ℹ️ Overview
 
-The purpose of this service is to provide a [Universal Registrar driver](https://identity.foundation/did-registration/#abstract) for the `did:cheqd` DID method. Universal Registrar is a project to provide simple REST APIs for DID creation, update, and deactivation.
+The purpose of this service is to provide a [Universal Registrar driver](https://identity.foundation/did-registration/#abstract) for the [`did:cheqd` DID method](https://docs.cheqd.io/identity/architecture/adr-list/adr-001-cheqd-did-method). The Universal Registrar is a project to provide simple REST APIs for DID creation, update, and deactivation.
 
 ## 📖 Endpoints
 
@@ -26,8 +26,8 @@ The purpose of this service is to provide a [Universal Registrar driver](https:/
 
 Environment variables needed for the Registrar are
 
-1. `FEE_PAYER_TESTNET_MNEMONIC` : The cosmos payer mnemonic for the Cheqd Mainnet
-2. `FEE_PAYER_MAINNET_MNEMONIC` : The cosmos payer mnemonic for the Cheqd Tesnet, By default it's the Testnet Faucet
+1. `FEE_PAYER_TESTNET_MNEMONIC` : The cosmos payer mnemonic for the cheqd Mainnet
+2. `FEE_PAYER_MAINNET_MNEMONIC` : The cosmos payer mnemonic for the cheqd Testnet - by default it's the Testnet Faucet
 3. `LOCAL_STORE_TTL` (default: `600`): The time in seconds for the registrar to store data in cache
 4. `PORT` (default: `3000`): The port number
 

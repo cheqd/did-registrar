@@ -1,6 +1,6 @@
 {
   "name": "@cheqd/did-registrar",
-  "version": "2.0.0-develop.4",
+  "version": "2.0.0",
   "description": "Universal Registrar for cheqd DID method",
   "homepage": "https://github.com/cheqd/did-registrar#readme",
   "license": "Apache-2.0",
@@ -46,7 +46,7 @@
     "@typescript-eslint/eslint-plugin": "^5.45.0",
     "@typescript-eslint/parser": "^5.45.0",
     "conventional-changelog-conventionalcommits": "^5.0.0",
-    "esbuild": "^0.15.16",
+    "esbuild": "^0.17.8",
     "eslint": "^8.28.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-config-typescript": "^3.0.0",

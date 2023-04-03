@@ -40,4 +40,4 @@ jobs:
       - name: Debugging with tmate
         if: ${{ always() }}
         uses: mxschmitt/action-tmate@v3
-        timeout-minutes: 60
+        timeout-minutes: 30

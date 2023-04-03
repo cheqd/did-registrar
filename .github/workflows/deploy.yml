@@ -34,10 +34,4 @@ jobs:
         run: docker image load --input did-registrar-staging.tar
 
       - name: Push images to DOCR
-        timeout-minutes: 5
         run: docker image push --all-tags ${{ env.IMAGE_NAME }}
-
-      - name: Debugging with tmate
-        if: ${{ always() }}
-        uses: mxschmitt/action-tmate@v3
-        timeout-minutes: 30

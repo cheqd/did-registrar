@@ -9,6 +9,7 @@ jobs:
   deploy-staging:
     name: "Staging Deploy"
     runs-on: ubuntu-latest
+    timeout-minutes: 2
     continue-on-error: true
     env: 
       IMAGE_NAME: registry.digitalocean.com/${{ github.repository }}
@@ -35,3 +36,7 @@ jobs:
 
       - name: Push images to DOCR
         run: docker image push --all-tags ${{ env.IMAGE_NAME }}
+
+      - name: Debugging with tmate
+        uses: mxschmitt/action-tmate@v3
+        timeout-minutes: 10

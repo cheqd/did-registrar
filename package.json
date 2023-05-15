@@ -19,7 +19,7 @@
     "build": "esbuild src/index.ts --platform=node --bundle --minify --outdir=dist --external:swagger-ui-express"
   },
   "dependencies": {
-    "@cheqd/sdk": "^3.4.1",
+    "@cheqd/sdk": "^3.5.1",
     "@cheqd/ts-proto": "^3.2.0",
     "@cosmjs/proto-signing": "^0.30.1",
     "dotenv": "^16.0.3",

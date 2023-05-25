@@ -1,13 +1,13 @@
 ###############################################################
-###         STAGE 1: Build did-registrar app           ###
+###             STAGE 1: Build did-registrar app            ###
 ###############################################################
 
 FROM node:18-alpine AS builder
 
-# Set working directory & bash defaults
+# Set working directory
 WORKDIR /home/node/app
 
-# Copy source files
+# Copy source
 COPY . .
 
 # Installing dependencies
@@ -16,39 +16,43 @@ RUN npm ci
 # Build the app
 RUN npm run build
 
+
 ###############################################################
-###         STAGE 2: Run did-registar app              ###
+###             STAGE 2: Build did-registrar runner         ###
 ###############################################################
 
 FROM node:18-alpine AS runner
 
-# Set working directory & bash defaults
+# Set Node.js environment
+ENV NODE_ENV=production
+
+# Set working directory
 WORKDIR /home/node/app
 
-# Copy built application
-COPY --from=builder /home/node/app/dist .
+# Install pre-requisites
+RUN apk update && \
+    apk add --no-cache bash ca-certificates
+
+# Copy files from builder
+COPY --from=builder --chown=node:node /home/node/app/*.json /home/node/app/*.md ./
+COPY --from=builder --chown=node:node /home/node/app/dist ./dist
+
+# Install production dependencies
+RUN npm ci
 
 # Build-time arguments
-ARG NODE_ENV=production
 ARG NPM_CONFIG_LOGLEVEL=warn
 ARG PORT=3000
 ARG FEE_PAYER_TESTNET_MNEMONIC
 ARG FEE_PAYER_MAINNET_MNEMONIC
 
 # NPM environment variables
-ENV NODE_ENV ${NODE_ENV}
 ENV NPM_CONFIG_LOGLEVEL ${NPM_CONFIG_LOGLEVEL}
 ENV PORT ${PORT}
 
 # App-specific environment variables
 ENV FEE_PAYER_TESTNET_MNEMONIC ${FEE_PAYER_TESTNET_MNEMONIC}
 ENV FEE_PAYER_MAINNET_MNEMONIC ${FEE_PAYER_MAINNET_MNEMONIC}
-
-# Install pre-requisites
-RUN npm install swagger-ui-express@4.5.0 && \
-    chown -R node:node /home/node/app && \
-    apk update && \
-    apk add --no-cache bash ca-certificates
 
 # Specify default port
 EXPOSE ${PORT}
@@ -58,4 +62,4 @@ USER node
 SHELL ["/bin/bash", "-euo", "pipefail", "-c"]
 
 # Run the application
-CMD [ "node", "index.js" ]
+CMD [ "node", "dist/index.js" ]

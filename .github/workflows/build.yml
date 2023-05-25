@@ -5,12 +5,32 @@ defaults:
   run:
     shell: bash
 
+
 jobs:
+
+  build-node:
+    name: "Build Node.js"
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          cache: 'npm'
+    
+      - name: "Clean install dependencies"
+        run: npm ci
+
+      - name: "Run npm build"
+        run: npm run build
+
   build-docker:
     name: "Build Docker image"
     runs-on: ubuntu-latest
     env:
-      IMAGE_NAME: registry.digitalocean.com/${{ github.repository }}
+      IMAGE_NAME: ${{ github.repository }}
 
     steps:
       - uses: actions/checkout@v3
@@ -21,12 +41,14 @@ jobs:
         with:
           install: true
           version: latest
-      
+    
       - name: Configure Docker image metadata
         id: meta
         uses: docker/metadata-action@v4
         with:
-          images: ${{ env.IMAGE_NAME }}
+          images: |
+            ghcr.io/${{ env.IMAGE_NAME }}
+            registry.digitalocean.com/${{ env.IMAGE_NAME }}
           tags: |
             type=ref,event=branch
             type=raw,value=staging-latest
@@ -41,11 +63,9 @@ jobs:
           load: true
           target: runner
           tags: ${{ steps.meta.outputs.tags }}
+          outputs: type=docker,dest=did-registrar-staging.tar
           cache-from: type=gha
           cache-to: type=gha,mode=min
-      
-      - name: Save Docker image
-        run:  docker save ${{ env.IMAGE_NAME }} > did-registrar-staging.tar
 
       - name: Upload build image as artifact
         uses: actions/upload-artifact@v3

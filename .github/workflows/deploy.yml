@@ -13,7 +13,7 @@ jobs:
       IMAGE_NAME: ${{ github.repository }}
     environment: 
       name: staging
-      url: https://did-registrar-staging.cheqd.net
+      url: https://did-registrar-staging.cheqd.net/api-docs
 
     steps:
       - name: Install DigitalOcean CLI

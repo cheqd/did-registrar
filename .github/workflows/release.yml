@@ -10,11 +10,12 @@ permissions:
 
 
 jobs:
-  release-npm:
+  release-node:
     name: "Semantic Release"
     runs-on: ubuntu-latest
     outputs:
-      VERSION: ${{ steps.set-version.outputs.VERSION }}
+      RELEASE_VERSION: ${{ steps.set-version.outputs.RELEASE_VERSION }}
+
     steps:
       - uses: actions/checkout@v3
         with:
@@ -46,16 +47,16 @@ jobs:
           GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
       
-      - name: Set version number
+      - name: Set release version number
         id: set-version
         run: |
-          VERSION=$( git describe --tags ${{ github.sha }})
-          echo "VERSION=$VERSION" >> "$GITHUB_OUTPUT"
+          RELEASE_VERSION=$( git describe --tags "${{ github.sha }}")
+          echo "RELEASE_VERSION=$RELEASE_VERSION" >> "$GITHUB_OUTPUT"
 
 
   release-docker:
     name: "Release Docker image"
-    needs: release-npm
+    needs: release-node
     runs-on: ubuntu-latest
     if: ${{ ( github.ref_name == 'main' ) }}
     env:
@@ -80,7 +81,7 @@ jobs:
         uses: digitalocean/action-doctl@v2
         with:
           token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
-
+      
       - name: Login to GitHub Container Registry
         uses: docker/login-action@v2
         with:
@@ -101,7 +102,7 @@ jobs:
           flavor: |
             latest=auto
           tags: |
-            type=semver,pattern={{version}},value=${{ needs.release-npm.outputs.VERSION }}
+            type=semver,pattern={{version}},value=${{ needs.release-node.outputs.RELEASE_VERSION }}
             type=raw,value=production-latest
             type=sha,format=long
           labels: |
@@ -109,7 +110,7 @@ jobs:
             org.opencontainers.image.source="https://github.com/cheqd/did-registrar"
             org.opencontainers.image.vendor="Cheqd Foundation Limited"
             org.opencontainers.image.created={{date 'dddd, MMMM Do YYYY, h:mm:ss a'}}
-            org.opencontainers.image.documentation="https://docs.cheqd.io/node"
+            org.opencontainers.image.documentation="https://docs.cheqd.io/identity"
       
       - name: Build image with labels
         uses: docker/build-push-action@v4

@@ -6,9 +6,9 @@
         }
     ],
     "info": {
-        "description": "Cheqd Registrar Driver for universal registrar",
+        "description": "Universal Registrar driver for did:cheqd",
         "version": "1.0.0",
-        "title": "Cheqd Did Registrar"
+        "title": "Universal Registrar driver for did:cheqd"
     },
     "tags": [
         {
@@ -18,7 +18,7 @@
             }
         },
         {
-            "name": "Cheqd Helpers"
+            "name": "Universal Registrar driver for did:cheqd"
         }
     ],
     "paths": {

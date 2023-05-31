@@ -28,7 +28,7 @@
     "@cheqd/sdk": "^3.5.4",
     "@cheqd/ts-proto": "^3.2.0",
     "@cosmjs/proto-signing": "^0.30.1",
-    "dotenv": "^16.1.0",
+    "dotenv": "^16.1.1",
     "express": "^4.18.2",
     "express-validator": "^7.0.1",
     "helmet": "^6.2.0",

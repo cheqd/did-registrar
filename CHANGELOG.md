@@ -1,5 +1,7 @@
 # Changelog
 
+## [2.0.6](https://github.com/cheqd/did-registrar/compare/2.0.5...2.0.6) (2023-07-31)
+
 ## [2.0.6-develop.1](https://github.com/cheqd/did-registrar/compare/2.0.5...2.0.6-develop.1) (2023-07-31)
 
 ## [2.0.5](https://github.com/cheqd/did-registrar/compare/2.0.4...2.0.5) (2023-05-31)

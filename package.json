@@ -34,7 +34,7 @@
     "helmet": "^7.0.0",
     "node-cache": "^5.1.2",
     "node-fetch": "^3.3.2",
-    "swagger-ui-express": "^4.6.3"
+    "swagger-ui-express": "^5.0.0"
   },
   "devDependencies": {
     "@semantic-release/changelog": "^6.0.3",

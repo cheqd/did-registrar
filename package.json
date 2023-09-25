@@ -57,7 +57,7 @@
     "eslint-config-prettier": "^8.9.0",
     "eslint-config-typescript": "^3.0.0",
     "prettier": "^3.0.0",
-    "semantic-release": "^21.0.7",
+    "semantic-release": "^22.0.5",
     "typescript": "^5.1.6"
   },
   "publishConfig": {

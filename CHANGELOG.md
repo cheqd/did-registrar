@@ -1,5 +1,13 @@
 # Changelog
 
+## [2.0.7](https://github.com/cheqd/did-registrar/compare/2.0.6...2.0.7) (2023-10-31)
+
+
+### Bug Fixes
+
+* Bump all semantic-related packages to the latest one ([#236](https://github.com/cheqd/did-registrar/issues/236)) ([c108a58](https://github.com/cheqd/did-registrar/commit/c108a5800b1863bb5895a9a61cbe97b0b1a35ba6))
+* Make release process as in Credential-Service ([#237](https://github.com/cheqd/did-registrar/issues/237)) ([17a5c99](https://github.com/cheqd/did-registrar/commit/17a5c9903fe5b6b49b4d861ca4f62053a191c8f8))
+
 ## [2.0.7-develop.2](https://github.com/cheqd/did-registrar/compare/2.0.7-develop.1...2.0.7-develop.2) (2023-10-31)
 
 ## [2.0.7-develop.1](https://github.com/cheqd/did-registrar/compare/2.0.6...2.0.7-develop.1) (2023-10-24)

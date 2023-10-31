@@ -16,7 +16,8 @@
   "scripts": {
     "dev": "nodemon src/index.ts",
     "start": "node dist/index.js",
-    "build": "esbuild src/index.ts --platform=node --bundle --minify --outdir=dist --external:swagger-ui-express"
+    "build": "esbuild src/index.ts --platform=node --bundle --minify --outdir=dist --external:swagger-ui-express",
+    "format": "prettier --write 'src/**/*.{js,ts,cjs,mjs}' 'tests/**/*.{js,ts,cjs,mjs}'"
   },
   "files": [
     "dist",
@@ -63,5 +64,8 @@
   "publishConfig": {
     "registry": "https://registry.npmjs.org/",
     "access": "public"
-  }
+  },
+  "engines": {
+		"node": ">=18.0.0"
+	}
 }

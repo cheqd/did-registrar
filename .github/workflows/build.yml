@@ -68,7 +68,7 @@ jobs:
           cache-to: type=gha,mode=min
 
       - name: Upload build image as artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: did-registrar-staging
           path: did-registrar-staging.tar

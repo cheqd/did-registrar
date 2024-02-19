@@ -6,8 +6,10 @@ import base64url from 'base64url'
 import * as dotenv from 'dotenv';
 import { assert } from 'console';
 
-const pub_key_base_64 = dotenv.config().parsed?.TEST_PUBLIC_KEY;
-const priv_key_base_64 = dotenv.config().parsed?.TEST_PRIVATE_KEY;
+dotenv.config();
+
+const pub_key_base_64 = process.env.TEST_PUBLIC_KEY;
+const priv_key_base_64 = process.env.TEST_PRIVATE_KEY;
 
 assert(pub_key_base_64, 'TEST_PUBLIC_KEY is not defined');
 assert(priv_key_base_64, 'TEST_PRIVATE_KEY is not defined');
@@ -53,7 +55,7 @@ test('did-create. Initiate DID Create procedure', async ({ request }) => {
     expect(body.didState.did).toBeDefined();
     expect(body.didState.state).toBeDefined();
     expect(body.didState.secret).toBeDefined();
-    
+
     didState = body.didState;
     jobId = body.jobId;
 })

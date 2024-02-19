@@ -9,7 +9,7 @@ import { ISignInfo } from '../types/types';
 export function convertToSignInfo(payload: ISignInfo[]): SignInfo[] {
 	return payload.map((value) => {
 		return {
-			verificationMethodId: value.verificationMethodId,
+			verificationMethodId: value.kid,
 			signature: base64ToBytes(value.signature),
 		};
 	});

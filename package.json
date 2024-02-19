@@ -17,7 +17,8 @@
     "dev": "nodemon src/index.ts",
     "start": "node dist/index.js",
     "build": "esbuild src/index.ts --platform=node --bundle --minify --outdir=dist --external:swagger-ui-express",
-    "format": "prettier --write 'src/**/*.{js,ts,cjs,mjs}' 'tests/**/*.{js,ts,cjs,mjs}'"
+    "format": "prettier --write 'src/**/*.{js,ts,cjs,mjs}' 'tests/**/*.{js,ts,cjs,mjs}'",
+    "test": "npx playwright test -c playwright.config.ts"
   },
   "files": [
     "dist",
@@ -38,12 +39,14 @@
     "swagger-ui-express": "^5.0.0"
   },
   "devDependencies": {
+    "@playwright/test": "^1.41.1",
     "@semantic-release/changelog": "^6.0.3",
     "@semantic-release/commit-analyzer": "^11.1.0",
     "@semantic-release/git": "^10.0.1",
     "@semantic-release/github": "^9.2.6",
     "@semantic-release/npm": "^11.0.2",
     "@semantic-release/release-notes-generator": "^12.1.0",
+    "@stablelib/base64": "^1.0.1",
     "@types/express": "^4.17.21",
     "@types/helmet": "^4.0.0",
     "@types/node": "^20.11.19",
@@ -52,6 +55,7 @@
     "@types/uuid": "^9.0.8",
     "@typescript-eslint/eslint-plugin": "^5.62.0",
     "@typescript-eslint/parser": "^5.62.0",
+    "base64url": "^3.0.1",
     "conventional-changelog-conventionalcommits": "^7.0.2",
     "esbuild": "^0.19.12",
     "eslint": "^8.56.0",

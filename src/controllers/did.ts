@@ -31,7 +31,7 @@ export class DidController {
 		check('options.versionId').optional().isString().withMessage(Messages.InvalidOptions),
 		check('secret.signingResponse').optional().isArray().withMessage(Messages.InvalidSecret),
 		check('secret.signingResponse.*.signature').isString().withMessage(Messages.InvalidSecret),
-		check('secret.signingResponse.*.verificationMethodId').isString().withMessage(Messages.InvalidSecret),
+		check('secret.signingResponse.*.kid').isString().withMessage(Messages.InvalidSecret),
 	];
 
 	public static updateValidator = [

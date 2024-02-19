@@ -73,7 +73,7 @@ export enum IAction {
 }
 
 export interface ISignInfo {
-	verificationMethodId: string;
+	kid: string;
 	signature: string;
 }
 

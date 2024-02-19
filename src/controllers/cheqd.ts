@@ -11,7 +11,7 @@ import {
 	VerificationMethods,
 } from '@cheqd/sdk';
 
-import { NetworkType } from '../service/cheqd';
+import { NetworkType } from '../service/cheqd.js';
 
 export class CheqdController {
 	public static didDocValidator = [

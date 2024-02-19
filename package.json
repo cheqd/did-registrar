@@ -9,19 +9,40 @@
     "type": "git",
     "url": "git+https://github.com/cheqd/did-registrar.git"
   },
+  "type": "module",
   "bugs": {
     "url": "https://github.com/cheqd/did-registrar/issues"
   },
-  "source": "src/index.ts",
+  "exports": {
+		".": {
+			"types": "./dist/types/index.d.ts",
+			"import": "./dist/index.js",
+			"default": "./dist/index.js"
+		},
+		"./*": {
+			"types": "./dist/types/*.d.ts",
+			"import": "./dist/*.js",
+			"default": "./dist/*.js"
+		}
+	},
   "scripts": {
     "dev": "nodemon src/index.ts",
     "start": "node dist/index.js",
-    "build": "esbuild src/index.ts --platform=node --bundle --minify --outdir=dist --external:swagger-ui-express",
+    "build": "tsc",
     "format": "prettier --write 'src/**/*.{js,ts,cjs,mjs}' 'tests/**/*.{js,ts,cjs,mjs}'",
     "test": "npx playwright test -c playwright.config.ts"
   },
+
+  "eslintConfig": {
+		"root": true,
+		"extends": [
+			"typescript",
+			"prettier"
+		]
+	},
   "files": [
     "dist",
+    "example.env",
     "LICENSE",
     "package.json",
     "README.md"
@@ -29,7 +50,7 @@
   "dependencies": {
     "@cheqd/sdk": "^3.7.9",
     "@cheqd/ts-proto": "^3.4.0",
-    "@cosmjs/proto-signing": "^0.31.3",
+    "@cosmjs/proto-signing": "^0.32.2",
     "dotenv": "^16.4.4",
     "express": "^4.18.2",
     "express-validator": "^7.0.1",
@@ -39,7 +60,7 @@
     "swagger-ui-express": "^5.0.0"
   },
   "devDependencies": {
-    "@playwright/test": "^1.41.1",
+    "@playwright/test": "^1.41.2",
     "@semantic-release/changelog": "^6.0.3",
     "@semantic-release/commit-analyzer": "^11.1.0",
     "@semantic-release/git": "^10.0.1",

@@ -3,13 +3,17 @@ import {sign} from '@stablelib/ed25519'
 import {toString, fromString} from 'uint8arrays'
 import base64url from 'base64url'
 
-const pub_key_base_64 = "HnogtCJaLFqKS2+/B4VoD/mtMZWnODbYyuY07Zo37vc="
-const priv_key_base_64 = "MB9jr7i+ii1BuWFviuTT7KVy2XEU7g70rVMpZ44NwrgeeiC0IlosWopLb78HhWgP+a0xlac4NtjK5jTtmjfu9w=="
-const pubKeyHex = toString(fromString(pub_key_base_64, 'base64pad'), 'base16');
-const privKeyBytes = base64url.toBuffer(priv_key_base_64);
+import * as dotenv from 'dotenv';
+import { assert } from 'console';
 
-// console.log(pubKeyHex);
-// console.log(privKeyHex)
+const pub_key_base_64 = dotenv.config().parsed?.TEST_PUBLIC_KEY;
+const priv_key_base_64 = dotenv.config().parsed?.TEST_PRIVATE_KEY;
+
+assert(pub_key_base_64, 'TEST_PUBLIC_KEY is not defined');
+assert(priv_key_base_64, 'TEST_PRIVATE_KEY is not defined');
+
+const pubKeyHex = toString(fromString(pub_key_base_64 as string, 'base64pad'), 'base16');
+const privKeyBytes = base64url.toBuffer(priv_key_base_64 as string);
 
 let didPayload;
 let didState;
@@ -19,15 +23,17 @@ test('did-document. Generate the payload', async ({ request }) => {
     const payload = await request.get(`/1.0/did-document?verificationMethod=JsonWebKey2020&methodSpecificIdAlgo=uuid&network=testnet&publicKeyHex=${pubKeyHex}`)
 
     expect(payload.status()).toBe(200);
+
     const body = await payload.json();
     expect(body.didDoc).toBeDefined();
     expect(body.key).toBeDefined();
     expect(body.key.kid).toBeDefined();
     expect(body.key.publicKeyHex).toBeDefined();
+
     didPayload = body.didDoc;
 })
 
-test('did-create', async ({ request }) => {
+test('did-create. Initiate DID Create procedure', async ({ request }) => {
     const payload = await request.post('/1.0/create', {
         data: {
             didDocument: didPayload,
@@ -39,22 +45,24 @@ test('did-create', async ({ request }) => {
     })
 
     expect(payload.status()).toBe(200);
+
     const body = await payload.json();
+
     expect(body.jobId).toBeDefined();
     expect(body.didState).toBeDefined();
     expect(body.didState.did).toBeDefined();
     expect(body.didState.state).toBeDefined();
     expect(body.didState.secret).toBeDefined();
+    
     didState = body.didState;
     jobId = body.jobId;
 })
 
-test('did-create. Get the status', async ({ request }) => {
+test('did-create. Send the final request for DID creating', async ({ request }) => {
     const serializedPayload = didState.signingRequest[0].serializedPayload;
     const serializedBytes = Buffer.from(serializedPayload, 'base64')
     const signature = sign(privKeyBytes, serializedBytes)
 
-    // console.log(base64url.encode(Buffer.from(signature), 'base16'))
     const secret = {
         signingResponse: [
             {
@@ -74,8 +82,6 @@ test('did-create. Get the status', async ({ request }) => {
             didDocument: didPayload
         }
     })
-
-    console.log(await didCreate.text())
 
     expect(didCreate.status()).toBe(201);
 })

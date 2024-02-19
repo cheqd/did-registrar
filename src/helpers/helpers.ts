@@ -1,10 +1,10 @@
 import type { DIDDocument, SpecValidationResult } from '@cheqd/sdk';
-import type { SignInfo } from '@cheqd/ts-proto/cheqd/did/v2';
+import type { SignInfo } from '@cheqd/ts-proto/cheqd/did/v2/index.js';
 
 import { VerificationMethods } from '@cheqd/sdk';
 import { base64ToBytes } from 'did-jwt';
 
-import { ISignInfo } from '../types/types';
+import { ISignInfo } from '../types/types.js';
 
 export function convertToSignInfo(payload: ISignInfo[]): SignInfo[] {
 	return payload.map((value) => {

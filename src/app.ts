@@ -1,12 +1,13 @@
 import express from 'express';
 import Helmet from 'helmet';
 import * as swagger from 'swagger-ui-express';
-import * as swaggerJson from '../swagger.json';
 
-import { DidController } from './controllers/did';
-import { CheqdController } from './controllers/cheqd';
-import { ResourceController } from './controllers/resource';
-import { CheqdRegistrar } from './service/cheqd';
+import * as swaggerJson from './static/swagger.json' assert { type: 'json' };
+
+import { DidController } from './controllers/did.js';
+import { CheqdController } from './controllers/cheqd.js';
+import { ResourceController } from './controllers/resource.js';
+import { CheqdRegistrar } from './service/cheqd.js';
 
 class App {
 	public express: express.Application;

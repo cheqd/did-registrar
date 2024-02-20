@@ -1,95 +1,95 @@
 {
-  "name": "@cheqd/did-registrar",
-  "version": "2.1.0",
-  "description": "Universal Registrar for cheqd DID method",
-  "homepage": "https://github.com/cheqd/did-registrar#readme",
-  "license": "Apache-2.0",
-  "author": "Cheqd Foundation Limited (https://github.com/cheqd)",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/cheqd/did-registrar.git"
-  },
-  "type": "module",
-  "bugs": {
-    "url": "https://github.com/cheqd/did-registrar/issues"
-  },
-  "exports": {
-    ".": {
-      "types": "./dist/types/index.d.ts",
-      "import": "./dist/index.js",
-      "default": "./dist/index.js"
-    },
-    "./*": {
-      "types": "./dist/types/*.d.ts",
-      "import": "./dist/*.js",
-      "default": "./dist/*.js"
-    }
-  },
-  "scripts": {
-    "dev": "nodemon src/index.ts",
-    "start": "node dist/index.js",
-    "build": "tsc",
-    "format": "prettier --write 'src/**/*.{js,ts,cjs,mjs}' 'tests/**/*.{js,ts,cjs,mjs}'",
-    "test": "npx playwright test -c playwright.config.ts"
-  },
-  "eslintConfig": {
-    "root": true,
-    "extends": [
-      "typescript",
-      "prettier"
-    ]
-  },
-  "files": [
-    "dist",
-    "example.env",
-    "LICENSE",
-    "package.json",
-    "README.md"
-  ],
-  "dependencies": {
-    "@cheqd/sdk": "^3.7.9",
-    "@cheqd/ts-proto": "^3.4.0",
-    "@cosmjs/proto-signing": "^0.32.2",
-    "dotenv": "^16.4.4",
-    "express": "^4.18.2",
-    "express-validator": "^7.0.1",
-    "helmet": "^7.1.0",
-    "node-cache": "^5.1.2",
-    "node-fetch": "^3.3.2",
-    "swagger-ui-express": "^5.0.0"
-  },
-  "devDependencies": {
-    "@playwright/test": "^1.41.2",
-    "@semantic-release/changelog": "^6.0.3",
-    "@semantic-release/commit-analyzer": "^11.1.0",
-    "@semantic-release/git": "^10.0.1",
-    "@semantic-release/github": "^9.2.6",
-    "@semantic-release/npm": "^11.0.2",
-    "@semantic-release/release-notes-generator": "^12.1.0",
-    "@stablelib/base64": "^1.0.1",
-    "@types/express": "^4.17.21",
-    "@types/helmet": "^4.0.0",
-    "@types/node": "^20.11.19",
-    "@types/node-fetch": "^2.6.11",
-    "@types/swagger-ui-express": "^4.1.6",
-    "@types/uuid": "^9.0.8",
-    "@typescript-eslint/eslint-plugin": "^5.62.0",
-    "@typescript-eslint/parser": "^5.62.0",
-    "base64url": "^3.0.1",
-    "conventional-changelog-conventionalcommits": "^7.0.2",
-    "esbuild": "^0.19.12",
-    "eslint": "^8.56.0",
-    "eslint-config-prettier": "^9.1.0",
-    "eslint-config-typescript": "^3.0.0",
-    "prettier": "^3.2.5",
-    "semantic-release": "^22.0.12",
-    "typescript": "^5.3.3"
-  },
-  "publishConfig": {
-    "registry": "https://registry.npmjs.org/",
-    "access": "public"
-  },
-  "engines": {
-    "node": ">=18.0.0"
-  }
+	"name": "@cheqd/did-registrar",
+	"version": "2.1.0",
+	"description": "Universal Registrar for cheqd DID method",
+	"homepage": "https://github.com/cheqd/did-registrar#readme",
+	"license": "Apache-2.0",
+	"author": "Cheqd Foundation Limited (https://github.com/cheqd)",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/cheqd/did-registrar.git"
+	},
+	"type": "module",
+	"bugs": {
+		"url": "https://github.com/cheqd/did-registrar/issues"
+	},
+	"exports": {
+		".": {
+			"types": "./dist/types/index.d.ts",
+			"import": "./dist/index.js",
+			"default": "./dist/index.js"
+		},
+		"./*": {
+			"types": "./dist/types/*.d.ts",
+			"import": "./dist/*.js",
+			"default": "./dist/*.js"
+		}
+	},
+	"scripts": {
+		"dev": "nodemon src/index.ts",
+		"start": "node dist/index.js",
+		"build": "tsc",
+		"format": "prettier --write '**/*.{js,ts,cjs,mjs,json}'",
+		"test": "npx playwright test -c playwright.config.ts"
+	},
+	"eslintConfig": {
+		"root": true,
+		"extends": [
+			"typescript",
+			"prettier"
+		]
+	},
+	"files": [
+		"dist",
+		"example.env",
+		"LICENSE",
+		"package.json",
+		"README.md"
+	],
+	"dependencies": {
+		"@cheqd/sdk": "^3.7.9",
+		"@cheqd/ts-proto": "^3.4.0",
+		"@cosmjs/proto-signing": "^0.32.2",
+		"dotenv": "^16.4.5",
+		"express": "^4.18.2",
+		"express-validator": "^7.0.1",
+		"helmet": "^7.1.0",
+		"node-cache": "^5.1.2",
+		"node-fetch": "^3.3.2",
+		"swagger-ui-express": "^5.0.0"
+	},
+	"devDependencies": {
+		"@playwright/test": "^1.41.2",
+		"@semantic-release/changelog": "^6.0.3",
+		"@semantic-release/commit-analyzer": "^11.1.0",
+		"@semantic-release/git": "^10.0.1",
+		"@semantic-release/github": "^9.2.6",
+		"@semantic-release/npm": "^11.0.2",
+		"@semantic-release/release-notes-generator": "^12.1.0",
+		"@stablelib/base64": "^1.0.1",
+		"@types/express": "^4.17.21",
+		"@types/helmet": "^4.0.0",
+		"@types/node": "^20.11.19",
+		"@types/node-fetch": "^2.6.11",
+		"@types/swagger-ui-express": "^4.1.6",
+		"@types/uuid": "^9.0.8",
+		"@typescript-eslint/eslint-plugin": "^5.62.0",
+		"@typescript-eslint/parser": "^5.62.0",
+		"base64url": "^3.0.1",
+		"conventional-changelog-conventionalcommits": "^7.0.2",
+		"esbuild": "^0.19.12",
+		"eslint": "^8.56.0",
+		"eslint-config-prettier": "^9.1.0",
+		"eslint-config-typescript": "^3.0.0",
+		"prettier": "^3.2.5",
+		"semantic-release": "^22.0.12",
+		"typescript": "^5.3.3"
+	},
+	"publishConfig": {
+		"registry": "https://registry.npmjs.org/",
+		"access": "public"
+	},
+	"engines": {
+		"node": ">=20.0.0"
+	}
 }

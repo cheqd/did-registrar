@@ -1,6 +1,6 @@
 {
   "name": "@cheqd/did-registrar",
-  "version": "2.0.8",
+  "version": "2.1.0-develop.1",
   "description": "Universal Registrar for cheqd DID method",
   "homepage": "https://github.com/cheqd/did-registrar#readme",
   "license": "Apache-2.0",
@@ -14,17 +14,17 @@
     "url": "https://github.com/cheqd/did-registrar/issues"
   },
   "exports": {
-		".": {
-			"types": "./dist/types/index.d.ts",
-			"import": "./dist/index.js",
-			"default": "./dist/index.js"
-		},
-		"./*": {
-			"types": "./dist/types/*.d.ts",
-			"import": "./dist/*.js",
-			"default": "./dist/*.js"
-		}
-	},
+    ".": {
+      "types": "./dist/types/index.d.ts",
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
+    },
+    "./*": {
+      "types": "./dist/types/*.d.ts",
+      "import": "./dist/*.js",
+      "default": "./dist/*.js"
+    }
+  },
   "scripts": {
     "dev": "nodemon src/index.ts",
     "start": "node dist/index.js",
@@ -32,14 +32,13 @@
     "format": "prettier --write 'src/**/*.{js,ts,cjs,mjs}' 'tests/**/*.{js,ts,cjs,mjs}'",
     "test": "npx playwright test -c playwright.config.ts"
   },
-
   "eslintConfig": {
-		"root": true,
-		"extends": [
-			"typescript",
-			"prettier"
-		]
-	},
+    "root": true,
+    "extends": [
+      "typescript",
+      "prettier"
+    ]
+  },
   "files": [
     "dist",
     "example.env",

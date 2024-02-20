@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.1.0](https://github.com/cheqd/did-registrar/compare/2.0.8...2.1.0) (2024-02-20)
+
+
+### Features
+
+* Rename verificationMethodId to kid [DEV-3670] ([#271](https://github.com/cheqd/did-registrar/issues/271)) ([fe0aeeb](https://github.com/cheqd/did-registrar/commit/fe0aeebc4d09cc8cb7f9de3a56c4b5ff1a4ccbb5))
+
 ## [2.1.0-develop.1](https://github.com/cheqd/did-registrar/compare/2.0.8...2.1.0-develop.1) (2024-02-20)
 
 

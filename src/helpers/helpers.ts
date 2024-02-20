@@ -49,7 +49,7 @@ export function validateSpecCompliantPayload(didDocument: DIDDocument): SpecVali
 	const isValidService = didDocument.service
 		? didDocument?.service?.every((s) => {
 				return Array.isArray(s?.serviceEndpoint) && s?.id && s?.type;
-		  })
+			})
 		: true;
 
 	if (!isValidService) return { valid: false, error: 'Service is Invalid' };

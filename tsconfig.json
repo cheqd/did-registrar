@@ -15,11 +15,9 @@
     "downlevelIteration": true,
     "declarationMap": true,
     "declaration": true,
-    // "composite": true,
-    // "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "resolveJsonModule": true,
     "rootDir": "src",
   },
-  "exclude": ["node_modules", "dist", "playwright", "playwright.config.ts", "tests"],
+  "exclude": ["dist", "playwright", "playwright.config.ts", "tests"],
 }

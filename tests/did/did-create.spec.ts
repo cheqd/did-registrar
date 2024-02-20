@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
-import {sign} from '@stablelib/ed25519'
-import {toString, fromString} from 'uint8arrays'
-import base64url from 'base64url'
+import { sign } from '@stablelib/ed25519';
+import { toString, fromString } from 'uint8arrays';
+import base64url from 'base64url';
 
 import * as dotenv from 'dotenv';
 import { assert } from 'console';
@@ -22,68 +22,70 @@ let didState;
 let jobId;
 
 test('did-document. Generate the payload', async ({ request }) => {
-    const payload = await request.get(`/1.0/did-document?verificationMethod=JsonWebKey2020&methodSpecificIdAlgo=uuid&network=testnet&publicKeyHex=${pubKeyHex}`)
+	const payload = await request.get(
+		`/1.0/did-document?verificationMethod=JsonWebKey2020&methodSpecificIdAlgo=uuid&network=testnet&publicKeyHex=${pubKeyHex}`
+	);
 
-    expect(payload.status()).toBe(200);
+	expect(payload.status()).toBe(200);
 
-    const body = await payload.json();
-    expect(body.didDoc).toBeDefined();
-    expect(body.key).toBeDefined();
-    expect(body.key.kid).toBeDefined();
-    expect(body.key.publicKeyHex).toBeDefined();
+	const body = await payload.json();
+	expect(body.didDoc).toBeDefined();
+	expect(body.key).toBeDefined();
+	expect(body.key.kid).toBeDefined();
+	expect(body.key.publicKeyHex).toBeDefined();
 
-    didPayload = body.didDoc;
-})
+	didPayload = body.didDoc;
+});
 
 test('did-create. Initiate DID Create procedure', async ({ request }) => {
-    const payload = await request.post('/1.0/create', {
-        data: {
-            didDocument: didPayload,
-            secret: {},
-            options: {
-                network: "testnet"
-            },
-        }
-    })
+	const payload = await request.post('/1.0/create', {
+		data: {
+			didDocument: didPayload,
+			secret: {},
+			options: {
+				network: 'testnet',
+			},
+		},
+	});
 
-    expect(payload.status()).toBe(200);
+	expect(payload.status()).toBe(200);
 
-    const body = await payload.json();
+	const body = await payload.json();
 
-    expect(body.jobId).toBeDefined();
-    expect(body.didState).toBeDefined();
-    expect(body.didState.did).toBeDefined();
-    expect(body.didState.state).toBeDefined();
-    expect(body.didState.secret).toBeDefined();
+	expect(body.jobId).toBeDefined();
+	expect(body.didState).toBeDefined();
+	expect(body.didState.did).toBeDefined();
+	expect(body.didState.state).toBeDefined();
+	expect(body.didState.secret).toBeDefined();
 
-    didState = body.didState;
-    jobId = body.jobId;
-})
+	didState = body.didState;
+	jobId = body.jobId;
+});
 
 test('did-create. Send the final request for DID creating', async ({ request }) => {
-    const serializedPayload = didState.signingRequest[0].serializedPayload;
-    const serializedBytes = Buffer.from(serializedPayload, 'base64')
-    const signature = sign(privKeyBytes, serializedBytes)
+	const serializedPayload = didState.signingRequest[0].serializedPayload;
+	const serializedBytes = Buffer.from(serializedPayload, 'base64');
+	const signature = sign(privKeyBytes, serializedBytes);
 
-    const secret = {
-        signingResponse: [
-            {
-                kid: didState.signingRequest[0].kid,
-                signature: toString(signature, 'base64'),
-            }
-        ]
-    }
+	const secret = {
+		signingResponse: [
+			{
+				kid: didState.signingRequest[0].kid,
+				signature: toString(signature, 'base64'),
+			},
+		],
+	};
 
-    const didCreate = await request.post(`/1.0/create/`, {
-        data: {
-            jobId: jobId,
-            secret: secret,
-            options: {
-                network: "testnet"
-            },
-            didDocument: didPayload
-        }
-    })
+	const didCreate = await request.post(`/1.0/create/`, {
+		data: {
+			jobId: jobId,
+			secret: secret,
+			options: {
+				network: 'testnet',
+			},
+			didDocument: didPayload,
+		},
+	});
 
-    expect(didCreate.status()).toBe(201);
-})
+	expect(didCreate.status()).toBe(201);
+});

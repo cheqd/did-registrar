@@ -16,4 +16,4 @@ yarn.lock
 **/tsconfig.json
 
 # Ignore generated files
-swagger.json
+src/static/swagger.json

@@ -1,17 +1,17 @@
 import type { Request, Response } from 'express';
-import type { MsgCreateResourcePayload } from '@cheqd/ts-proto/cheqd/resource/v2';
-import type { SignInfo } from '@cheqd/ts-proto/cheqd/did/v2';
+import type { MsgCreateResourcePayload } from '@cheqd/ts-proto/cheqd/resource/v2/index.js';
+import type { SignInfo } from '@cheqd/ts-proto/cheqd/did/v2/index.js';
 
 import { check, param, validationResult } from 'express-validator';
 import { v4 } from 'uuid';
 import { fromString } from 'uint8arrays';
 
-import { CheqdRegistrar, CheqdResolver, NetworkType } from '../service/cheqd';
-import { IResourceCreateRequest, IState } from '../types/types';
-import { Messages } from '../types/constants';
-import { convertToSignInfo } from '../helpers/helpers';
-import { Responses } from '../helpers/response';
-import { LocalStore } from './store';
+import { CheqdRegistrar, CheqdResolver, NetworkType } from '../service/cheqd.js';
+import { IResourceCreateRequest, IState } from '../types/types.js';
+import { Messages } from '../types/constants.js';
+import { convertToSignInfo } from '../helpers/helpers.js';
+import { Responses } from '../helpers/response.js';
+import { LocalStore } from './store.js';
 
 export class ResourceController {
 	public static createValidator = [

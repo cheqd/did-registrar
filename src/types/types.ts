@@ -1,6 +1,6 @@
 import type { DIDDocument, DidStdFee } from '@cheqd/sdk';
-import type { AlternativeUri } from '@cheqd/ts-proto/cheqd/resource/v2';
-import type { NetworkType } from '../service/cheqd';
+import type { AlternativeUri } from '@cheqd/ts-proto/cheqd/resource/v2/index.js';
+import type { NetworkType } from '../service/cheqd.js';
 
 export interface IDIDCreateRequest {
 	jobId: string | null;
@@ -73,7 +73,7 @@ export enum IAction {
 }
 
 export interface ISignInfo {
-	verificationMethodId: string;
+	kid: string;
 	signature: string;
 }
 

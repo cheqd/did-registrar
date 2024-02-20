@@ -1,14 +1,14 @@
 import type { CheqdSDK, AbstractCheqdSDKModule, ICheqdSDKOptions, DIDDocument, DidStdFee } from '@cheqd/sdk';
 
 import { createCheqdSDK, DIDModule, ResourceModule } from '@cheqd/sdk';
-import { MsgCreateResourcePayload } from '@cheqd/ts-proto/cheqd/resource/v2';
-import { SignInfo } from '@cheqd/ts-proto/cheqd/did/v2';
+import { MsgCreateResourcePayload } from '@cheqd/ts-proto/cheqd/resource/v2/index.js';
+import { SignInfo } from '@cheqd/ts-proto/cheqd/did/v2/index.js';
 import { DirectSecp256k1HdWallet } from '@cosmjs/proto-signing';
 import * as dotenv from 'dotenv';
 import fetch from 'node-fetch';
 
-import { Messages } from '../types/constants';
-import { IOptions } from '../types/types';
+import { Messages } from '../types/constants.js';
+import { IOptions } from '../types/types.js';
 
 dotenv.config();
 
@@ -49,8 +49,8 @@ export class CheqdRegistrar {
 			rpcUrl: options.rpcUrl
 				? options.rpcUrl
 				: options.network === NetworkType.Testnet
-				  ? DefaultRPCUrl.Testnet
-				  : DefaultRPCUrl.Mainnet,
+					? DefaultRPCUrl.Testnet
+					: DefaultRPCUrl.Mainnet,
 			wallet: await DirectSecp256k1HdWallet.fromMnemonic(
 				options.network === NetworkType.Mainnet ? FEE_PAYER_MAINNET_MNEMONIC : FEE_PAYER_TESTNET_MNEMONIC,
 				{ prefix: 'cheqd' }

@@ -1,16 +1,16 @@
 import type { Request, Response } from 'express';
 import type { DIDDocument } from '@cheqd/sdk';
-import type { SignInfo } from '@cheqd/ts-proto/cheqd/did/v2';
+import type { SignInfo } from '@cheqd/ts-proto/cheqd/did/v2/index.js';
 
 import { validationResult, check } from 'express-validator';
 import { v4 } from 'uuid';
 
-import { convertToSignInfo, validateSpecCompliantPayload } from '../helpers/helpers';
-import { Responses } from '../helpers/response';
-import { CheqdRegistrar, CheqdResolver, NetworkType } from '../service/cheqd';
-import { Messages } from '../types/constants';
-import { DidDocumentOperation, IDIDCreateRequest, IDIDUpdateRequest, IState } from '../types/types';
-import { LocalStore } from './store';
+import { convertToSignInfo, validateSpecCompliantPayload } from '../helpers/helpers.js';
+import { Responses } from '../helpers/response.js';
+import { CheqdRegistrar, CheqdResolver, NetworkType } from '../service/cheqd.js';
+import { Messages } from '../types/constants.js';
+import { DidDocumentOperation, IDIDCreateRequest, IDIDUpdateRequest, IState } from '../types/types.js';
+import { LocalStore } from './store.js';
 
 export class DidController {
 	public static createValidator = [
@@ -31,7 +31,7 @@ export class DidController {
 		check('options.versionId').optional().isString().withMessage(Messages.InvalidOptions),
 		check('secret.signingResponse').optional().isArray().withMessage(Messages.InvalidSecret),
 		check('secret.signingResponse.*.signature').isString().withMessage(Messages.InvalidSecret),
-		check('secret.signingResponse.*.verificationMethodId').isString().withMessage(Messages.InvalidSecret),
+		check('secret.signingResponse.*.kid').isString().withMessage(Messages.InvalidSecret),
 	];
 
 	public static updateValidator = [

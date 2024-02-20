@@ -26,6 +26,13 @@ jobs:
       - name: "Run npm build"
         run: npm run build
 
+      - name: "Run npm test"
+        env:
+          TEST_PRIVATE_KEY: ${{ secrets.TEST_PRIVATE_KEY }}
+          TEST_PUBLIC_KEY: ${{ secrets.TEST_PUBLIC_KEY }}
+          
+        run: npm run test
+
   build-docker:
     name: "Build Docker image"
     runs-on: ubuntu-latest
@@ -68,7 +75,7 @@ jobs:
           cache-to: type=gha,mode=min
 
       - name: Upload build image as artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: did-registrar-staging
           path: did-registrar-staging.tar

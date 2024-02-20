@@ -1,15 +1,15 @@
 import type { DIDDocument, SpecValidationResult } from '@cheqd/sdk';
-import type { SignInfo } from '@cheqd/ts-proto/cheqd/did/v2';
+import type { SignInfo } from '@cheqd/ts-proto/cheqd/did/v2/index.js';
 
 import { VerificationMethods } from '@cheqd/sdk';
 import { base64ToBytes } from 'did-jwt';
 
-import { ISignInfo } from '../types/types';
+import { ISignInfo } from '../types/types.js';
 
 export function convertToSignInfo(payload: ISignInfo[]): SignInfo[] {
 	return payload.map((value) => {
 		return {
-			verificationMethodId: value.verificationMethodId,
+			verificationMethodId: value.kid,
 			signature: base64ToBytes(value.signature),
 		};
 	});
@@ -49,7 +49,7 @@ export function validateSpecCompliantPayload(didDocument: DIDDocument): SpecVali
 	const isValidService = didDocument.service
 		? didDocument?.service?.every((s) => {
 				return Array.isArray(s?.serviceEndpoint) && s?.id && s?.type;
-		  })
+			})
 		: true;
 
 	if (!isValidService) return { valid: false, error: 'Service is Invalid' };

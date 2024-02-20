@@ -11,7 +11,7 @@ import {
 	VerificationMethods,
 } from '@cheqd/sdk';
 
-import { NetworkType } from '../service/cheqd';
+import { NetworkType } from '../service/cheqd.js';
 
 export class CheqdController {
 	public static didDocValidator = [
@@ -60,7 +60,7 @@ export class CheqdController {
 		return response.json({
 			didDoc: createDidPayload(verificationMethods, [verificationKeys]),
 			key: {
-				verificationMethodId: verificationMethods[0].id,
+				kid: verificationMethods[0].id,
 				publicKeyHex,
 			},
 		});

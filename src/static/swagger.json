@@ -584,7 +584,7 @@
                         },
                         "example": [
                             {
-                                "verificationMethodId": "did:cheqd:testnet:ca9ff47c-0286-4614-a4be-8ffa83911e09",
+                                "kid": "did:cheqd:testnet:ca9ff47c-0286-4614-a4be-8ffa83911e09",
                                 "signature": "keaiUef4jaPvupBpC2IK9/H/yd/OPsgxCADOgftuLQc"
                             }
                         ]
@@ -606,7 +606,7 @@
             "KeyPair": {
                 "type": "object",
                 "properties": {
-                    "verificationMethodId": {
+                    "kid": {
                         "type": "string"
                     },
                     "privateKeyHex": {
@@ -620,7 +620,7 @@
             "SigningResponse": {
                 "type": "object",
                 "properties": {
-                    "verificationMethodId": {
+                    "kid": {
                         "type": "string"
                     },
                     "signature": {

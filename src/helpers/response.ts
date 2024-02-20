@@ -1,13 +1,13 @@
 import type { DIDDocument, VerificationMethod } from '@cheqd/sdk';
 
 import { DIDModule } from '@cheqd/sdk';
-import { MsgCreateDidDocPayload, MsgDeactivateDidDocPayload } from '@cheqd/ts-proto/cheqd/did/v2';
-import { MsgCreateResourcePayload } from '@cheqd/ts-proto/cheqd/resource/v2';
+import { MsgCreateDidDocPayload, MsgDeactivateDidDocPayload } from '@cheqd/ts-proto/cheqd/did/v2/index.js';
+import { MsgCreateResourcePayload } from '@cheqd/ts-proto/cheqd/resource/v2/index.js';
 
 import { toString } from 'uint8arrays';
 
-import { Messages } from '../types/constants';
-import { IAction, IState } from '../types/types';
+import { Messages } from '../types/constants.js';
+import { IAction, IState } from '../types/types.js';
 
 export class Responses {
 	static GetSuccessResponse(jobId: string, didDocument: DIDDocument, secret: Record<string, any>) {

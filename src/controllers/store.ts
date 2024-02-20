@@ -1,10 +1,10 @@
 import type { DIDDocument } from '@cheqd/sdk';
-import type { MsgCreateResourcePayload } from '@cheqd/ts-proto/cheqd/resource/v2';
+import type { MsgCreateResourcePayload } from '@cheqd/ts-proto/cheqd/resource/v2/index.js';
 
 import NodeCache from 'node-cache';
 import * as dotenv from 'dotenv';
 
-import { IState } from '../types/types';
+import { IState } from '../types/types.js';
 
 dotenv.config();
 
@@ -20,7 +20,7 @@ export class LocalStore {
 	}
 
 	setItem(key: string, data: IDidDocData) {
-		this.cache.set(key, data, LOCAL_STORE_TTL || 600);
+		this.cache.set(key, data, +LOCAL_STORE_TTL || 600);
 	}
 
 	getItem(key: string) {
@@ -28,7 +28,7 @@ export class LocalStore {
 	}
 
 	setResource(key: string, data: IResourceData) {
-		this.cache.set(key, data, LOCAL_STORE_TTL || 600);
+		this.cache.set(key, data, +LOCAL_STORE_TTL || 600);
 	}
 
 	getResource(key: string) {

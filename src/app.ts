@@ -1,8 +1,8 @@
 import express from 'express';
 import Helmet from 'helmet';
-import * as swagger from 'swagger-ui-express';
+import swaggerUI from 'swagger-ui-express';
 
-import * as swaggerJson from './static/swagger.json' assert { type: 'json' };
+import swaggerDocument from './static/swagger.json' assert { type: 'json' };
 
 import { DidController } from './controllers/did.js';
 import { CheqdController } from './controllers/cheqd.js';
@@ -23,7 +23,7 @@ class App {
 		this.express.use(express.json({ limit: '50mb' }));
 		this.express.use(express.urlencoded({ extended: false }));
 		this.express.use(Helmet());
-		this.express.use('/api-docs', swagger.serve, swagger.setup(swaggerJson));
+		this.express.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerDocument));
 	}
 
 	private routes() {

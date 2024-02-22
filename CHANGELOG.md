@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.1.1](https://github.com/cheqd/did-registrar/compare/2.1.0...2.1.1) (2024-02-22)
+
+
+### Bug Fixes
+
+* Fix JSON import [DEV-3670] ([#273](https://github.com/cheqd/did-registrar/issues/273)) ([08039cb](https://github.com/cheqd/did-registrar/commit/08039cbe474f986e184ec9b28f5d808cb170fd62))
+
 ## [2.1.1-develop.1](https://github.com/cheqd/did-registrar/compare/2.1.0...2.1.1-develop.1) (2024-02-22)
 
 

@@ -1,6 +1,6 @@
 {
 	"name": "@cheqd/did-registrar",
-	"version": "2.1.2-develop.1",
+	"version": "2.1.2",
 	"description": "Universal Registrar for cheqd DID method",
 	"homepage": "https://github.com/cheqd/did-registrar#readme",
 	"license": "Apache-2.0",
@@ -47,7 +47,7 @@
 		"README.md"
 	],
 	"dependencies": {
-		"@cheqd/sdk": "^4.0.0-develop.1",
+		"@cheqd/sdk": "^4.0.0",
 		"@cheqd/ts-proto": "^3.4.1",
 		"@cosmjs/proto-signing": "^0.32.3",
 		"dotenv": "^16.4.5",

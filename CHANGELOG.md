@@ -1,5 +1,19 @@
 # Changelog
 
+## [2.1.2](https://github.com/cheqd/did-registrar/compare/2.1.1...2.1.2) (2024-04-02)
+
+
+### Bug Fixes
+
+* Add more positive tests and deps bumps [DEV-3798] ([#288](https://github.com/cheqd/did-registrar/issues/288)) ([c3f7ad2](https://github.com/cheqd/did-registrar/commit/c3f7ad2a7c26fe92a45526083fe3d6ba26664880))
+
+## [2.1.2-develop.2](https://github.com/cheqd/did-registrar/compare/2.1.2-develop.1...2.1.2-develop.2) (2024-04-02)
+
+
+### Bug Fixes
+
+* Add more positive tests and deps bumps [DEV-3798] ([#288](https://github.com/cheqd/did-registrar/issues/288)) ([c3f7ad2](https://github.com/cheqd/did-registrar/commit/c3f7ad2a7c26fe92a45526083fe3d6ba26664880))
+
 ## [2.1.2-develop.1](https://github.com/cheqd/did-registrar/compare/2.1.1...2.1.2-develop.1) (2024-03-31)
 
 ## [2.1.1](https://github.com/cheqd/did-registrar/compare/2.1.0...2.1.1) (2024-02-22)

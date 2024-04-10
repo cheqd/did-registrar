@@ -142,4 +142,3 @@ test('did-deactivate. Send the final request for DID deactivating', async ({ req
 
 	expect(didDeactivate.status()).toBe(201);
 });
-

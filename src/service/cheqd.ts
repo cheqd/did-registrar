@@ -49,8 +49,8 @@ export class CheqdRegistrar {
 			rpcUrl: options.rpcUrl
 				? options.rpcUrl
 				: options.network === NetworkType.Testnet
-				  ? DefaultRPCUrl.Testnet
-				  : DefaultRPCUrl.Mainnet,
+					? DefaultRPCUrl.Testnet
+					: DefaultRPCUrl.Mainnet,
 			wallet: await DirectSecp256k1HdWallet.fromMnemonic(
 				options.network === NetworkType.Mainnet ? FEE_PAYER_MAINNET_MNEMONIC : FEE_PAYER_TESTNET_MNEMONIC,
 				{ prefix: 'cheqd' }

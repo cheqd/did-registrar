@@ -1,5 +1,7 @@
 # Changelog
 
+## [2.1.3-develop.1](https://github.com/cheqd/did-registrar/compare/2.1.2...2.1.3-develop.1) (2024-04-10)
+
 ## [2.1.2](https://github.com/cheqd/did-registrar/compare/2.1.1...2.1.2) (2024-04-02)
 
 

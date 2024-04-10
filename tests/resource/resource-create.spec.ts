@@ -94,9 +94,9 @@ test('resource-create. Send the final request for DID creating', async ({ reques
 test('resource-create. Initiate Resource creation procedure', async ({ request }) => {
 	const payload = await request.post(`/1.0/${didPayload.id}/create-resource`, {
 		data: {
-            data: "SGVsbG8gV29ybGQ=",
-            name: "ResourceName",
-            type: "TextDocument"
+			data: 'SGVsbG8gV29ybGQ=',
+			name: 'ResourceName',
+			type: 'TextDocument',
 		},
 	});
 
@@ -104,11 +104,11 @@ test('resource-create. Initiate Resource creation procedure', async ({ request }
 
 	const body = await payload.json();
 
-    expect(body.resourceState).toBeDefined();
-    expect(body.resourceState).toBeDefined();
+	expect(body.resourceState).toBeDefined();
+	expect(body.resourceState).toBeDefined();
 
-    resourceState = body.resourceState;
-    jobId = body.jobId;
+	resourceState = body.resourceState;
+	jobId = body.jobId;
 });
 
 test('resource-create. Send the final request for Resource creating', async ({ request }) => {
@@ -127,9 +127,9 @@ test('resource-create. Send the final request for Resource creating', async ({ r
 
 	const resourceCreate = await request.post(`/1.0/${didPayload.id}/create-resource`, {
 		data: {
-            data: "SGVsbG8gV29ybGQ=",
-            name: "ResourceName",
-            type: "TextDocument",
+			data: 'SGVsbG8gV29ybGQ=',
+			name: 'ResourceName',
+			type: 'TextDocument',
 			jobId: jobId,
 			secret: secret,
 			options: {

@@ -91,17 +91,17 @@ test('did-update. Send the final request for DID creating', async ({ request }) 
 });
 
 test('did-update. Initiate DID Update procedure', async ({ request }) => {
-    // Change didPayload
-    didPayload = {
-        ...didPayload,
-        service: [
-            {
-                id: `${didPayload.id}#service-1`,
-                type: 'URL',
-                serviceEndpoint: ['https://example.com/vc/'],
-            },
-        ],
-    };
+	// Change didPayload
+	didPayload = {
+		...didPayload,
+		service: [
+			{
+				id: `${didPayload.id}#service-1`,
+				type: 'URL',
+				serviceEndpoint: ['https://example.com/vc/'],
+			},
+		],
+	};
 	const payload = await request.post('/1.0/update', {
 		data: {
 			didDocument: [didPayload],

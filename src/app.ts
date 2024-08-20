@@ -2,7 +2,7 @@ import express from 'express';
 import Helmet from 'helmet';
 import swaggerUI from 'swagger-ui-express';
 
-import swaggerDocument from './static/swagger.json' assert { type: 'json' };
+import swaggerDocument from './static/swagger.json' with { type: 'json' };
 
 import { DidController } from './controllers/did.js';
 import { CheqdController } from './controllers/cheqd.js';

@@ -1,5 +1,11 @@
 # Changelog
 
+## [2.1.4-develop.2](https://github.com/cheqd/did-registrar/compare/2.1.4-develop.1...2.1.4-develop.2) (2024-08-20)
+
+### Bug Fixes
+
+* Fix eslint error ([#322](https://github.com/cheqd/did-registrar/issues/322)) ([8a9f737](https://github.com/cheqd/did-registrar/commit/8a9f737680f222f758a2edf98f4de9a571e09c6f))
+
 ## [2.1.4-develop.1](https://github.com/cheqd/did-registrar/compare/2.1.3...2.1.4-develop.1) (2024-08-20)
 
 ## [2.1.3](https://github.com/cheqd/did-registrar/compare/2.1.2...2.1.3) (2024-04-24)

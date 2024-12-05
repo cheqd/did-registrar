@@ -1,5 +1,11 @@
 # Changelog
 
+## [2.2.0](https://github.com/cheqd/did-registrar/compare/2.1.5...2.2.0) (2024-12-05)
+
+### Features
+
+* Bump sdk and ts-proto to support v3 protocol release ([#362](https://github.com/cheqd/did-registrar/issues/362)) ([3bc6761](https://github.com/cheqd/did-registrar/commit/3bc67618cdb22aab5b1af23299147d197cd5b66c))
+
 ## [2.2.0-develop.1](https://github.com/cheqd/did-registrar/compare/2.1.5...2.2.0-develop.1) (2024-12-05)
 
 ### Features

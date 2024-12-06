@@ -7,7 +7,7 @@ import { v4 } from 'uuid';
 import { fromString } from 'uint8arrays';
 
 import { CheqdRegistrar, CheqdResolver, NetworkType } from '../service/cheqd.js';
-import { IResourceCreateRequest, IState } from '../types/types.js';
+import { IResourceCreateRequest, IResourceCreateRequestV1, IResourceUpdateRequest, IState } from '../types/types.js';
 import { Messages } from '../types/constants.js';
 import { convertToSignInfo } from '../helpers/helpers.js';
 import { Responses } from '../helpers/response.js';
@@ -25,6 +25,22 @@ export class ResourceController {
 		check('name').optional().isString().withMessage(Messages.Invalid),
 		check('type').optional().isString().withMessage(Messages.Invalid),
 		check('data').optional().isString().withMessage(Messages.Invalid),
+		check('alsoKnownAs').optional().isArray().withMessage(Messages.Invalid),
+		check('alsoKnownAs.*.uri').isString().withMessage(Messages.Invalid),
+		check('alsoKnownAs.*.description').isString().withMessage(Messages.Invalid),
+	];
+	public static createResourceValidator = [
+		check('did').exists().isString().contains('did:cheqd').withMessage(Messages.InvalidDid),
+		check('jobId')
+			.custom((value, { req }) => {
+				if (!value && !(req.body.name && req.body.type && req.body.data)) return false;
+				return true;
+			})
+			.withMessage('name, type and data are required'),
+		check('name').optional().isString().withMessage(Messages.Invalid),
+		check('type').optional().isString().withMessage(Messages.Invalid),
+		check('content').optional().isString().withMessage(Messages.Invalid),
+		check('relativeDidUrl').optional().isString().contains('/resources/').withMessage(Messages.InvalidDidUrl),
 		check('alsoKnownAs').optional().isArray().withMessage(Messages.Invalid),
 		check('alsoKnownAs.*.uri').isString().withMessage(Messages.Invalid),
 		check('alsoKnownAs.*.description').isString().withMessage(Messages.Invalid),
@@ -48,7 +64,7 @@ export class ResourceController {
 			version,
 			secret = {},
 			options = {},
-		} = request.body as IResourceCreateRequest;
+		} = request.body as IResourceCreateRequestV1;
 
 		let resourcePayload: Partial<MsgCreateResourcePayload> = {};
 		try {
@@ -139,4 +155,206 @@ export class ResourceController {
 			});
 		}
 	}
+	public async createResource(request: Request, response: Response) {
+		const result = validationResult(request);
+		if (!result.isEmpty()) {
+			return response
+				.status(400)
+				.json(Responses.GetInvalidResourceResponse({}, request.body.secret, result.array()[0].msg));
+		}
+
+		let { did, jobId, content, name, type, secret = {}, options = {} } = request.body as IResourceCreateRequest;
+
+		let resourcePayload: Partial<MsgCreateResourcePayload> = {};
+		try {
+			// check if did is registered on the ledger
+			let resolvedDocument = await CheqdResolver(did);
+			if (!resolvedDocument?.didDocument || resolvedDocument.didDocumentMetadata.deactivated) {
+				return response
+					.status(400)
+					.send(Responses.GetInvalidResponse({ id: did }, secret, Messages.DidNotFound));
+			} else {
+				resolvedDocument = resolvedDocument.didDocument;
+			}
+
+			// Validate and get store data if any
+			if (jobId) {
+				const storeData = LocalStore.instance.getResource(jobId);
+				if (!storeData) {
+					return response.status(400).json(Responses.GetJobExpiredResponse(jobId));
+				} else if (storeData.state == IState.Finished) {
+					return response.status(201).json({
+						jobId,
+						resourceState: {
+							resourceId: storeData.resource.id,
+							state: IState.Finished,
+							secret,
+							resource: storeData.resource,
+						},
+					});
+				}
+
+				resourcePayload = storeData.resource;
+				resourcePayload.data = new Uint8Array(Object.values(resourcePayload.data!));
+			} else if (!content) {
+				return response
+					.status(400)
+					.json(Responses.GetInvalidResourceResponse({}, secret, Messages.InvalidContent));
+			} else {
+				jobId = v4();
+
+				resourcePayload = {
+					collectionId: did.split(':').pop()!,
+					id: v4(),
+					name,
+					resourceType: type,
+					data: fromString(content, 'base64'),
+				};
+			}
+
+			let signInputs: SignInfo[];
+
+			if (secret.signingResponse) {
+				signInputs = convertToSignInfo(secret.signingResponse);
+			} else {
+				LocalStore.instance.setResource(jobId, { resource: resourcePayload, state: IState.Action });
+				return response
+					.status(200)
+					.json(
+						Responses.GetResourceActionSignatureResponse(
+							jobId,
+							resolvedDocument.verificationMethod,
+							resourcePayload
+						)
+					);
+			}
+
+			options.network = options.network || (did.split(':')[2] as NetworkType);
+			await CheqdRegistrar.instance.connect(options);
+			const result = await CheqdRegistrar.instance.createResource(signInputs, resourcePayload);
+			if (result.code == 0) {
+				return response.status(201).json(Responses.GetResourceSuccessResponse(jobId, secret, resourcePayload));
+			} else {
+				return response
+					.status(400)
+					.json(Responses.GetInvalidResourceResponse(resourcePayload, secret, Messages.InvalidResource));
+			}
+		} catch (error) {
+			return response.status(500).json({
+				jobId,
+				resourceState: {
+					state: IState.Failed,
+					reason: Messages.Internal,
+					description: Messages.TryAgain + error,
+					secret,
+					resourcePayload,
+				},
+			});
+		}
+	}
+	// public async updateResource(request: Request, response: Response) {
+	// 	const result = validationResult(request);
+	// 	if (!result.isEmpty()) {
+	// 		return response
+	// 			.status(400)
+	// 			.json(Responses.GetInvalidResourceResponse({}, request.body.secret, result.array()[0].msg));
+	// 	}
+
+	// 	let {
+	// 		did,
+	// 		jobId,
+	// 		content,
+	// 		relativeDidUrl,
+	// 		contentOperation,
+	// 		secret = {},
+	// 		options = {},
+	// 	} = request.body as IResourceUpdateRequest;
+
+	// 	let resourcePayload: Partial<MsgCreateResourcePayload> = {};
+	// 	try {
+	// 		// check if did is registered on the ledger
+	// 		let resolvedDocument = await CheqdResolver(did);
+	// 		if (!resolvedDocument?.didDocument || resolvedDocument.didDocumentMetadata.deactivated) {
+	// 			return response
+	// 				.status(400)
+	// 				.send(Responses.GetInvalidResponse({ id: did }, secret, Messages.DidNotFound));
+	// 		} else {
+	// 			resolvedDocument = resolvedDocument.didDocument;
+	// 		}
+
+	// 		// Validate and get store data if any
+	// 		if (jobId) {
+	// 			const storeData = LocalStore.instance.getResource(jobId);
+	// 			if (!storeData) {
+	// 				return response.status(400).json(Responses.GetJobExpiredResponse(jobId));
+	// 			} else if (storeData.state == IState.Finished) {
+	// 				return response.status(201).json({
+	// 					jobId,
+	// 					resourceState: {
+	// 						resourceId: storeData.resource.id,
+	// 						state: IState.Finished,
+	// 						secret,
+	// 						resource: storeData.resource,
+	// 					},
+	// 				});
+	// 			}
+
+	// 			resourcePayload = storeData.resource;
+	// 			resourcePayload.data = new Uint8Array(Object.values(resourcePayload.data!));
+	// 		} else if (!content) {
+	// 			return response
+	// 				.status(400)
+	// 				.json(Responses.GetInvalidResourceResponse({}, secret, Messages.InvalidContent));
+	// 		} else {
+	// 			jobId = v4();
+
+	// 			resourcePayload = {
+	// 				collectionId: did.split(':').pop()!,
+	// 				id: v4(),
+	// 				name,
+	// 				resourceType: type,
+	// 				data: fromString(content, 'base64'),
+	// 			};
+	// 		}
+
+	// 		let signInputs: SignInfo[];
+
+	// 		if (secret.signingResponse) {
+	// 			signInputs = convertToSignInfo(secret.signingResponse);
+	// 		} else {
+	// 			LocalStore.instance.setResource(jobId, { resource: resourcePayload, state: IState.Action });
+	// 			return response
+	// 				.status(200)
+	// 				.json(
+	// 					Responses.GetResourceActionSignatureResponse(
+	// 						jobId,
+	// 						resolvedDocument.verificationMethod,
+	// 						resourcePayload
+	// 					)
+	// 				);
+	// 		}
+
+	// 		options.network = options.network || (did.split(':')[2] as NetworkType);
+	// 		await CheqdRegistrar.instance.connect(options);
+	// 		const result = await CheqdRegistrar.instance.createResource(signInputs, resourcePayload);
+	// 		if (result.code == 0) {
+	// 			return response.status(201).json(Responses.GetResourceSuccessResponse(jobId, secret, resourcePayload));
+	// 		} else {
+	// 			return response
+	// 				.status(400)
+	// 				.json(Responses.GetInvalidResourceResponse(resourcePayload, secret, Messages.InvalidResource));
+	// 		}
+	// 	} catch (error) {
+	// 		return response.status(500).json({
+	// 			jobId,
+	// 			resourceState: {
+	// 				state: IState.Failed,
+	// 				reason: Messages.Internal,
+	// 				description: Messages.TryAgain + error,
+	// 				secret,
+	// 				resourcePayload,
+	// 			},
+	// 		});
+	// 	}
+	// }
 }

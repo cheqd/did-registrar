@@ -98,7 +98,7 @@ export class Responses {
 		};
 	}
 
-	static GetResourceActionSignatureResponse(
+	static GetResourceActionSignatureResponseV1(
 		jobId: string,
 		verificationMethod: VerificationMethod[],
 		resource: Partial<MsgCreateResourcePayload>
@@ -119,6 +119,38 @@ export class Responses {
 			jobId,
 			resourceState: {
 				did: resource.collectionId,
+				state: IState.Action,
+				action: IAction.GetSignature,
+				description: Messages.GetSignature,
+				signingRequest,
+				secret: {
+					signingResponse: [Messages.SigingResponse],
+				},
+			},
+		};
+	}
+	static GetResourceActionSignatureResponse(
+		jobId: string,
+		verificationMethod: VerificationMethod[],
+		did: string,
+		resource: Partial<MsgCreateResourcePayload>
+	) {
+		const signingRequest = verificationMethod.map((method) => {
+			return {
+				kid: method.id,
+				type: method.type,
+				alg: 'EdDSA',
+				serializedPayload: toString(
+					MsgCreateResourcePayload.encode(MsgCreateResourcePayload.fromPartial(resource)).finish(),
+					'base64pad'
+				),
+			};
+		});
+
+		return {
+			jobId,
+			didUrlState: {
+				didUrl: did + '/resources/' + resource.id,
 				state: IState.Action,
 				action: IAction.GetSignature,
 				description: Messages.GetSignature,
@@ -167,7 +199,7 @@ export class Responses {
 		};
 	}
 
-	static GetResourceSuccessResponse(
+	static GetResourceSuccessResponseV1(
 		jobId: string,
 		secret: Record<string, any>,
 		resourcePayload: Partial<MsgCreateResourcePayload>
@@ -182,8 +214,29 @@ export class Responses {
 			},
 		};
 	}
+	static GetResourceSuccessResponse(
+		jobId: string,
+		secret: Record<string, any>,
+		did: string,
+		resourcePayload: Partial<MsgCreateResourcePayload>
+	) {
+		return {
+			jobId,
+			didUrlState: {
+				didUrl: did + '/resources/' + resourcePayload.id || '',
+				state: IState.Finished,
+				secret,
+				content: resourcePayload.data,
+				name: resourcePayload.name,
+				type: resourcePayload.resourceType,
+				version: resourcePayload.version,
+			},
+			didRegistrationMetadata: {},
+			contentMetadata: {},
+		};
+	}
 
-	static GetInvalidResourceResponse(
+	static GetInvalidResourceResponseV1(
 		resourcePayload: Partial<MsgCreateResourcePayload> = {},
 		secret: Record<string, any> = {},
 		error: string
@@ -192,6 +245,24 @@ export class Responses {
 			jobId: null,
 			resourceState: {
 				resourceId: resourcePayload.id,
+				state: IState.Failed,
+				reason: Messages.Invalid,
+				description: Messages.Invalid + ': ' + error,
+				secret,
+				resourcePayload,
+			},
+		};
+	}
+	static GetInvalidResourceResponse(
+		did: string,
+		resourcePayload: Partial<MsgCreateResourcePayload> = {},
+		secret: Record<string, any> = {},
+		error: string
+	) {
+		return {
+			jobId: null,
+			didUrlState: {
+				didUrl: did + '/resources/' + resourcePayload.id,
 				state: IState.Failed,
 				reason: Messages.Invalid,
 				description: Messages.Invalid + ': ' + error,

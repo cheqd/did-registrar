@@ -77,6 +77,7 @@ This repository contains the playwright tests for unit and integration testing.
 Add any additional tests in the `tests` directory.
 
 You must set up these two env vars before running test:
+
 1. `TEST_PRIVATE_KEY` : Private key for signing the requests
 2. `TEST_PUBLIC_KEY` : Corresponding public key
 

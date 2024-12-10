@@ -63,7 +63,7 @@ test('resource-create. Initiate DID Create procedure', async ({ request }) => {
 	jobId = body.jobId;
 });
 
-test('resource-create. Send the final request for DID creating', async ({ request }) => {
+test('resource-create. Send the final request for DID creation', async ({ request }) => {
 	const serializedPayload = didState.signingRequest[0].serializedPayload;
 	const serializedBytes = Buffer.from(serializedPayload, 'base64');
 	const signature = sign(privKeyBytes, serializedBytes);
@@ -111,7 +111,7 @@ test('resource-create. Initiate Resource creation procedure', async ({ request }
 	jobId = body.jobId;
 });
 
-test('resource-create. Send the final request for Resource creating', async ({ request }) => {
+test('resource-create. Send the final request for Resource creation', async ({ request }) => {
 	const serializedPayload = resourceState.signingRequest[0].serializedPayload;
 	const serializedBytes = Buffer.from(serializedPayload, 'base64');
 	const signature = sign(privKeyBytes, serializedBytes);

@@ -22,6 +22,7 @@ let didState;
 let didUrlState;
 let jobId;
 let resourceJobId;
+let resourceId;
 
 test('did-document. Generate the payload', async ({ request }) => {
 	const payload = await request.get(
@@ -39,7 +40,7 @@ test('did-document. Generate the payload', async ({ request }) => {
 	didPayload = body.didDoc;
 });
 
-test('resource-create. Initiate DID Create procedure', async ({ request }) => {
+test('resource-update. Initiate DID Create procedure', async ({ request }) => {
 	const payload = await request.post('/1.0/create', {
 		data: {
 			didDocument: didPayload,
@@ -64,7 +65,7 @@ test('resource-create. Initiate DID Create procedure', async ({ request }) => {
 	jobId = body.jobId;
 });
 
-test('resource-create. Send the final request for DID creation', async ({ request }) => {
+test('resource-update. Send the final request for DID creation', async ({ request }) => {
 	const serializedPayload = didState.signingRequest[0].serializedPayload;
 	const serializedBytes = Buffer.from(serializedPayload, 'base64');
 	const signature = sign(privKeyBytes, serializedBytes);
@@ -92,7 +93,7 @@ test('resource-create. Send the final request for DID creation', async ({ reques
 	expect(didCreate.status()).toBe(201);
 });
 
-test('resource-create. Initiate Resource creation procedure', async ({ request }) => {
+test('resource-update. Initiate Resource creation procedure', async ({ request }) => {
 	const payload = await request.post(`/1.0/createResource`, {
 		data: {
 			did: didPayload.id,
@@ -118,7 +119,7 @@ test('resource-create. Initiate Resource creation procedure', async ({ request }
 	resourceJobId = body.jobId;
 });
 
-test('resource-create. Send the final request for Resource creation', async ({ request }) => {
+test('resource-update. Send the final request for Resource creation', async ({ request }) => {
 	const serializedPayload = didUrlState.signingRequest[0].serializedPayload;
 	const serializedBytes = Buffer.from(serializedPayload, 'base64');
 	const signature = sign(privKeyBytes, serializedBytes);
@@ -155,4 +156,73 @@ test('resource-create. Send the final request for Resource creation', async ({ r
 	expect(response.didUrlState.name).toEqual('ResourceName');
 	expect(response.didUrlState.type).toEqual('TextDocument');
 	expect(response.didUrlState.version).toEqual('1.0');
+	console.log('DIDUrl:' + response.didUrlState.didUrl);
+	resourceId = response.didUrlState.didUrl.split('/resources/')[1];
+});
+
+test('resource-update. Initiate Resource update procedure', async ({ request }) => {
+	const payload = await request.post(`/1.0/updateResource`, {
+		data: {
+			did: didPayload.id,
+			name: 'ResourceName',
+			type: 'TextDocument',
+			content: ['SGVsbG8gV29ybGQ='],
+			version: '2.0',
+			relativeDidUrl: '/resources/' + resourceId,
+			options: {
+				network: 'testnet',
+			},
+		},
+	});
+
+	expect(payload.status()).toBe(200);
+
+	const body = await payload.json();
+	expect(body.didUrlState).toBeDefined();
+	expect(body.didUrlState.didUrl).toBeDefined();
+	expect(body.didUrlState.state).toBeDefined();
+	expect(body.didUrlState.signingRequest).toBeDefined();
+
+	didUrlState = body.didUrlState;
+	resourceJobId = body.jobId;
+});
+
+test('resource-update. Send the final request for Resource update', async ({ request }) => {
+	const serializedPayload = didUrlState.signingRequest[0].serializedPayload;
+	const serializedBytes = Buffer.from(serializedPayload, 'base64');
+	const signature = sign(privKeyBytes, serializedBytes);
+
+	const secret = {
+		signingResponse: [
+			{
+				kid: didUrlState.signingRequest[0].kid,
+				signature: toString(signature, 'base64'),
+			},
+		],
+	};
+
+	const resourceCreate = await request.post(`/1.0/updateResource`, {
+		data: {
+			did: didPayload.id,
+			content: ['SGVsbG8gV29ybGQ='],
+			name: 'ResourceName',
+			type: 'TextDocument',
+			version: '1.0',
+			jobId: resourceJobId,
+			relativeDidUrl: '/resources/' + resourceId,
+			secret: secret,
+			options: {
+				network: 'testnet',
+			},
+		},
+	});
+	const response = await resourceCreate.json();
+	expect(resourceCreate.status()).toBe(201);
+	expect(response.didUrlState).toBeDefined();
+	expect(response.didUrlState.didUrl).toBeDefined();
+	expect(response.didUrlState.state).toBeDefined();
+	expect(response.didUrlState.state).toEqual('finished');
+	expect(response.didUrlState.name).toEqual('ResourceName');
+	expect(response.didUrlState.type).toEqual('TextDocument');
+	expect(response.didUrlState.version).toEqual('2.0');
 });

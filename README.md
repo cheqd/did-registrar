@@ -12,11 +12,17 @@ The purpose of this service is to provide a [Universal Registrar driver](https:/
 
 ## 📖 Endpoints
 
-- `/create`
-- `/update`
-- `/deactivate`
-- `/create-resource`
-- `/api-docs`
+- POST `/create`
+- POST `/update`
+- POST `/deactivate`
+- POST `/{did}/create-resource`
+- POST `/createResource`
+- POST `/updateResource`
+- GET `/key-pair`
+- GET `/did-document`
+- GET `/properties`
+- GET `/methods`
+- GET `/traits`
 
 ## 🧑‍💻🛠 Developer Guide
 
@@ -63,6 +69,23 @@ docker run -it did-registrar:local
 npm install
 npm run build
 npm start 
+```
+
+### 🛠 Testing
+
+This repository contains the playwright tests for unit and integration testing.
+Add any additional tests in the `tests` directory.
+
+You must set up these two env vars before running test:
+1. `TEST_PRIVATE_KEY` : Private key for signing the requests
+2. `TEST_PUBLIC_KEY` : Corresponding public key
+
+Then execute the tests
+
+```bash
+npm run test
+# if tests faile because of parallelism, run
+npm run test -- --workers=1
 ```
 
 ## 🐞 Bug reports & 🤔 feature requests

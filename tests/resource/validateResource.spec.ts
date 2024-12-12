@@ -259,3 +259,24 @@ test('resource-update. Resource not found', async ({ request }) => {
 	expect(body.didUrlState).toBeDefined();
 	expect(body.didUrlState.description).toEqual('Invalid payload: Resource does not exist');
 });
+
+test('resource-update. Send wrong name/type without relativeDidUrl', async ({ request }) => {
+	const payload = await request.post(`/1.0/updateResource`, {
+		data: {
+			did: activeDid,
+			name: 'ResourceName2',
+			type: 'TextDocument2',
+			version: '1.0',
+			content: ['Test Data'],
+			options: {
+				network: 'testnet',
+			},
+		},
+	});
+
+	expect(payload.status()).toBe(400);
+
+	const body = await payload.json();
+	expect(body.didUrlState).toBeDefined();
+	expect(body.didUrlState.description).toEqual('Invalid payload: Resource does not exist');
+});

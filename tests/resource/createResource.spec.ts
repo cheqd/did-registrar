@@ -156,3 +156,26 @@ test('resource-create. Send the final request for Resource creation', async ({ r
 	expect(response.didUrlState.type).toEqual('TextDocument');
 	expect(response.didUrlState.version).toEqual('1.0');
 });
+
+test('resource-create. Fail second create with same name and type', async ({ request }) => {
+	const payload = await request.post(`/1.0/createResource`, {
+		data: {
+			did: didPayload.id,
+			content: 'SGVsbG8gV29ybGQ=',
+			name: 'ResourceName',
+			type: 'TextDocument',
+			version: '1.0',
+			options: {
+				network: 'testnet',
+			},
+		},
+	});
+
+	expect(payload.status()).toBe(400);
+
+	const body = await payload.json();
+	expect(body.didUrlState).toBeDefined();
+	expect(body.didUrlState.state).toBeDefined();
+	expect(body.didUrlState.state).toEqual('failed');
+	expect(body.didUrlState.description).toEqual('Invalid payload: Resource already exists');
+});

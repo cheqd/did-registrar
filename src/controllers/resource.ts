@@ -43,7 +43,7 @@ export class ResourceController {
 				return true;
 			})
 			.withMessage('name, type and content are required'),
-		check('content').exists().isString().withMessage(Messages.Invalid),
+		check('content').optional().isString().withMessage(Messages.Invalid),
 		check('name').optional().isString().withMessage(Messages.Invalid),
 		check('type').optional().isString().withMessage(Messages.Invalid),
 		check('version').optional().isString().withMessage(Messages.Invalid),
@@ -63,7 +63,7 @@ export class ResourceController {
 		check('name').optional().isString().withMessage(Messages.Invalid),
 		check('type').optional().isString().withMessage(Messages.Invalid),
 		check('content')
-			.exists()
+			.optional()
 			.isArray()
 			.custom((value) => {
 				if (value.length !== 1) return false;
@@ -71,7 +71,7 @@ export class ResourceController {
 				return true;
 			})
 			.withMessage('The content array must be provided and must have exactly one string'),
-		check('relativeDidUrl').exists().isString().contains('/resources/').withMessage(Messages.InvalidDidUrl),
+		check('relativeDidUrl').optional().isString().contains('/resources/').withMessage(Messages.InvalidDidUrl),
 		check('contentOperation')
 			.optional()
 			.isArray()
@@ -190,6 +190,28 @@ export class ResourceController {
 			});
 		}
 	}
+
+	// function to get resource by using name and type
+	public static async checkResourceStatus(
+		did: string,
+		name: string,
+		type: string
+	): Promise<{ existingResource: any }> {
+		let existingResource;
+		let queryString = did + '?resourceName=' + name + '&resourceType=' + type + '&resourceMetadata=true';
+		let resource = await CheqdResolver(queryString);
+		if (resource)
+			if (resource.contentStream) {
+				let metadata = resource.contentStream.linkedResourceMetadata || [];
+				if (metadata.length >= 1) {
+					return {
+						existingResource: metadata[0],
+					};
+				}
+			}
+		return { existingResource: existingResource };
+	}
+
 	public async createResource(request: Request, response: Response) {
 		const result = validationResult(request);
 		if (!result.isEmpty()) {
@@ -210,6 +232,7 @@ export class ResourceController {
 		} = request.body as IResourceCreateRequest;
 
 		let resourcePayload: Partial<MsgCreateResourcePayload> = {};
+
 		try {
 			// check if did is registered on the ledger
 			let resolvedDocument = await CheqdResolver(did);
@@ -217,10 +240,8 @@ export class ResourceController {
 				return response
 					.status(400)
 					.send(Responses.GetInvalidResourceResponse(did, {}, secret, Messages.DidNotFound));
-			} else {
-				resolvedDocument = resolvedDocument.didDocument;
 			}
-
+			resolvedDocument = resolvedDocument.didDocument;
 			// Validate and get store data if any
 			if (jobId) {
 				const storeData = LocalStore.instance.getResource(jobId);
@@ -245,6 +266,12 @@ export class ResourceController {
 					.status(400)
 					.json(Responses.GetInvalidResourceResponse('', {}, secret, Messages.InvalidContent));
 			} else {
+				const checkResource = await ResourceController.checkResourceStatus(did, name, type);
+				if (checkResource.existingResource) {
+					return response
+						.status(400)
+						.send(Responses.GetInvalidResourceResponse(did, {}, secret, Messages.ResourceExists));
+				}
 				jobId = v4();
 
 				resourcePayload = {
@@ -321,7 +348,7 @@ export class ResourceController {
 		} = request.body as IResourceUpdateRequest;
 
 		let resourcePayload: Partial<MsgCreateResourcePayload> = {};
-		let existingResource;
+
 		try {
 			// check if did is registered on the ledger
 			let resolvedDocument = await CheqdResolver(did);
@@ -329,38 +356,8 @@ export class ResourceController {
 				return response
 					.status(400)
 					.send(Responses.GetInvalidResourceResponse(did, {}, secret, Messages.DidNotFound));
-			} else {
-				const didUrlIndex = resolvedDocument.didDocumentMetadata.linkedResourceMetadata.findIndex(
-					(resource: { resourceURI: string }) => resource.resourceURI === did + relativeDidUrl
-				);
-				if (didUrlIndex !== -1) {
-					existingResource = resolvedDocument.didDocumentMetadata.linkedResourceMetadata[didUrlIndex];
-					if (existingResource.resourceName !== name || existingResource.resourceType !== type)
-						return response
-							.status(400)
-							.send(
-								Responses.GetInvalidResourceResponse(
-									did,
-									{ id: relativeDidUrl.split('resources/')[1] },
-									secret,
-									Messages.InvalidUpdateResource
-								)
-							);
-				} else {
-					return response
-						.status(400)
-						.send(
-							Responses.GetInvalidResourceResponse(
-								did,
-								{ id: relativeDidUrl.split('resources/')[1] },
-								secret,
-								Messages.ResourceNotFound
-							)
-						);
-				}
-				resolvedDocument = resolvedDocument.didDocument;
 			}
-
+			const resolvedDidDocument = resolvedDocument.didDocument;
 			// Validate and get store data if any
 			if (jobId) {
 				const storeData = LocalStore.instance.getResource(jobId);
@@ -385,6 +382,54 @@ export class ResourceController {
 					.status(400)
 					.json(Responses.GetInvalidResourceResponse('', {}, secret, Messages.InvalidContent));
 			} else {
+				let existingResource;
+				const linkedResourceMetadata = resolvedDocument.didDocumentMetadata.linkedResourceMetadata || [];
+
+				if (relativeDidUrl) {
+					// search resource using relativeDidUrl
+					const didUrlIndex = linkedResourceMetadata.findIndex(
+						(resource: { resourceURI: string }) => resource.resourceURI === did + relativeDidUrl
+					);
+					if (didUrlIndex !== -1) {
+						// if resource is found using relativeDidUrl
+						existingResource = linkedResourceMetadata[didUrlIndex];
+						// passed name and type must match
+						if (existingResource.resourceName !== name || existingResource.resourceType !== type)
+							return response
+								.status(400)
+								.send(
+									Responses.GetInvalidResourceResponse(
+										did,
+										{ id: relativeDidUrl.split('resources/')[1] },
+										secret,
+										Messages.InvalidUpdateResource
+									)
+								);
+						// If resource has a nextVersionId, then return error
+						if (existingResource.nextVersionId) {
+							return response
+								.status(400)
+								.send(
+									Responses.GetInvalidResourceResponse(
+										did,
+										{},
+										secret,
+										'Only latest version of resource can be updated'
+									)
+								);
+						}
+					}
+				} else {
+					// if not relativeDidUrl, find by name and type
+					const checkResource = await ResourceController.checkResourceStatus(did, name, type);
+					existingResource = checkResource.existingResource;
+				}
+				if (!existingResource) {
+					return response
+						.status(400)
+						.send(Responses.GetInvalidResourceResponse(did, {}, secret, Messages.ResourceNotFound));
+				}
+
 				jobId = v4();
 
 				resourcePayload = {
@@ -408,7 +453,7 @@ export class ResourceController {
 					.json(
 						Responses.GetResourceActionSignatureResponse(
 							jobId,
-							resolvedDocument.verificationMethod,
+							resolvedDidDocument.verificationMethod,
 							did,
 							resourcePayload
 						)

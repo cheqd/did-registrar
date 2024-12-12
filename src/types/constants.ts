@@ -11,6 +11,7 @@ export enum Messages {
 	SecretValidation = 'Provide either a valid KeyPair or Signature',
 	InvalidResource = 'Resource Data is invalid',
 	ResourceNotFound = 'Resource does not exist',
+	ResourceExists = 'Resource already exists',
 	InvalidContent = 'Resource Content is invalid',
 	InvalidUpdateResource = 'Update resource name or type does not match existing resource',
 	TestnetFaucet = 'sketch mountain erode window enact net enrich smoke claim kangaroo another visual write meat latin bacon pulp similar forum guilt father state erase bright',

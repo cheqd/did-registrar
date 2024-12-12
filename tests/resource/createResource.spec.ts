@@ -64,7 +64,7 @@ test('resource-create. Initiate DID Create procedure', async ({ request }) => {
 	jobId = body.jobId;
 });
 
-test('resource-create. Send the final request for DID creating', async ({ request }) => {
+test('resource-create. Send the final request for DID creation', async ({ request }) => {
 	const serializedPayload = didState.signingRequest[0].serializedPayload;
 	const serializedBytes = Buffer.from(serializedPayload, 'base64');
 	const signature = sign(privKeyBytes, serializedBytes);
@@ -90,26 +90,6 @@ test('resource-create. Send the final request for DID creating', async ({ reques
 	});
 
 	expect(didCreate.status()).toBe(201);
-});
-
-test('resource-create. Fail to send content', async ({ request }) => {
-	const payload = await request.post(`/1.0/createResource`, {
-		data: {
-			did: didPayload.id,
-			name: 'ResourceName',
-			type: 'TextDocument',
-			version: '1.0',
-			options: {
-				network: 'testnet',
-			},
-		},
-	});
-
-	expect(payload.status()).toBe(400);
-
-	const body = await payload.json();
-	expect(body.didUrlState).toBeDefined();
-	expect(body.didUrlState.description).toEqual('Invalid payload: name, type and content are required');
 });
 
 test('resource-create. Initiate Resource creation procedure', async ({ request }) => {
@@ -138,7 +118,7 @@ test('resource-create. Initiate Resource creation procedure', async ({ request }
 	resourceJobId = body.jobId;
 });
 
-test('resource-create. Send the final request for Resource creating', async ({ request }) => {
+test('resource-create. Send the final request for Resource creation', async ({ request }) => {
 	const serializedPayload = didUrlState.signingRequest[0].serializedPayload;
 	const serializedBytes = Buffer.from(serializedPayload, 'base64');
 	const signature = sign(privKeyBytes, serializedBytes);
@@ -175,4 +155,27 @@ test('resource-create. Send the final request for Resource creating', async ({ r
 	expect(response.didUrlState.name).toEqual('ResourceName');
 	expect(response.didUrlState.type).toEqual('TextDocument');
 	expect(response.didUrlState.version).toEqual('1.0');
+});
+
+test('resource-create. Fail second create with same name and type', async ({ request }) => {
+	const payload = await request.post(`/1.0/createResource`, {
+		data: {
+			did: didPayload.id,
+			content: 'SGVsbG8gV29ybGQ=',
+			name: 'ResourceName',
+			type: 'TextDocument',
+			version: '1.0',
+			options: {
+				network: 'testnet',
+			},
+		},
+	});
+
+	expect(payload.status()).toBe(400);
+
+	const body = await payload.json();
+	expect(body.didUrlState).toBeDefined();
+	expect(body.didUrlState.state).toBeDefined();
+	expect(body.didUrlState.state).toEqual('failed');
+	expect(body.didUrlState.description).toEqual('Invalid payload: Resource already exists');
 });

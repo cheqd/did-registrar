@@ -7,7 +7,7 @@ import swaggerDocument from './static/swagger.json' with { type: 'json' };
 import { DidController } from './controllers/did.js';
 import { CheqdController } from './controllers/cheqd.js';
 import { ResourceController } from './controllers/resource.js';
-import { CheqdRegistrar } from './service/cheqd.js';
+import { CheqdRegistrar, DefaultResolverUrl, DefaultRPCUrl } from './service/cheqd.js';
 import { MethodSpecificIdAlgo, VerificationMethods } from '@cheqd/sdk';
 
 class App {
@@ -31,13 +31,28 @@ class App {
 		const app = this.express;
 		const URL_PREFIX = '/1.0';
 		const staticTraits = {
-			cheqd: {
-				updatable: true,
-				deactivatable: true,
-				enumerable: true,
-				historyAvailable: true,
-				humanReadable: false,
-			},
+			name: 'cheqd',
+			updateable: true,
+			updateableServiceEndpoints: true,
+			deactivatable: true,
+			deletable: false,
+			transactionalFees: true,
+			selfCertifying: true,
+			updateableVerificationMethods: true,
+			prerotationOfKeys: false,
+			multisigVerificationMethod: false,
+			humanreadable: false,
+			enumerable: true,
+			resolvableLocally: false,
+			resolvableGlobally: true,
+			history: true,
+			historySigned: true,
+			hostingNotRequired: false,
+			hostedCentrally: false,
+			hostedDecentrally: true,
+			cryptographyPrivacyPreserving: false,
+			cryptographyGovernmentApproved: false,
+			dataProtectionCompliant: false,
 		};
 		const properties = {
 			cheqd: {
@@ -48,6 +63,8 @@ class App {
 				],
 				supportedAlgorithm: [MethodSpecificIdAlgo.Base58, MethodSpecificIdAlgo.Uuid],
 				localStoreTTL: process.env.LOCAL_STORE_TTL,
+				rpcUrl: DefaultRPCUrl.Mainnet,
+				resolverUrl: DefaultResolverUrl.Cheqd,
 			},
 		};
 		const didMethods = ['cheqd'];

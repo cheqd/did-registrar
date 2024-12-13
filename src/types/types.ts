@@ -119,6 +119,9 @@ export interface IResourceUpdateRequest {
 	relativeDidUrl: string;
 	content: any;
 	contentOperation: ContentOperation[];
+	name: string;
+	type: string;
+	version: string;
 }
 
 export enum ContentOperation {

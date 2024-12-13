@@ -88,9 +88,9 @@ class App {
 		);
 		app.post(
 			`${URL_PREFIX}/updateResource`,
-			ResourceController.createResourceValidator,
+			ResourceController.updateResourceValidator,
 			DidController.commonValidator,
-			new ResourceController().create
+			new ResourceController().updateResource
 		);
 
 		app.get(`${URL_PREFIX}/methods`, (req: Request, res: Response) => {

@@ -490,13 +490,13 @@
                                     "type": "object",
                                     "description": "A map of DID traits.",
                                     "example": {
-                                        "cheqd": {
-                                            "updatable": true,
-                                            "deactivatable": true,
-                                            "enumerable": true,
-                                            "historyAvailable": true,
-                                            "humanReadable": false
-                                        }
+                                        "$schema": "https://identity.foundation/did-traits/schemas/traits.json",
+                                        "name": "cheqd",
+                                        "updatable": true,
+                                        "deactivatable": true,
+                                        "enumerable": true,
+                                        "historyAvailable": true,
+                                        "humanReadable": false
                                     }
                                 }
                             }

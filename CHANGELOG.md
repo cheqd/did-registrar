@@ -1,5 +1,11 @@
 # Changelog
 
+## [2.3.0-develop.1](https://github.com/cheqd/did-registrar/compare/2.2.0...2.3.0-develop.1) (2024-12-17)
+
+### Features
+
+* add createResource endpoint [DEV-4605][DEV-4636] ([#366](https://github.com/cheqd/did-registrar/issues/366)) ([25b5f59](https://github.com/cheqd/did-registrar/commit/25b5f59c41c7aebefeaf7fc0c99d9074c0cc8b79)), closes [#367](https://github.com/cheqd/did-registrar/issues/367)
+
 ## [2.2.0](https://github.com/cheqd/did-registrar/compare/2.1.5...2.2.0) (2024-12-05)
 
 ### Features

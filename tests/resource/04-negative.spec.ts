@@ -1,5 +1,6 @@
 import { test, expect } from '@playwright/test';
 import * as dotenv from 'dotenv';
+import { getDidDocument, getResourceId } from 'fixtures';
 
 dotenv.config();
 
@@ -279,4 +280,54 @@ test('resource-update. Send wrong name/type without relativeDidUrl', async ({ re
 	const body = await payload.json();
 	expect(body.didUrlState).toBeDefined();
 	expect(body.didUrlState.description).toEqual('Invalid payload: Resource does not exist');
+});
+
+test('resource-create. Fail second create with same name and type', async ({ request }) => {
+	const didPayload = getDidDocument();
+	const payload = await request.post(`/1.0/createResource`, {
+		data: {
+			did: didPayload.id,
+			content: 'SGVsbG8gV29ybGQ=',
+			name: 'ResourceName',
+			type: 'TextDocument',
+			version: '1.0',
+			options: {
+				network: 'testnet',
+			},
+		},
+	});
+
+	expect(payload.status()).toBe(400);
+
+	const body = await payload.json();
+	expect(body.didUrlState).toBeDefined();
+	expect(body.didUrlState.state).toBeDefined();
+	expect(body.didUrlState.state).toEqual('failed');
+	expect(body.didUrlState.description).toEqual('Invalid payload: Resource already exists');
+});
+
+test('resource-update. Fail Resource update with existing nextVersionId', async ({ request }) => {
+	const didPayload = getDidDocument();
+	const resourceId = getResourceId();
+	const payload = await request.post(`/1.0/updateResource`, {
+		data: {
+			did: didPayload.id,
+			name: 'ResourceName',
+			type: 'TextDocument',
+			content: ['SGVsbG8gV29ybGQ='],
+			version: '4.0',
+			relativeDidUrl: '/resources/' + resourceId,
+			options: {
+				network: 'testnet',
+			},
+		},
+	});
+
+	expect(payload.status()).toBe(400);
+
+	const body = await payload.json();
+	expect(body.didUrlState).toBeDefined();
+	expect(body.didUrlState.state).toBeDefined();
+	expect(body.didUrlState.state).toEqual('failed');
+	expect(body.didUrlState.description).toEqual('Invalid payload: Only latest version of resource can be updated');
 });

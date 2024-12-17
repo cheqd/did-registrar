@@ -1,27 +1,11 @@
 import { test, expect } from '@playwright/test';
 import { sign } from '@stablelib/ed25519';
 import { toString, fromString } from 'uint8arrays';
-import base64url from 'base64url';
+import { getDidDocument, privKeyBytes, pubKeyHex, setDidDocument } from 'fixtures';
 
-import * as dotenv from 'dotenv';
-import { assert } from 'console';
-
-dotenv.config();
-
-const pub_key_base_64 = process.env.TEST_PUBLIC_KEY;
-const priv_key_base_64 = process.env.TEST_PRIVATE_KEY;
-
-assert(pub_key_base_64, 'TEST_PUBLIC_KEY is not defined');
-assert(priv_key_base_64, 'TEST_PRIVATE_KEY is not defined');
-
-const pubKeyHex = toString(fromString(pub_key_base_64 as string, 'base64pad'), 'base16');
-const privKeyBytes = base64url.toBuffer(priv_key_base_64 as string);
-
-let didPayload;
 let didState;
 let jobId;
-
-test('did-document. Generate the payload', async ({ request }) => {
+test.beforeAll(async ({ request }) => {
 	const payload = await request.get(
 		`/1.0/did-document?verificationMethod=JsonWebKey2020&methodSpecificIdAlgo=uuid&network=testnet&publicKeyHex=${pubKeyHex}`
 	);
@@ -34,10 +18,11 @@ test('did-document. Generate the payload', async ({ request }) => {
 	expect(body.key.kid).toBeDefined();
 	expect(body.key.publicKeyHex).toBeDefined();
 
-	didPayload = body.didDoc;
+	setDidDocument(body.didDoc);
 });
 
 test('did-create. Initiate DID Create procedure', async ({ request }) => {
+	const didPayload = getDidDocument();
 	const payload = await request.post('/1.0/create', {
 		data: {
 			didDocument: didPayload,
@@ -63,6 +48,7 @@ test('did-create. Initiate DID Create procedure', async ({ request }) => {
 });
 
 test('did-create. Send the final request for DID creating', async ({ request }) => {
+	const didPayload = getDidDocument();
 	const serializedPayload = didState.signingRequest[0].serializedPayload;
 	const serializedBytes = Buffer.from(serializedPayload, 'base64');
 	const signature = sign(privKeyBytes, serializedBytes);

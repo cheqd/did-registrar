@@ -51,7 +51,7 @@ class App {
 			hostedCentrally: false,
 			hostedDecentrally: true,
 			cryptographyPrivacyPreserving: false,
-			cryptographyGovernmentApproved: false,
+			cryptographyGovernmentApproved: true,
 			dataProtectionCompliant: false,
 		};
 		const properties = {

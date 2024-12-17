@@ -198,7 +198,7 @@ export class ResourceController {
 		type: string
 	): Promise<{ existingResource: any }> {
 		let existingResource;
-		let queryString = did + '?resourceName=' + name + '&resourceType=' + type + '&resourceMetadata=true';
+		const queryString = `${did}?resourceName=${name}&resourceType=${type}&resourceMetadata=true`;
 		let resource = await CheqdResolver(queryString);
 		if (resource)
 			if (resource.contentStream) {

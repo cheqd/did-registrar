@@ -6,9 +6,9 @@
         }
     ],
     "info": {
+        "title": "Universal Registrar driver for did:cheqd",
         "description": "Universal Registrar driver for did:cheqd",
-        "version": "1.0.0",
-        "title": "Universal Registrar driver for did:cheqd"
+        "version": "1.0.0"
     },
     "tags": [
         {
@@ -16,20 +16,17 @@
             "externalDocs": {
                 "url": "https://github.com/cheqd/did-registrar#readme"
             }
-        },
-        {
-            "name": "Universal Registrar driver for did:cheqd"
         }
     ],
     "paths": {
         "/create": {
             "post": {
-                "tags": [
-                    "DID"
-                ],
                 "summary": "Create a DID.",
                 "description": "<p>This endpoint creates a DID. As input it takes the DID plus options, a DID document, and optionally secrets needed to create a DID. The output is a state object that represents the current state of the DID creation process.</p> <p>See the <a href=\"https://identity.foundation/did-registration/#create\">DID Registration</a> specification for additional details.</p>",
                 "operationId": "create",
+                "tags": [
+                    "DID"
+                ],
                 "requestBody": {
                     "content": {
                         "application/json": {
@@ -85,12 +82,12 @@
         },
         "/update": {
             "post": {
-                "tags": [
-                    "DID"
-                ],
                 "summary": "Update a DID.",
                 "description": "<p>This endpoint updates a DID. As input it takes the existing DID plus options, a DID document, and optionally secrets needed to update a DID. The output is a state object that represents the current state of the DID update process.</p> <p>See the <a href=\"https://identity.foundation/did-registration/#update\">DID Registration</a> specification for additional details.</p>",
                 "operationId": "update",
+                "tags": [
+                    "DID"
+                ],
                 "requestBody": {
                     "content": {
                         "application/json": {
@@ -136,12 +133,12 @@
         },
         "/deactivate": {
             "post": {
-                "tags": [
-                    "DID"
-                ],
                 "summary": "Deactivate a DID.",
                 "description": "<p>This endpoint deactivates a DID. As input it takes the existing DID plus options, and optionally secrets needed to deactivate a DID. The output is a state object that represents the current state of the DID deactivation process.</p> <p>See the <a href=\"https://identity.foundation/did-registration/#deactivate\">DID Registration</a> specification for additional details.</p>",
                 "operationId": "deactivate",
+                "tags": [
+                    "DID"
+                ],
                 "requestBody": {
                     "content": {
                         "application/json": {
@@ -187,10 +184,12 @@
         },
         "/{did}/create-resource": {
             "post": {
+                "summary": "Create a Resource (Deprecated)",
+                "description": "This endpoint is deprecated and will be removed in future versions. Please use `/createResource` instead.",
+                "deprecated": true,
                 "tags": [
                     "Resource"
                 ],
-                "summary": "Create a Resource",
                 "parameters": [
                     {
                         "in": "path",
@@ -205,7 +204,7 @@
                     "content": {
                         "application/json": {
                             "schema": {
-                                "$ref": "#/components/schemas/CreateResourceRequest"
+                                "$ref": "#/components/schemas/CreateResourceRequestV1"
                             }
                         }
                     }
@@ -213,6 +212,118 @@
                 "responses": {
                     "200": {
                         "description": "The resource is created successfully"
+                    }
+                }
+            }
+        },
+        "/createResource": {
+            "post": {
+                "summary": "Create a DID URL and associated resource",
+                "description": "<p>This endpoint creates a DID URL and associated resource. As input it takes an existing DID, a relative DID URL, a resource, plus optional DID registration <a href=\"https://identity.foundation/did-registration/#options\">options</a> and <a href=\"https://identity.foundation/did-registration/#secret\">secrets</a> needed to create the DID URL. The output is a state object that represents the current state of the DID URL creation process.</p> <p>See the <a href=\"https://identity.foundation/did-registration/#createResource\">DID Registration</a> specification for additional details.</p>",
+                "operationId": "createResource",
+                "tags": [
+                    "Resource"
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CreateResourceRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "The request was successful, but the DID URL may not be fully created yet, as indicated by the \"didState.state\" and \"jobId\" output fields. Additional state information plus metadata are available in the response body.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/CreateResourceState"
+                                }
+                            }
+                        }
+                    },
+                    "201": {
+                        "description": "The DID URL has been successfully created, as indicated by the \"didState.state\" output field. Additional state information (including the created DID URL) plus metadata are available in the response body.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/CreateResourceState"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "A problem with the input fields has occurred. Additional state information plus metadata may be available in the response body.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/InvalidRequest"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "An internal error has occurred. Additional state information plus metadata may be available in the response body.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/InvalidRequest"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/updateResource": {
+            "post": {
+                "summary": "Update a DID URL and associated resource",
+                "description": "<p>This endpoint updates a DID URL and associated resource. As input it takes an existing DID, a relative DID URL, a resource, plus optional DID registration <a href=\"https://identity.foundation/did-registration/#options\">options</a> and <a href=\"https://identity.foundation/did-registration/#secret\">secrets</a> needed to update the DID URL. The output is a state object that represents the current state of the DID URL update process.</p> <p>See the <a href=\"https://identity.foundation/did-registration/#updateResource\">DID Registration</a> specification for additional details.</p>",
+                "operationId": "updateResource",
+                "tags": [
+                    "Resource"
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UpdateResourceRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "The request was successful, and the DID URL may or may not be fully updated yet, as indicated by the \"didState.state\" and \"jobId\" output fields. Additional state information plus metadata are available in the response body.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UpdateResourceState"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "A problem with the input fields has occurred. Additional state information plus metadata may be available in the response body.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/InvalidRequest"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "An internal error has occurred. Additional state information plus metadata may be available in the response body.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/InvalidRequest"
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -303,66 +414,198 @@
                     }
                 }
             }
+        },
+        "/properties": {
+            "get": {
+                "summary": "Return a map of configuration properties",
+                "description": "<p>This endpoint returns a map of the configuration properties of the DID Registrar, including of its drivers.</p>",
+                "operationId": "universalRegistrarGetProperties",
+                "tags": [
+                    "Properties"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success.",
+                        "content": {
+                            "application/did+json": {
+                                "schema": {
+                                    "type": "object",
+                                    "description": "A map of properties.",
+                                    "example": {
+                                        "cheqd": {
+                                            "someprop": "/lib",
+                                            "poolConfigs": "..."
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/methods": {
+            "get": {
+                "summary": "Return a list of supported DID methods",
+                "description": "<p>This endpoint returns a list of DID methods supported by the DID Registrar.</p>",
+                "operationId": "universalRegistrarGetMethods",
+                "tags": [
+                    "Properties"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success.",
+                        "content": {
+                            "application/did+json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "string"
+                                    },
+                                    "description": "The list of supported DID methods.",
+                                    "example": [
+                                        "cheqd"
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/traits": {
+            "get": {
+                "summary": "Return a map of DID traits",
+                "description": "<p>This endpoint returns a map of the DID traits of the DID methods supported by the DID Registrar.</p>",
+                "operationId": "universalRegistrarGetTraits",
+                "tags": [
+                    "Properties"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success.",
+                        "content": {
+                            "application/did+json": {
+                                "schema": {
+                                    "type": "object",
+                                    "description": "A map of DID traits.",
+                                    "example": {
+                                        "$schema": "https://identity.foundation/did-traits/schemas/traits.json",
+                                        "name": "cheqd",
+                                        "updatable": true,
+                                        "deactivatable": true,
+                                        "enumerable": true,
+                                        "historyAvailable": true,
+                                        "humanReadable": false
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
     },
     "components": {
         "schemas": {
-            "CreateRequest": {
-                "description": "Input fields for the create operation.",
+            "RegistrarRequest": {
+                "description": "Input fields for a DID operation.",
                 "type": "object",
-                "additionalProperties": false,
                 "properties": {
                     "jobId": {
-                        "description": "This input field is used to keep track of an ongoing DID creation process. See <a href=\"https://identity.foundation/did-registration/#jobid\">https://identity.foundation/did-registration/#jobid</a>.",
-                        "type": "string"
+                        "description": "This input field is used to keep track of an ongoing DID operation process. See <a href=\"https://identity.foundation/did-registration/#jobid\">https://identity.foundation/did-registration/#jobid</a>.",
+                        "type": "string",
+                        "example": "6d85bcd0-2ea3-4288-ab00-15afadd8a156"
                     },
                     "options": {
-                        "$ref": "#/components/schemas/Options"
+                        "$ref": "#/components/schemas/RequestOptions"
                     },
                     "secret": {
-                        "$ref": "#/components/schemas/Secret"
-                    },
-                    "didDocument": {
-                        "$ref": "#/components/schemas/DidDocument"
+                        "$ref": "#/components/schemas/RequestSecret"
                     }
                 }
             },
-            "UpdateRequest": {
-                "description": "Input fields for the update operation.",
+            "RequestOptions": {
+                "description": "This input field contains an object with various options for the DID operation, such as the network where the DID operation should be executed. See <a href=\"https://identity.foundation/did-registration/#options\">https://identity.foundation/did-registration/#options</a>.",
                 "type": "object",
-                "additionalProperties": false,
                 "properties": {
-                    "jobId": {
-                        "description": "This input field is used to keep track of an ongoing DID update process. See <a href=\"https://identity.foundation/did-registration/#jobid\">https://identity.foundation/did-registration/#jobid</a>.",
-                        "type": "string"
+                    "clientSecretMode": {
+                        "$ref": "#/components/schemas/Boolean"
                     },
-                    "did": {
-                        "description": "This input field indicates the DID that is the target of the DID update operation.",
-                        "type": "string",
-                        "example": "did:cheqd:testnet:ca9ff47c-0286-4614-a4be-8ffa83911e09"
+                    "storeSecrets": {
+                        "$ref": "#/components/schemas/Boolean"
                     },
-                    "options": {
-                        "$ref": "#/components/schemas/Options"
+                    "returnSecrets": {
+                        "$ref": "#/components/schemas/Boolean"
                     },
-                    "secret": {
-                        "$ref": "#/components/schemas/SigningResponse"
-                    },
-                    "didDocumentOperation": {
-                        "type": "array",
-                        "items": {
-                            "type": "string"
-                        },
-                        "default": [
-                            "setDidDocument"
-                        ]
-                    },
-                    "didDocument": {
-                        "type": "array",
-                        "items": {
-                            "$ref": "#/components/schemas/DidDocument"
-                        }
+                    "requestVerificationMethod": {
+                        "$ref": "#/components/schemas/RequestOptionsRequestVerificationMethod"
                     }
                 },
+                "additionalProperties": {},
+                "example": {
+                    "network": "testnet"
+                }
+            },
+            "RequestOptionsRequestVerificationMethod": {
+                "type": "array",
+                "items": {
+                    "$ref": "#/components/schemas/VerificationMethodTemplate"
+                }
+            },
+            "CreateRequest": {
+                "description": "Input fields for the DID create operation.",
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/RegistrarRequest"
+                    },
+                    {
+                        "type": "object",
+                        "properties": {
+                            "didDocument": {
+                                "$ref": "#/components/schemas/DidDocument"
+                            }
+                        }
+                    }
+                ]
+            },
+            "UpdateRequest": {
+                "description": "Input fields for the DID update operation.",
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/RegistrarRequest"
+                    },
+                    {
+                        "type": "object",
+                        "required": [
+                            "did"
+                        ],
+                        "properties": {
+                            "did": {
+                                "description": "This input field indicates the DID that is the target of the DID update operation.",
+                                "type": "string",
+                                "example": "did:cheqd:testnet:ca9ff47c-0286-4614-a4be-8ffa83911e09"
+                            },
+                            "didDocumentOperation": {
+                                "description": "This input field indicates which update operation(s) should be applied to a DID’s associated DID document. See <a href=\"https://identity.foundation/did-registration/#diddocumentoperation\">https://identity.foundation/did-registration/#diddocumentoperation</a>.",
+                                "type": "array",
+                                "items": {
+                                    "type": "string"
+                                },
+                                "default": [
+                                    "setDidDocument"
+                                ]
+                            },
+                            "didDocument": {
+                                "description": "This input field contains either a complete DID document, or an incremental change (diff) to a DID document. See <a href=\"https://identity.foundation/did-registration/#diddocument\">https://identity.foundation/did-registration/#diddocument</a>.",
+                                "type": "array",
+                                "items": {
+                                    "$ref": "#/components/schemas/DidDocument"
+                                }
+                            }
+                        }
+                    }
+                ],
                 "example": {
                     "did": "did:cheqd:testnet:ca9ff47c-0286-4614-a4be-8ffa83911e09",
                     "didDocumentOperation": [
@@ -400,31 +643,28 @@
                 }
             },
             "DeactivateRequest": {
-                "description": "Input fields for the deactivate operation.",
-                "type": "object",
-                "additionalProperties": false,
-                "properties": {
-                    "jobId": {
-                        "description": "This input field is used to keep track of an ongoing DID deactivation process. See <a href=\"https://identity.foundation/did-registration/#jobid\">https://identity.foundation/did-registration/#jobid</a>.",
-                        "type": "string"
+                "description": "Input fields for the DID deactivate operation.",
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/RegistrarRequest"
                     },
-                    "did": {
-                        "description": "This input field indicates the DID that is the target of the DID deactivation operation.",
-                        "type": "string"
-                    },
-                    "options": {
-                        "$ref": "#/components/schemas/Options"
-                    },
-                    "secret": {
-                        "$ref": "#/components/schemas/Secret"
+                    {
+                        "type": "object",
+                        "required": [
+                            "did"
+                        ],
+                        "properties": {
+                            "did": {
+                                "description": "This input field indicates the DID that is the target of the DID deactivation operation.",
+                                "type": "string",
+                                "example": "did:cheqd:testnet:ca9ff47c-0286-4614-a4be-8ffa83911e09"
+                            }
+                        }
                     }
-                },
-                "example": {
-                    "did": "did:cheqd:testnet:ca9ff47c-0286-4614-a4be-8ffa83911e09"
-                }
+                ]
             },
-            "CreateResourceRequest": {
-                "description": "Input fields for the resource creation",
+            "CreateResourceRequestV1": {
+                "description": "Input fields for a DID URL create operation.",
                 "type": "object",
                 "additionalProperties": false,
                 "properties": {
@@ -483,173 +723,94 @@
                     "type": "TextDocument"
                 }
             },
-            "CreateState": {
-                "description": "The state after a create operation.",
-                "type": "object",
-                "additionalProperties": false,
-                "required": [
-                    "didState"
-                ],
-                "properties": {
-                    "jobId": {
-                        "type": "string",
-                        "example": "null"
+            "CreateResourceRequest": {
+                "description": "Input fields for a DID URL create operation.",
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/RegistrarRequest"
                     },
-                    "didState": {
-                        "$ref": "#/components/schemas/DidState"
-                    },
-                    "didRegistrationMetadata": {
-                        "type": "object"
-                    },
-                    "didDocumentMetadata": {
-                        "type": "object"
-                    }
-                }
-            },
-            "UpdateState": {
-                "description": "The state after an update operation.",
-                "type": "object",
-                "additionalProperties": false,
-                "required": [
-                    "didState"
-                ],
-                "properties": {
-                    "jobId": {
-                        "type": "string",
-                        "example": "null"
-                    },
-                    "didState": {
-                        "$ref": "#/components/schemas/DidState"
-                    },
-                    "didRegistrationMetadata": {
-                        "type": "object"
-                    },
-                    "didDocumentMetadata": {
-                        "type": "object"
-                    }
-                }
-            },
-            "DeactivateState": {
-                "description": "The state after a deactivate operation.",
-                "type": "object",
-                "additionalProperties": false,
-                "required": [
-                    "didState"
-                ],
-                "properties": {
-                    "jobId": {
-                        "type": "string",
-                        "example": "null"
-                    },
-                    "didState": {
-                        "$ref": "#/components/schemas/DidState"
-                    },
-                    "didRegistrationMetadata": {
-                        "type": "object"
-                    },
-                    "didDocumentMetadata": {
-                        "type": "object"
-                    }
-                }
-            },
-            "DidState": {
-                "description": "The current state of a DID.",
-                "type": "object",
-                "additionalProperties": true,
-                "properties": {
-                    "state": {
-                        "type": "string",
-                        "example": "finished"
-                    },
-                    "did": {
-                        "type": "string",
-                        "example": "did:cheqd:testnet:ca9ff47c-0286-4614-a4be-8ffa83911e09"
-                    },
-                    "secret": {
-                        "$ref": "#/components/schemas/Secret"
-                    },
-                    "didDocument": {
-                        "$ref": "#/components/schemas/DidDocument"
-                    }
-                }
-            },
-            "Secret": {
-                "description": "This input field contains an object with DID controller keys and other secrets needed for performing the DID deactivate operation. See <a href=\"https://identity.foundation/did-registration/#secret\">https://identity.foundation/did-registration/#secret</a>.",
-                "type": "object",
-                "properties": {
-                    "signingResponse": {
-                        "type": "array",
-                        "items": {
-                            "$ref": "#/components/schemas/SigningResponse"
-                        },
-                        "example": [
-                            {
-                                "kid": "did:cheqd:testnet:ca9ff47c-0286-4614-a4be-8ffa83911e09",
-                                "signature": "keaiUef4jaPvupBpC2IK9/H/yd/OPsgxCADOgftuLQc"
+                    {
+                        "type": "object",
+                        "required": [
+                            "did",
+                            "relativeDidUrl"
+                        ],
+                        "properties": {
+                            "did": {
+                                "description": "This input field indicates the DID that is the target of the DID URL create operation.",
+                                "type": "string",
+                                "example": "did:cheqd:testnet:ca9ff47c-0286-4614-a4be-8ffa83911e09"
+                            },
+                            "relativeDidUrl": {
+                                "description": "This input field indicates a relative DID URL that is the target of the DID URL create operation.",
+                                "type": "string",
+                                "example": "/resources/123"
+                            },
+                            "content": {
+                                "description": "This input field contains Base64-encoded data that is the content of the resource associated with the DID URL.",
+                                "type": "string",
+                                "example": "SGVsbG8gV29ybGQ="
                             }
-                        ]
+                        }
                     }
-                }
+                ]
             },
-            "Options": {
-                "description": "This input field contains an object with various options for the DID create operation, such as the network where the DID should be created. See <a href=\"https://identity.foundation/did-registration/#options\">https://identity.foundation/did-registration/#options</a>.",
-                "type": "object",
-                "properties": {
-                    "network": {
-                        "type": "string"
-                    }
-                },
-                "example": {
-                    "network": "testnet"
-                }
-            },
-            "KeyPair": {
-                "type": "object",
-                "properties": {
-                    "kid": {
-                        "type": "string"
+            "UpdateResourceRequest": {
+                "description": "Input fields for a DID URL update operation.",
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/RegistrarRequest"
                     },
-                    "privateKeyHex": {
-                        "type": "string"
-                    },
-                    "publicKeyHex": {
-                        "type": "string"
+                    {
+                        "type": "object",
+                        "required": [
+                            "did",
+                            "relativeDidUrl"
+                        ],
+                        "properties": {
+                            "did": {
+                                "description": "This input field indicates the DID that is the target of the DID URL update operation.",
+                                "type": "string",
+                                "example": "did:cheqd:testnet:ca9ff47c-0286-4614-a4be-8ffa83911e09"
+                            },
+                            "relativeDidUrl": {
+                                "description": "This input field indicates a relative DID URL that is the target of the DID URL update operation.",
+                                "type": "string",
+                                "example": "/resources/123"
+                            },
+                            "contentOperation": {
+                                "description": "This input field indicates which update operation(s) should be applied to the content of a DID URL’s associated resource. See <a href=\"https://identity.foundation/did-registration/#diddocumentoperation\">https://identity.foundation/did-registration/#resourceoperation</a>.",
+                                "type": "array",
+                                "items": {
+                                    "type": "string"
+                                },
+                                "example": [
+                                    "setContent"
+                                ]
+                            },
+                            "content": {
+                                "description": "This input field contains Base64-encoded data that is the content of the resource associated with the DID URL.",
+                                "type": "array",
+                                "items": {
+                                    "type": "string"
+                                },
+                                "example": [
+                                    "SGVsbG8gV29ybGQ="
+                                ]
+                            }
+                        }
                     }
-                }
-            },
-            "SigningResponse": {
-                "type": "object",
-                "properties": {
-                    "kid": {
-                        "type": "string"
-                    },
-                    "signature": {
-                        "type": "string"
-                    }
-                }
+                ]
             },
             "DidDocument": {
                 "description": "This input field contains either a complete DID document, or an incremental change (diff) to a DID document. See <a href=\"https://identity.foundation/did-registration/#diddocument\">https://identity.foundation/did-registration/#diddocument</a>.",
                 "type": "object",
                 "properties": {
-                    "context": {
-                        "type": "array",
-                        "items": {
-                            "type": "string"
-                        }
-                    },
                     "id": {
-                        "type": "string",
-                        "example": "did:cheqd:testnet:ca9ff47c-0286-4614-a4be-8ffa83911e09"
+                        "$ref": "#/components/schemas/String"
                     },
                     "controller": {
-                        "type": "array",
-                        "items": {
-                            "type": "string"
-                        },
-                        "example": [
-                            "did:cheqd:testnet:ca9ff47c-0286-4614-a4be-8ffa83911e09"
-                        ]
+                        "$ref": "#/components/schemas/DidDocumentController"
                     },
                     "authentication": {
                         "type": "array",
@@ -687,16 +848,17 @@
                     "verificationMethod": {
                         "type": "array",
                         "items": {
-                            "$ref": "#/components/schemas/VerificationMethod"
+                            "$ref": "#/components/schemas/VerificationMethodTemplate"
                         }
                     },
                     "service": {
                         "type": "array",
                         "items": {
-                            "$ref": "#/components/schemas/Service"
+                            "$ref": "#/components/schemas/DidDocumentService"
                         }
                     }
                 },
+                "additionalProperties": {},
                 "example": {
                     "id": "did:cheqd:testnet:ca9ff47c-0286-4614-a4be-8ffa83911e09",
                     "controller": [
@@ -715,7 +877,636 @@
                     ]
                 }
             },
-            "VerificationMethod": {
+            "DidDocumentController": {
+                "type": "array",
+                "items": {
+                    "type": "string"
+                },
+                "example": [
+                    "did:cheqd:testnet:ca9ff47c-0286-4614-a4be-8ffa83911e09"
+                ]
+            },
+            "DidDocumentService": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "additionalProperties": {}
+                }
+            },
+            "RegistrarState": {
+                "description": "The state after a DID operation.",
+                "type": "object",
+                "required": [
+                    "didState"
+                ],
+                "properties": {
+                    "jobId": {
+                        "type": "string",
+                        "example": "6d85bcd0-2ea3-4288-ab00-15afadd8a156"
+                    },
+                    "didState": {
+                        "$ref": "#/components/schemas/DidState"
+                    },
+                    "didRegistrationMetadata": {
+                        "type": "object",
+                        "additionalProperties": {}
+                    },
+                    "didDocumentMetadata": {
+                        "type": "object",
+                        "additionalProperties": {}
+                    }
+                }
+            },
+            "RegistrarResourceState": {
+                "description": "The state after a DID URL operation.",
+                "type": "object",
+                "required": [
+                    "didUrlState"
+                ],
+                "properties": {
+                    "jobId": {
+                        "type": "string",
+                        "example": "6d85bcd0-2ea3-4288-ab00-15afadd8a156"
+                    },
+                    "didUrlState": {
+                        "$ref": "#/components/schemas/DidUrlState"
+                    },
+                    "didRegistrationMetadata": {
+                        "type": "object",
+                        "additionalProperties": {}
+                    },
+                    "contentMetadata": {
+                        "type": "object",
+                        "additionalProperties": {}
+                    }
+                }
+            },
+            "CreateState": {
+                "description": "The state after a DID create operation.",
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/RegistrarState"
+                    },
+                    {
+                        "type": "object"
+                    }
+                ]
+            },
+            "UpdateState": {
+                "description": "The state after a DID update operation.",
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/RegistrarState"
+                    },
+                    {
+                        "type": "object"
+                    }
+                ]
+            },
+            "DeactivateState": {
+                "description": "The state after a DID deactivate operation.",
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/RegistrarState"
+                    },
+                    {
+                        "type": "object"
+                    }
+                ]
+            },
+            "CreateResourceState": {
+                "description": "The state after a DID URL create operation.",
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/RegistrarResourceState"
+                    },
+                    {
+                        "type": "object"
+                    }
+                ]
+            },
+            "UpdateResourceState": {
+                "description": "The state after a DID URL update operation.",
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/RegistrarResourceState"
+                    },
+                    {
+                        "type": "object"
+                    }
+                ]
+            },
+            "DeactivateResourceState": {
+                "description": "The state after a DID URL deactivate operation.",
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/RegistrarResourceState"
+                    },
+                    {
+                        "type": "object"
+                    }
+                ]
+            },
+            "DidState": {
+                "description": "The current state of a DID.",
+                "type": "object",
+                "required": [
+                    "state"
+                ],
+                "discriminator": {
+                    "propertyName": "state",
+                    "mapping": {
+                        "finished": "#/components/schemas/DidStateFinished",
+                        "failed": "#/components/schemas/DidStateFailed",
+                        "action": "#/components/schemas/DidStateAction",
+                        "wait": "#/components/schemas/DidStateWait"
+                    }
+                },
+                "properties": {
+                    "state": {
+                        "$ref": "#/components/schemas/String"
+                    },
+                    "did": {
+                        "$ref": "#/components/schemas/String"
+                    },
+                    "secret": {
+                        "$ref": "#/components/schemas/DidStateSecret"
+                    },
+                    "didDocument": {
+                        "$ref": "#/components/schemas/DidDocument"
+                    }
+                },
+                "additionalProperties": true
+            },
+            "DidUrlState": {
+                "description": "The current state of a DID URL and associated resource.",
+                "type": "object",
+                "required": [
+                    "state"
+                ],
+                "discriminator": {
+                    "propertyName": "state",
+                    "mapping": {
+                        "finished": "#/components/schemas/DidUrlStateFinished",
+                        "failed": "#/components/schemas/DidUrlStateFailed",
+                        "action": "#/components/schemas/DidUrlStateAction",
+                        "wait": "#/components/schemas/DidUrlStateWait"
+                    }
+                },
+                "properties": {
+                    "state": {
+                        "$ref": "#/components/schemas/String"
+                    },
+                    "didUrl": {
+                        "$ref": "#/components/schemas/String"
+                    },
+                    "secret": {
+                        "$ref": "#/components/schemas/DidStateSecret"
+                    },
+                    "content": {
+                        "$ref": "#/components/schemas/String"
+                    }
+                },
+                "additionalProperties": {}
+            },
+            "DidStateFinished": {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/DidState"
+                    },
+                    {
+                        "$ref": "#/components/schemas/StateFinished"
+                    }
+                ]
+            },
+            "DidStateFailed": {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/DidState"
+                    },
+                    {
+                        "$ref": "#/components/schemas/StateFailed"
+                    }
+                ]
+            },
+            "DidStateAction": {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/DidState"
+                    },
+                    {
+                        "$ref": "#/components/schemas/StateAction"
+                    }
+                ]
+            },
+            "DidStateWait": {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/DidState"
+                    },
+                    {
+                        "$ref": "#/components/schemas/StateWait"
+                    }
+                ]
+            },
+            "DidUrlStateFinished": {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/DidUrlState"
+                    },
+                    {
+                        "$ref": "#/components/schemas/StateFinished"
+                    }
+                ]
+            },
+            "DidUrlStateFailed": {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/DidUrlState"
+                    },
+                    {
+                        "$ref": "#/components/schemas/StateFailed"
+                    }
+                ]
+            },
+            "DidUrlStateAction": {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/DidUrlState"
+                    },
+                    {
+                        "$ref": "#/components/schemas/StateAction"
+                    }
+                ]
+            },
+            "DidUrlStateWait": {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/DidUrlState"
+                    },
+                    {
+                        "$ref": "#/components/schemas/StateWait"
+                    }
+                ]
+            },
+            "StateFinished": {
+                "description": "This state indicates that the DID operation has been completed. See https://identity.foundation/did-registration/#didstatestatefinished.",
+                "allOf": [
+                    {
+                        "type": "object"
+                    }
+                ]
+            },
+            "StateFailed": {
+                "description": "This state indicates that the DID operation has failed. See https://identity.foundation/did-registration/#didstatestatefailed.",
+                "allOf": [
+                    {
+                        "type": "object",
+                        "properties": {
+                            "error": {
+                                "$ref": "#/components/schemas/String"
+                            },
+                            "reason": {
+                                "$ref": "#/components/schemas/String"
+                            }
+                        }
+                    }
+                ]
+            },
+            "StateAction": {
+                "description": "This state indicates that the client needs to perform an action, before the DID operation can be continued. See https://identity.foundation/did-registration/#didstatestateaction.",
+                "allOf": [
+                    {
+                        "type": "object",
+                        "properties": {
+                            "action": {
+                                "$ref": "#/components/schemas/String"
+                            },
+                            "verificationMethodTemplate": {
+                                "$ref": "#/components/schemas/StateActionVerificationMethodTemplate"
+                            },
+                            "signingRequest": {
+                                "type": "array",
+                                "items": {
+                                    "$ref": "#/components/schemas/SigningRequest"
+                                }
+                            },
+                            "decryptionRequest": {
+                                "type": "array",
+                                "items": {
+                                    "$ref": "#/components/schemas/DecryptionRequest"
+                                }
+                            }
+                        }
+                    }
+                ]
+            },
+            "StateActionVerificationMethodTemplate": {
+                "type": "array",
+                "items": {
+                    "$ref": "#/components/schemas/VerificationMethodTemplate"
+                }
+            },
+            "StateWait": {
+                "description": "This state indicates that the client needs to wait, before the DID operation can be continued. See https://identity.foundation/did-registration/#didstatestatewait.",
+                "allOf": [
+                    {
+                        "type": "object",
+                        "properties": {
+                            "wait": {
+                                "$ref": "#/components/schemas/String"
+                            },
+                            "waittime": {
+                                "$ref": "#/components/schemas/String"
+                            }
+                        }
+                    }
+                ]
+            },
+            "Secret": {
+                "description": "Secrets in requests and states.",
+                "type": "object",
+                "properties": {
+                    "verificationMethod": {
+                        "$ref": "#/components/schemas/SecretVerificationMethod"
+                    }
+                },
+                "additionalProperties": {}
+            },
+            "SecretVerificationMethod": {
+                "type": "array",
+                "items": {
+                    "oneOf": [
+                        {
+                            "$ref": "#/components/schemas/VerificationMethodPublicData"
+                        },
+                        {
+                            "$ref": "#/components/schemas/VerificationMethodPrivateData"
+                        },
+                        {
+                            "$ref": "#/components/schemas/SecretVerificationMethodVerificationMethodTemplate"
+                        }
+                    ]
+                },
+                "example": [
+                    {
+                        "id": "did:cheqd:testnet:ca9ff47c-0286-4614-a4be-8ffa83911e09#key-1",
+                        "type": "JsonWebKey2020",
+                        "privateKeyJwk": {
+                            "kty": "OKP",
+                            "crv": "Ed25519",
+                            "d": "NzJXR3A3TmdGUjFPcWRpOHpsdDdqUVE0MzRYUjBjTlE",
+                            "x": "jpIKKU2b77lNXKTNW2NGvw1GUMjU6v_l_tLJAH5uYz0"
+                        }
+                    }
+                ]
+            },
+            "SecretVerificationMethodVerificationMethodTemplate": {
+                "type": "array",
+                "items": {
+                    "$ref": "#/components/schemas/VerificationMethodTemplate"
+                }
+            },
+            "RequestSecret": {
+                "description": "This input field contains an object with DID controller keys and other secrets needed for performing the DID operation. See https://identity.foundation/did-registration/#secret.",
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/Secret"
+                    },
+                    {
+                        "type": "object",
+                        "properties": {
+                            "signingResponse": {
+                                "type": "array",
+                                "items": {
+                                    "$ref": "#/components/schemas/SigningResponse"
+                                }
+                            },
+                            "decryptionResponse": {
+                                "type": "array",
+                                "items": {
+                                    "$ref": "#/components/schemas/DecryptionResponse"
+                                }
+                            }
+                        }
+                    }
+                ]
+            },
+            "DidStateSecret": {
+                "description": "This output field contains an object with DID controller keys and other secrets. See https://identity.foundation/did-registration/#didstatesecret.",
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/Secret"
+                    },
+                    {
+                        "type": "object",
+                        "example": {
+                            "seed": "72WGp7NgFR1Oqdi8zlt7jQQ434XR0cNQ"
+                        }
+                    }
+                ]
+            },
+            "SigningRequest": {
+                "description": "A signing request, see https://identity.foundation/did-registration/#signing-request-set.",
+                "type": "object",
+                "required": [
+                    "serializedPayload",
+                    "alg"
+                ],
+                "properties": {
+                    "payload": {
+                        "type": "object"
+                    },
+                    "serializedPayload": {
+                        "$ref": "#/components/schemas/String"
+                    },
+                    "kid": {
+                        "$ref": "#/components/schemas/String"
+                    },
+                    "alg": {
+                        "$ref": "#/components/schemas/String"
+                    },
+                    "purpose": {
+                        "$ref": "#/components/schemas/String"
+                    }
+                },
+                "additionalProperties": {}
+            },
+            "SigningRequestSet": {
+                "description": "A signing request set, see https://identity.foundation/did-registration/#signing-request-set.",
+                "type": "object",
+                "additionalProperties": {
+                    "$ref": "#/components/schemas/SigningRequest"
+                }
+            },
+            "SigningResponse": {
+                "description": "A signing response, see https://identity.foundation/did-registration/#signing-response-set.",
+                "type": "object",
+                "required": [
+                    "signature"
+                ],
+                "properties": {
+                    "signature": {
+                        "$ref": "#/components/schemas/String"
+                    },
+                    "kid": {
+                        "$ref": "#/components/schemas/String"
+                    },
+                    "alg": {
+                        "$ref": "#/components/schemas/String"
+                    },
+                    "purpose": {
+                        "$ref": "#/components/schemas/String"
+                    }
+                },
+                "additionalProperties": {},
+                "example": {
+                    "kid": "did:cheqd:testnet:ca9ff47c-0286-4614-a4be-8ffa83911e09#key-1",
+                    "signature": "keaiUef4jaPvupBpC2IK9/H/yd/OPsgxCADOgftuLQc"
+                }
+            },
+            "SigningResponseSet": {
+                "description": "A signing response set, see https://identity.foundation/did-registration/#signing-response-set.",
+                "type": "object",
+                "additionalProperties": {
+                    "$ref": "#/components/schemas/SigningResponse"
+                }
+            },
+            "DecryptionRequest": {
+                "description": "A decryption request, see https://identity.foundation/did-registration/#decryption-request-set.",
+                "type": "object",
+                "required": [
+                    "encryptedPayload",
+                    "enc"
+                ],
+                "properties": {
+                    "payload": {
+                        "$ref": "#/components/schemas/String"
+                    },
+                    "encryptedPayload": {
+                        "$ref": "#/components/schemas/String"
+                    },
+                    "kid": {
+                        "$ref": "#/components/schemas/String"
+                    },
+                    "enc": {
+                        "$ref": "#/components/schemas/String"
+                    },
+                    "purpose": {
+                        "$ref": "#/components/schemas/String"
+                    }
+                },
+                "additionalProperties": {}
+            },
+            "DecryptionRequestSet": {
+                "description": "A decryption request set, see https://identity.foundation/did-registration/#decryption-request-set.",
+                "type": "object",
+                "additionalProperties": {
+                    "$ref": "#/components/schemas/DecryptionRequest"
+                }
+            },
+            "DecryptionResponse": {
+                "description": "A decryption response, see https://identity.foundation/did-registration/#decryption-response-set.",
+                "type": "object",
+                "required": [
+                    "decryptedPayload"
+                ],
+                "properties": {
+                    "decryptedPayload": {
+                        "$ref": "#/components/schemas/String"
+                    },
+                    "kid": {
+                        "$ref": "#/components/schemas/String"
+                    },
+                    "enc": {
+                        "$ref": "#/components/schemas/String"
+                    },
+                    "purpose": {
+                        "$ref": "#/components/schemas/String"
+                    }
+                },
+                "additionalProperties": {},
+                "example": {
+                    "kid": "did:cheqd:testnet:ca9ff47c-0286-4614-a4be-8ffa83911e09#key-1",
+                    "decryptedPayload": "keaiUef4jaPvupBpC2IK9/H/yd/OPsgxCADOgftuLQc"
+                }
+            },
+            "DecryptionResponseSet": {
+                "description": "A decryption response set, see https://identity.foundation/did-registration/#decryption-response-set.",
+                "type": "object",
+                "additionalProperties": {
+                    "$ref": "#/components/schemas/DecryptionResponse"
+                }
+            },
+            "VerificationMethodData": {
+                "type": "object",
+                "required": [
+                    "type"
+                ],
+                "properties": {
+                    "id": {
+                        "type": "string"
+                    },
+                    "type": {
+                        "type": "string"
+                    },
+                    "controller": {
+                        "type": "string"
+                    },
+                    "purpose": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "VerificationMethodPublicData": {
+                "description": "A verification method public data object, see https://identity.foundation/did-registration/#verification-method-public-data",
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/VerificationMethodData"
+                    },
+                    {
+                        "type": "object",
+                        "properties": {
+                            "publicKeyJwk": {
+                                "type": "array",
+                                "items": {
+                                    "type": "string"
+                                }
+                            },
+                            "publicKeyMultibase": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                ]
+            },
+            "VerificationMethodPrivateData": {
+                "description": "A verification method private data object, see https://identity.foundation/did-registration/#verification-method-private-data",
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/VerificationMethodData"
+                    },
+                    {
+                        "type": "object",
+                        "properties": {
+                            "privateKeyJwk": {
+                                "type": "array",
+                                "items": {
+                                    "type": "string"
+                                }
+                            },
+                            "privateKeyMultibase": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                ]
+            },
+            "VerificationMethodTemplate": {
+                "description": "A verification method template, see https://identity.foundation/did-registration/#verification-method-template",
                 "type": "object",
                 "properties": {
                     "id": {
@@ -730,6 +1521,12 @@
                         "type": "string",
                         "example": "did:cheqd:testnet:ca9ff47c-0286-4614-a4be-8ffa83911e09"
                     },
+                    "purpose": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
                     "publicKeyMultibase": {
                         "type": "string",
                         "example": "z6Mkt9Vg1a1Jbg5a1NkToUeWH23Z33TwGUua5MrqAYUz2AL3"
@@ -741,6 +1538,12 @@
                         }
                     }
                 }
+            },
+            "String": {
+                "type": "string"
+            },
+            "Boolean": {
+                "type": "boolean"
             },
             "Service": {
                 "type": "object",
@@ -761,6 +1564,32 @@
                         "example": [
                             "https://rand.in"
                         ]
+                    }
+                }
+            },
+            "Options": {
+                "description": "This input field contains an object with various options for the DID create operation, such as the network where the DID should be created. See <a href=\"https://identity.foundation/did-registration/#options\">https://identity.foundation/did-registration/#options</a>.",
+                "type": "object",
+                "properties": {
+                    "network": {
+                        "type": "string"
+                    }
+                },
+                "example": {
+                    "network": "testnet"
+                }
+            },
+            "KeyPair": {
+                "type": "object",
+                "properties": {
+                    "kid": {
+                        "type": "string"
+                    },
+                    "privateKeyHex": {
+                        "type": "string"
+                    },
+                    "publicKeyHex": {
+                        "type": "string"
                     }
                 }
             },

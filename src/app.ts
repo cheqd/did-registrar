@@ -1,4 +1,4 @@
-import express from 'express';
+import express, { Request, Response } from 'express';
 import Helmet from 'helmet';
 import swaggerUI from 'swagger-ui-express';
 
@@ -7,7 +7,8 @@ import swaggerDocument from './static/swagger.json' with { type: 'json' };
 import { DidController } from './controllers/did.js';
 import { CheqdController } from './controllers/cheqd.js';
 import { ResourceController } from './controllers/resource.js';
-import { CheqdRegistrar } from './service/cheqd.js';
+import { CheqdRegistrar, DefaultResolverUrl, DefaultRPCUrl } from './service/cheqd.js';
+import { MethodSpecificIdAlgo, VerificationMethods } from '@cheqd/sdk';
 
 class App {
 	public express: express.Application;
@@ -29,6 +30,44 @@ class App {
 	private routes() {
 		const app = this.express;
 		const URL_PREFIX = '/1.0';
+		const staticTraits = {
+			name: 'cheqd',
+			updateable: true,
+			updateableServiceEndpoints: true,
+			deactivatable: true,
+			deletable: false,
+			transactionalFees: true,
+			selfCertifying: true,
+			updateableVerificationMethods: true,
+			prerotationOfKeys: false,
+			multisigVerificationMethod: false,
+			humanreadable: false,
+			enumerable: true,
+			resolvableLocally: false,
+			resolvableGlobally: true,
+			history: true,
+			historySigned: true,
+			hostingNotRequired: false,
+			hostedCentrally: false,
+			hostedDecentrally: true,
+			cryptographyPrivacyPreserving: false,
+			cryptographyGovernmentApproved: true,
+			dataProtectionCompliant: false,
+		};
+		const properties = {
+			cheqd: {
+				supportedVerificationMethods: [
+					VerificationMethods.Ed255192020,
+					VerificationMethods.Ed255192018,
+					VerificationMethods.JWK,
+				],
+				supportedAlgorithm: [MethodSpecificIdAlgo.Base58, MethodSpecificIdAlgo.Uuid],
+				localStoreTTL: process.env.LOCAL_STORE_TTL,
+				rpcUrl: DefaultRPCUrl.Mainnet,
+				resolverUrl: DefaultResolverUrl.Cheqd,
+			},
+		};
+		const didMethods = ['cheqd'];
 
 		app.get('/', (req, res) => res.redirect('api-docs'));
 
@@ -57,6 +96,29 @@ class App {
 			DidController.commonValidator,
 			new ResourceController().create
 		);
+
+		app.post(
+			`${URL_PREFIX}/createResource`,
+			ResourceController.createResourceValidator,
+			DidController.commonValidator,
+			new ResourceController().createResource
+		);
+		app.post(
+			`${URL_PREFIX}/updateResource`,
+			ResourceController.updateResourceValidator,
+			DidController.commonValidator,
+			new ResourceController().updateResource
+		);
+
+		app.get(`${URL_PREFIX}/methods`, (req: Request, res: Response) => {
+			res.status(200).json(didMethods);
+		});
+		app.get(`${URL_PREFIX}/properties`, (req: Request, res: Response) => {
+			res.status(200).json(properties);
+		});
+		app.get(`${URL_PREFIX}/traits`, (req: Request, res: Response) => {
+			res.status(200).json(staticTraits);
+		});
 
 		// cheqd-helpers
 		app.get(`${URL_PREFIX}/key-pair`, new CheqdController().generateKeys);

@@ -36,7 +36,7 @@ export class ResourceController {
 		check('alsoKnownAs.*.description').isString().withMessage(Messages.Invalid),
 	];
 	public static createResourceValidator = [
-		check('did').exists().isString().contains('did:cheqd').withMessage(Messages.InvalidDid),
+		check('did').optional().isString().contains('did:cheqd').withMessage(Messages.InvalidDid),
 		check('jobId')
 			.custom((value, { req }) => {
 				if (!value && !(req.body.name && req.body.type && req.body.content)) return false;
@@ -53,7 +53,7 @@ export class ResourceController {
 		check('alsoKnownAs.*.description').isString().withMessage(Messages.Invalid),
 	];
 	public static updateResourceValidator = [
-		check('did').exists().isString().contains('did:cheqd').withMessage(Messages.InvalidDid),
+		check('did').optional().isString().contains('did:cheqd').withMessage(Messages.InvalidDid),
 		check('jobId')
 			.custom((value, { req }) => {
 				if (!value && !(req.body.name && req.body.type && req.body.content)) return false;
@@ -87,7 +87,7 @@ export class ResourceController {
 				.json(Responses.GetInvalidResourceResponseV1({}, request.body.secret, result.array()[0].msg));
 		}
 
-		const { did } = request.params;
+		let { did } = request.params;
 		let {
 			jobId,
 			data,
@@ -129,6 +129,7 @@ export class ResourceController {
 				}
 
 				resourcePayload = storeData.resource;
+				did = storeData.did;
 				resourcePayload.data = new Uint8Array(Object.values(resourcePayload.data!));
 			} else if (!data) {
 				return response
@@ -153,7 +154,7 @@ export class ResourceController {
 			if (secret.signingResponse) {
 				signInputs = convertToSignInfo(secret.signingResponse);
 			} else {
-				LocalStore.instance.setResource(jobId, { resource: resourcePayload, state: IState.Action });
+				LocalStore.instance.setResource(jobId, { resource: resourcePayload, state: IState.Action, did });
 				return response
 					.status(200)
 					.json(
@@ -260,6 +261,7 @@ export class ResourceController {
 				}
 
 				resourcePayload = storeData.resource;
+				did = storeData.did;
 				resourcePayload.data = new Uint8Array(Object.values(resourcePayload.data!));
 			} else if (!content) {
 				return response
@@ -289,7 +291,7 @@ export class ResourceController {
 			if (secret.signingResponse) {
 				signInputs = convertToSignInfo(secret.signingResponse);
 			} else {
-				LocalStore.instance.setResource(jobId, { resource: resourcePayload, state: IState.Action });
+				LocalStore.instance.setResource(jobId, { resource: resourcePayload, state: IState.Action, did });
 				return response
 					.status(200)
 					.json(
@@ -376,6 +378,7 @@ export class ResourceController {
 				}
 
 				resourcePayload = storeData.resource;
+				did = storeData.did;
 				resourcePayload.data = new Uint8Array(Object.values(resourcePayload.data!));
 			} else if (!content) {
 				return response
@@ -447,7 +450,7 @@ export class ResourceController {
 			if (secret.signingResponse) {
 				signInputs = convertToSignInfo(secret.signingResponse);
 			} else {
-				LocalStore.instance.setResource(jobId, { resource: resourcePayload, state: IState.Action });
+				LocalStore.instance.setResource(jobId, { resource: resourcePayload, state: IState.Action, did });
 				return response
 					.status(200)
 					.json(

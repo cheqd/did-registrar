@@ -1,5 +1,11 @@
 # Changelog
 
+## [2.3.0-develop.3](https://github.com/cheqd/did-registrar/compare/2.3.0-develop.2...2.3.0-develop.3) (2025-01-10)
+
+### Bug Fixes
+
+* Store did in cache for resources ([#373](https://github.com/cheqd/did-registrar/issues/373)) ([d601b62](https://github.com/cheqd/did-registrar/commit/d601b62aa46bff045a00be05b1f03bea8417b532))
+
 ## [2.3.0-develop.2](https://github.com/cheqd/did-registrar/compare/2.3.0-develop.1...2.3.0-develop.2) (2025-01-10)
 
 ### Bug Fixes

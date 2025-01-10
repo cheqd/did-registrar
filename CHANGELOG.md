@@ -1,5 +1,11 @@
 # Changelog
 
+## [2.3.0-develop.2](https://github.com/cheqd/did-registrar/compare/2.3.0-develop.1...2.3.0-develop.2) (2025-01-10)
+
+### Bug Fixes
+
+* Make did and relativeDidUrl optional ([#372](https://github.com/cheqd/did-registrar/issues/372)) ([75ee35b](https://github.com/cheqd/did-registrar/commit/75ee35b079180e89c345032dac56eab7b18cd4f1))
+
 ## [2.3.0-develop.1](https://github.com/cheqd/did-registrar/compare/2.2.0...2.3.0-develop.1) (2024-12-17)
 
 ### Features

@@ -45,4 +45,5 @@ export interface IDidDocData {
 export interface IResourceData {
 	resource: Partial<MsgCreateResourcePayload>;
 	state: IState;
+	did: string;
 }

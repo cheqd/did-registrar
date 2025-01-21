@@ -1,5 +1,16 @@
 # Changelog
 
+## [2.3.0](https://github.com/cheqd/did-registrar/compare/2.2.0...2.3.0) (2025-01-21)
+
+### Features
+
+* add createResource endpoint [DEV-4605][DEV-4636] ([#366](https://github.com/cheqd/did-registrar/issues/366)) ([25b5f59](https://github.com/cheqd/did-registrar/commit/25b5f59c41c7aebefeaf7fc0c99d9074c0cc8b79)), closes [#367](https://github.com/cheqd/did-registrar/issues/367)
+
+### Bug Fixes
+
+* Make did and relativeDidUrl optional ([#372](https://github.com/cheqd/did-registrar/issues/372)) ([75ee35b](https://github.com/cheqd/did-registrar/commit/75ee35b079180e89c345032dac56eab7b18cd4f1))
+* Store did in cache for resources ([#373](https://github.com/cheqd/did-registrar/issues/373)) ([d601b62](https://github.com/cheqd/did-registrar/commit/d601b62aa46bff045a00be05b1f03bea8417b532))
+
 ## [2.3.0-develop.3](https://github.com/cheqd/did-registrar/compare/2.3.0-develop.2...2.3.0-develop.3) (2025-01-10)
 
 ### Bug Fixes

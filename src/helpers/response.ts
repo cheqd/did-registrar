@@ -63,7 +63,7 @@ export class Responses {
 				description: Messages.GetSignature,
 				signingRequest,
 				secret: {
-					signingResponse: [Messages.SigingResponse],
+					signingResponse: Messages.SigingResponse,
 				},
 			},
 		};
@@ -95,7 +95,7 @@ export class Responses {
 				description: Messages.GetSignature,
 				signingRequest,
 				secret: {
-					signingResponse: [Messages.SigingResponse],
+					signingResponse: Messages.SigingResponse,
 				},
 			},
 		};
@@ -129,7 +129,7 @@ export class Responses {
 				description: Messages.GetSignature,
 				signingRequest,
 				secret: {
-					signingResponse: [Messages.SigingResponse],
+					signingResponse: Messages.SigingResponse,
 				},
 			},
 		};
@@ -163,7 +163,7 @@ export class Responses {
 				description: Messages.GetSignature,
 				signingRequest,
 				secret: {
-					signingResponse: [Messages.SigingResponse],
+					signingResponse: Messages.SigingResponse,
 				},
 			},
 		};

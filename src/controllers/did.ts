@@ -29,12 +29,16 @@ export class DidController {
 
 	public static commonValidator = [
 		check('options.versionId').optional().isString().withMessage(Messages.InvalidOptions),
-		check('secret.signingResponse').optional().isArray().withMessage(Messages.InvalidSecret),
-		check('secret.signingResponse.*.signature').isString().withMessage(Messages.InvalidSecret),
-		check('secret.signingResponse.*.kid').isString().withMessage(Messages.InvalidSecret),
+		check('secret.signingResponse').optional().isObject().withMessage(Messages.InvalidSecret),
 	];
 
 	public static updateValidator = [
+		check('did')
+			.optional()
+			.isString()
+			.withMessage(Messages.InvalidDid)
+			.contains('did:cheqd:')
+			.withMessage(Messages.InvalidDid),
 		check('didDocument')
 			.optional()
 			.isArray()
@@ -46,12 +50,6 @@ export class DidController {
 		check('jobId')
 			.custom((value, { req }) => value || (req.body.did && req.body.didDocument))
 			.withMessage(Messages.Invalid),
-		check('did')
-			.optional()
-			.isString()
-			.withMessage(Messages.InvalidDid)
-			.contains('did:cheqd:')
-			.withMessage(Messages.InvalidDid),
 		check('didDocumentOperation')
 			.optional()
 			.isArray()

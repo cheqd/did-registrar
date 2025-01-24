@@ -15,7 +15,7 @@ export enum Messages {
 	InvalidContent = 'Resource Content is invalid',
 	InvalidUpdateResource = 'Update resource name or type does not match existing resource',
 	TestnetFaucet = 'sketch mountain erode window enact net enrich smoke claim kangaroo another visual write meat latin bacon pulp similar forum guilt father state erase bright',
-	SigingResponse = 'e.g. { kid: did:cheqd:testnet:qsqdcansoica#key-1, signature: aca1s12q14213casdvaadcfas }',
+	SigingResponse = 'e.g. { signingRequest0: { kid: did:cheqd:testnet:qsqdcansoica#key-1, signature: aca1s12q14213casdvaadcfas }, signingRequest1: ... }',
 	InvalidOptions = 'The provided options are invalid',
 	InvalidSecret = 'The provided secret is invalid',
 }

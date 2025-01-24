@@ -6,13 +6,17 @@ import { base64ToBytes } from 'did-jwt';
 
 import { ISignInfo } from '../types/types.js';
 
-export function convertToSignInfo(payload: ISignInfo[]): SignInfo[] {
-	return payload.map((value) => {
-		return {
-			verificationMethodId: value.kid,
-			signature: base64ToBytes(value.signature),
-		};
-	});
+export function convertToSignInfo(payload: Record<string, ISignInfo>): SignInfo[] {
+	const signInfo = [];
+	for (var key in payload) {
+		if (payload[key])
+			signInfo.push({
+				verificationMethodId: payload[key].kid,
+				signature: base64ToBytes(payload[key].signature),
+			});
+	}
+
+	return signInfo;
 }
 
 export function validateSpecCompliantPayload(didDocument: DIDDocument): SpecValidationResult {

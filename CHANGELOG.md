@@ -1,5 +1,11 @@
 # Changelog
 
+## [2.3.0-develop.4](https://github.com/cheqd/did-registrar/compare/2.3.0-develop.3...2.3.0-develop.4) (2025-01-24)
+
+### Bug Fixes
+
+* Signing type from array to object ([#374](https://github.com/cheqd/did-registrar/issues/374)) ([61ad71b](https://github.com/cheqd/did-registrar/commit/61ad71b090d50bb2a520739c7b78d97148ef314d))
+
 ## [2.3.0-develop.3](https://github.com/cheqd/did-registrar/compare/2.3.0-develop.2...2.3.0-develop.3) (2025-01-10)
 
 ### Bug Fixes

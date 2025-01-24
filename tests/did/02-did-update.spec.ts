@@ -46,17 +46,18 @@ test('did-update. Initiate DID Update procedure', async ({ request }) => {
 });
 
 test('did-update. Send the final request for DID updating', async ({ request }) => {
-	const serializedPayload = didState.signingRequest[0].serializedPayload;
+	const signingRequest = didState.signingRequest['signingRequest0'];
+	const serializedPayload = signingRequest.serializedPayload;
 	const serializedBytes = Buffer.from(serializedPayload, 'base64');
 	const signature = sign(privKeyBytes, serializedBytes);
 
 	const secret = {
-		signingResponse: [
-			{
-				kid: didState.signingRequest[0].kid,
+		signingResponse: {
+			signingRequest0: {
+				kid: signingRequest.kid,
 				signature: toString(signature, 'base64'),
 			},
-		],
+		},
 	};
 
 	const didUpdate = await request.post(`/1.0/update`, {

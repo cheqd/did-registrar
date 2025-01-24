@@ -89,7 +89,7 @@ export interface IDecryptionInfo {
 
 export interface ISecret {
 	verificationMethod?: VerificationMethod[];
-	signingResponse?: ISignInfo[];
+	signingResponse?: Record<string, ISignInfo>;
 	decryptionResponse?: IDecryptionInfo[];
 }
 

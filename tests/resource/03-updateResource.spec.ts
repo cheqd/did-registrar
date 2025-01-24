@@ -38,7 +38,8 @@ test('resource-update. Initiate Resource update procedure', async ({ request }) 
 test('resource-update. Send the final request for Resource update', async ({ request }) => {
 	const didPayload = getDidDocument();
 	const resourceId = getResourceId();
-	const serializedPayload = didUrlState.signingRequest[0].serializedPayload;
+	const signingRequest = didUrlState.signingRequest['signingRequest0'];
+	const serializedPayload = signingRequest.serializedPayload;
 	const serializedBytes = Buffer.from(serializedPayload, 'base64');
 	const signature = sign(privKeyBytes, serializedBytes);
 
@@ -106,17 +107,18 @@ test('resource-update. Resource update without relativeDidUrl', async ({ request
 
 test('resource-update. Send the final update without relativeDidUrl', async ({ request }) => {
 	const didPayload = getDidDocument();
-	const serializedPayload = didUrlState.signingRequest[0].serializedPayload;
+	const signingRequest = didUrlState.signingRequest['signingRequest0'];
+	const serializedPayload = signingRequest.serializedPayload;
 	const serializedBytes = Buffer.from(serializedPayload, 'base64');
 	const signature = sign(privKeyBytes, serializedBytes);
 
 	const secret = {
-		signingResponse: [
-			{
-				kid: didUrlState.signingRequest[0].kid,
+		signingResponse: {
+			signingRequest0: {
+				kid: signingRequest.kid,
 				signature: toString(signature, 'base64'),
 			},
-		],
+		},
 	};
 
 	const resourceUpdate = await request.post(`/1.0/updateResource`, {

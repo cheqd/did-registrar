@@ -29,9 +29,7 @@ export class DidController {
 
 	public static commonValidator = [
 		check('options.versionId').optional().isString().withMessage(Messages.InvalidOptions),
-		check('secret.signingResponse').optional().isArray().withMessage(Messages.InvalidSecret),
-		check('secret.signingResponse.*.signature').isString().withMessage(Messages.InvalidSecret),
-		check('secret.signingResponse.*.kid').isString().withMessage(Messages.InvalidSecret),
+		check('secret.signingResponse').optional().isObject().withMessage(Messages.InvalidSecret),
 	];
 
 	public static updateValidator = [
@@ -107,6 +105,7 @@ export class DidController {
 
 		if (secret.signingResponse) {
 			signInputs = convertToSignInfo(secret.signingResponse);
+			console.log(signInputs);
 		} else {
 			LocalStore.instance.setItem(jobId, { didDocument, state: IState.Action, versionId });
 			return response

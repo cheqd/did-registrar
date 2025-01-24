@@ -15,7 +15,7 @@ export class Responses {
 			jobId,
 			didState: {
 				did: didDocument.id,
-				state: 'finished',
+				state: IState.Finished,
 				secret,
 				didDocument,
 			},
@@ -25,8 +25,10 @@ export class Responses {
 	static async GetDIDActionSignatureResponse(jobId: string, didPayload: DIDDocument, versionId: string) {
 		const { protobufVerificationMethod, protobufService } =
 			await DIDModule.validateSpecCompliantPayload(didPayload);
-		const signingRequest = didPayload.verificationMethod!.map((method) => {
-			return {
+		const signingRequest: Record<string, any> = {};
+
+		didPayload.verificationMethod!.forEach((method, index) => {
+			signingRequest[`signingRequest${index}`] = {
 				kid: method.id,
 				type: method.type,
 				alg: 'EdDSA',

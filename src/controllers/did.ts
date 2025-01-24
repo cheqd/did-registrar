@@ -33,6 +33,12 @@ export class DidController {
 	];
 
 	public static updateValidator = [
+		check('did')
+			.optional()
+			.isString()
+			.withMessage(Messages.InvalidDid)
+			.contains('did:cheqd:')
+			.withMessage(Messages.InvalidDid),
 		check('didDocument')
 			.optional()
 			.isArray()
@@ -44,12 +50,6 @@ export class DidController {
 		check('jobId')
 			.custom((value, { req }) => value || (req.body.did && req.body.didDocument))
 			.withMessage(Messages.Invalid),
-		check('did')
-			.optional()
-			.isString()
-			.withMessage(Messages.InvalidDid)
-			.contains('did:cheqd:')
-			.withMessage(Messages.InvalidDid),
 		check('didDocumentOperation')
 			.optional()
 			.isArray()
@@ -105,7 +105,6 @@ export class DidController {
 
 		if (secret.signingResponse) {
 			signInputs = convertToSignInfo(secret.signingResponse);
-			console.log(signInputs);
 		} else {
 			LocalStore.instance.setItem(jobId, { didDocument, state: IState.Action, versionId });
 			return response

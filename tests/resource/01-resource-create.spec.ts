@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test';
 import { sign } from '@stablelib/ed25519';
-import { toString, fromString } from 'uint8arrays';
+import { toString } from 'uint8arrays';
 import { getDidDocument, privKeyBytes, pubKeyHex, setDidDocument } from 'fixtures';
 
 let didState;
@@ -51,18 +51,18 @@ test('resource-create. Initiate DID Create procedure', async ({ request }) => {
 
 test('resource-create. Send the final request for DID creation', async ({ request }) => {
 	const didPayload = getDidDocument();
-	const signingRequest = resourceState.signingRequest['signingRequest0'];
+	const signingRequest = didState.signingRequest['signingRequest0'];
 	const serializedPayload = signingRequest.serializedPayload;
 	const serializedBytes = Buffer.from(serializedPayload, 'base64');
 	const signature = sign(privKeyBytes, serializedBytes);
 
 	const secret = {
-		signingResponse: [
-			{
+		signingResponse: {
+			signingRequest0: {
 				kid: signingRequest.kid,
 				signature: toString(signature, 'base64'),
 			},
-		],
+		},
 	};
 
 	const didCreate = await request.post(`/1.0/create/`, {

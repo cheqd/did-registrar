@@ -44,12 +44,12 @@ test('resource-update. Send the final request for Resource update', async ({ req
 	const signature = sign(privKeyBytes, serializedBytes);
 
 	const secret = {
-		signingResponse: [
-			{
-				kid: didUrlState.signingRequest[0].kid,
+		signingResponse: {
+			signingRequest0: {
+				kid: signingRequest.kid,
 				signature: toString(signature, 'base64'),
 			},
-		],
+		},
 	};
 
 	const resourceUpdate = await request.post(`/1.0/updateResource`, {

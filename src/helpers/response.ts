@@ -70,8 +70,9 @@ export class Responses {
 	}
 
 	static GetDeactivateDidSignatureResponse(jobId: string, payload: DIDDocument, versionId: string) {
-		const signingRequest = payload.verificationMethod!.map((method) => {
-			return {
+		const signingRequest: Record<string, any> = {};
+		payload.verificationMethod!.map((method, index) => {
+			signingRequest[`signingRequest${index}`] = {
 				kid: method.id,
 				type: method.type,
 				alg: 'EdDSA',
@@ -105,8 +106,10 @@ export class Responses {
 		verificationMethod: VerificationMethod[],
 		resource: Partial<MsgCreateResourcePayload>
 	) {
-		const signingRequest = verificationMethod.map((method) => {
-			return {
+		const signingRequest: Record<string, any> = {};
+
+		verificationMethod.forEach((method, index) => {
+			signingRequest[`signingRequest${index}`] = {
 				kid: method.id,
 				type: method.type,
 				alg: 'EdDSA',
@@ -137,8 +140,10 @@ export class Responses {
 		did: string,
 		resource: Partial<MsgCreateResourcePayload>
 	) {
-		const signingRequest = verificationMethod.map((method) => {
-			return {
+		const signingRequest: Record<string, any> = {};
+
+		verificationMethod.forEach((method, index) => {
+			signingRequest[`signingRequest${index}`] = {
 				kid: method.id,
 				type: method.type,
 				alg: 'EdDSA',

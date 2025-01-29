@@ -1,5 +1,11 @@
 # Changelog
 
+## [2.3.0-develop.5](https://github.com/cheqd/did-registrar/compare/2.3.0-develop.4...2.3.0-develop.5) (2025-01-29)
+
+### Features
+
+* Migrate name, type, versionId to options ([#376](https://github.com/cheqd/did-registrar/issues/376)) ([3e40a6b](https://github.com/cheqd/did-registrar/commit/3e40a6b2db0811ca6991af01fb4b296ecaf764c6))
+
 ## [2.3.0-develop.4](https://github.com/cheqd/did-registrar/compare/2.3.0-develop.3...2.3.0-develop.4) (2025-01-24)
 
 ### Bug Fixes

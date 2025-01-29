@@ -36,52 +36,43 @@ export class ResourceController {
 		check('alsoKnownAs.*.uri').isString().withMessage(Messages.Invalid),
 		check('alsoKnownAs.*.description').isString().withMessage(Messages.Invalid),
 	];
-	public static createResourceValidator = [
-		check('did').optional().isString().contains('did:cheqd').withMessage(Messages.InvalidDid),
-		check('jobId')
-			.custom((value, { req }) => {
-				if (!value 
-                    && 
-                    !(
-                        req.body.content && 
-                        req.body.options && 
-                        req.body.options.name && 
-                        req.body.options.type
-                    )
-                ) return false;
-				return true;
-			})
-			.withMessage('options and content are required'),
-		check('content').optional().isString().withMessage(Messages.Invalid),
+
+    static validateJobId = check('jobId')
+    .custom((value, { req }) => {
+        if (!value 
+            && 
+            !(
+                req.body.content && 
+                req.body.options && 
+                req.body.options.name && 
+                req.body.options.type
+            )
+        ) return false;
+        return true;
+    })
+    .withMessage('options and content are required')
+
+    static validateOptions = [
         check('options').optional().isObject().withMessage(Messages.Invalid),
 		check('options.name').optional().isString().withMessage(Messages.Invalid),
 		check('options.type').optional().isString().withMessage(Messages.Invalid),
 		check('options.versionId').optional().isString().withMessage(Messages.Invalid),
-		check('relativeDidUrl').optional().isString().contains('/resources/').withMessage(Messages.InvalidDidUrl),
-		check('options.alsoKnownAs').optional().isArray().withMessage(Messages.Invalid),
+        check('options.alsoKnownAs').optional().isArray().withMessage(Messages.Invalid),
 		check('options.alsoKnownAs.*.uri').isString().withMessage(Messages.Invalid),
 		check('options.alsoKnownAs.*.description').isString().withMessage(Messages.Invalid),
+    ]
+
+	public static createResourceValidator = [
+		check('did').optional().isString().contains('did:cheqd').withMessage(Messages.InvalidDid),
+		this.validateJobId,
+		check('content').optional().isString().withMessage(Messages.Invalid),
+		check('relativeDidUrl').optional().isString().contains('/resources/').withMessage(Messages.InvalidDidUrl),
+        ...this.validateOptions
 	];
+
 	public static updateResourceValidator = [
 		check('did').optional().isString().contains('did:cheqd').withMessage(Messages.InvalidDid),
-		check('jobId')
-			.custom((value, { req }) => {
-				if (!value 
-                    && 
-                    !(
-                        req.body.content && 
-                        req.body.options && 
-                        req.body.options.name && 
-                        req.body.options.type
-                    )
-                ) return false;
-				return true;
-			})
-			.withMessage('options and content are required'),
-        check('options').optional().isObject().withMessage(Messages.Invalid),
-        check('options.name').optional().isString().withMessage(Messages.Invalid),
-		check('options.type').optional().isString().withMessage(Messages.Invalid),
-        check('options.versionId').optional().isString().withMessage(Messages.Invalid),
+		this.validateJobId,
         check('content')
 			.optional()
 			.isArray()
@@ -97,6 +88,7 @@ export class ResourceController {
 			.isArray()
 			.custom((value) => value[0] === ContentOperation.Set && value.length == 1)
 			.withMessage('Only Set operation is supported'),
+            ...this.validateOptions
 	];
 
 	public async create(request: Request, response: Response) {

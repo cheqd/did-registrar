@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test';
 import { sign } from '@stablelib/ed25519';
-import { toString, fromString } from 'uint8arrays';
+import { toString } from 'uint8arrays';
 import { getDidDocument, getResourceId, privKeyBytes } from 'fixtures';
 
 let didUrlState;
@@ -12,13 +12,13 @@ test('resource-update. Initiate Resource update procedure', async ({ request }) 
 	const payload = await request.post(`/1.0/updateResource`, {
 		data: {
 			did: didPayload.id,
-			name: 'ResourceName',
-			type: 'TextDocument',
 			content: ['SGVsbG8gV29ybGQ='],
-			version: '2.0',
 			relativeDidUrl: '/resources/' + resourceId,
 			options: {
 				network: 'testnet',
+                name: 'ResourceName',
+                type: 'TextDocument',
+                versionId: '2.0',
 			},
 		},
 	});
@@ -56,14 +56,14 @@ test('resource-update. Send the final request for Resource update', async ({ req
 		data: {
 			did: didPayload.id,
 			content: ['SGVsbG8gV29ybGQ='],
-			name: 'ResourceName',
-			type: 'TextDocument',
-			version: '1.0',
 			jobId: resourceJobId,
 			relativeDidUrl: '/resources/' + resourceId,
 			secret: secret,
 			options: {
 				network: 'testnet',
+                name: 'ResourceName',
+                type: 'TextDocument',
+                versionId: '1.0',
 			},
 		},
 	});
@@ -83,12 +83,12 @@ test('resource-update. Resource update without relativeDidUrl', async ({ request
 	const payload = await request.post(`/1.0/updateResource`, {
 		data: {
 			did: didPayload.id,
-			name: 'ResourceName',
-			type: 'TextDocument',
 			content: ['SGVsbG8gV29ybGQ='],
-			version: '3.0',
 			options: {
 				network: 'testnet',
+                name: 'ResourceName',
+                type: 'TextDocument',
+                versionId: '3.0',
 			},
 		},
 	});

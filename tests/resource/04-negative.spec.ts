@@ -13,11 +13,11 @@ test('resource-create. wrong did', async ({ request }) => {
 	const payload = await request.post(`/1.0/createResource`, {
 		data: {
 			did: indyDid,
-			name: 'ResourceName',
-			type: 'TextDocument',
-			version: '1.0',
 			options: {
 				network: 'testnet',
+                name: 'ResourceName',
+                type: 'TextDocument',
+                versionId: '1.0',
 			},
 		},
 	});
@@ -33,11 +33,11 @@ test('resource-create. Fail to send content', async ({ request }) => {
 	const payload = await request.post(`/1.0/createResource`, {
 		data: {
 			did: activeDid,
-			name: 'ResourceName',
-			type: 'TextDocument',
-			version: '1.0',
 			options: {
 				network: 'testnet',
+                name: 'ResourceName',
+                type: 'TextDocument',
+                versionId: '1.0',
 			},
 		},
 	});
@@ -46,19 +46,19 @@ test('resource-create. Fail to send content', async ({ request }) => {
 
 	const body = await payload.json();
 	expect(body.didUrlState).toBeDefined();
-	expect(body.didUrlState.description).toEqual('Invalid payload: name, type and content are required');
+	expect(body.didUrlState.description).toEqual('Invalid payload: options and content are required');
 });
 
 test('resource-create. Send wrong content type', async ({ request }) => {
 	const payload = await request.post(`/1.0/createResource`, {
 		data: {
 			did: activeDid,
-			name: 'ResourceName',
-			type: 'TextDocument',
-			version: '1.0',
 			content: 50,
 			options: {
 				network: 'testnet',
+                name: 'ResourceName',
+                type: 'TextDocument',
+                versionId: '1.0',
 			},
 		},
 	});
@@ -73,12 +73,12 @@ test('resource-create. Send deactivated did', async ({ request }) => {
 	const payload = await request.post(`/1.0/createResource`, {
 		data: {
 			did: deactiveDid,
-			name: 'ResourceName',
-			type: 'TextDocument',
-			version: '1.0',
 			content: 'Test Data',
 			options: {
 				network: 'testnet',
+                name: 'ResourceName',
+                type: 'TextDocument',
+                versionId: '1.0',
 			},
 		},
 	});
@@ -94,11 +94,11 @@ test('resource-update. wrong did', async ({ request }) => {
 	const payload = await request.post(`/1.0/updateResource`, {
 		data: {
 			did: indyDid,
-			name: 'ResourceName',
-			type: 'TextDocument',
-			version: '1.0',
 			options: {
 				network: 'testnet',
+                name: 'ResourceName',
+                type: 'TextDocument',
+                versionId: '1.0',
 			},
 		},
 	});
@@ -114,11 +114,11 @@ test('resource-update. Fail to send content', async ({ request }) => {
 	const payload = await request.post(`/1.0/updateResource`, {
 		data: {
 			did: activeDid,
-			name: 'ResourceName',
-			type: 'TextDocument',
-			version: '1.0',
 			options: {
 				network: 'testnet',
+                name: 'ResourceName',
+                type: 'TextDocument',
+                versionId: '1.0',
 			},
 		},
 	});
@@ -127,19 +127,19 @@ test('resource-update. Fail to send content', async ({ request }) => {
 
 	const body = await payload.json();
 	expect(body.didUrlState).toBeDefined();
-	expect(body.didUrlState.description).toEqual('Invalid payload: name, type and content are required');
+	expect(body.didUrlState.description).toEqual('Invalid payload: options and content are required');
 });
 
 test('resource-update. Send wrong content type', async ({ request }) => {
 	const payload = await request.post(`/1.0/updateResource`, {
 		data: {
 			did: activeDid,
-			name: 'ResourceName',
-			type: 'TextDocument',
-			version: '1.0',
 			content: [50],
 			options: {
 				network: 'testnet',
+                name: 'ResourceName',
+                type: 'TextDocument',
+                versionId: '1.0',
 			},
 		},
 	});
@@ -156,13 +156,13 @@ test('resource-update. Send wrong didUrl', async ({ request }) => {
 	const payload = await request.post(`/1.0/updateResource`, {
 		data: {
 			did: deactiveDid,
-			name: 'ResourceName',
-			type: 'TextDocument',
-			version: '1.0',
 			content: ['Test Data'],
 			relativeDidUrl: 'abcdef',
 			options: {
 				network: 'testnet',
+                name: 'ResourceName',
+                type: 'TextDocument',
+                versionId: '1.0',
 			},
 		},
 	});
@@ -177,14 +177,14 @@ test('resource-update. Send wrong operation', async ({ request }) => {
 	const payload = await request.post(`/1.0/updateResource`, {
 		data: {
 			did: deactiveDid,
-			name: 'ResourceName',
-			type: 'TextDocument',
-			version: '1.0',
 			content: ['Test Data'],
 			relativeDidUrl: didUrl,
 			contentOperation: ['removeContent'],
 			options: {
 				network: 'testnet',
+                name: 'ResourceName',
+                type: 'TextDocument',
+                versionId: '1.0',
 			},
 		},
 	});
@@ -199,13 +199,13 @@ test('resource-update. Send deactivated did', async ({ request }) => {
 	const payload = await request.post(`/1.0/updateResource`, {
 		data: {
 			did: deactiveDid,
-			name: 'ResourceName',
-			type: 'TextDocument',
-			version: '1.0',
 			content: ['Test Data'],
 			relativeDidUrl: didUrl,
 			options: {
 				network: 'testnet',
+                name: 'ResourceName',
+                type: 'TextDocument',
+                versionId: '1.0',
 			},
 		},
 	});
@@ -220,13 +220,13 @@ test('resource-update. Send wrong name/type', async ({ request }) => {
 	const payload = await request.post(`/1.0/updateResource`, {
 		data: {
 			did: activeDid,
-			name: 'ResourceName1',
-			type: 'TextDocument',
-			version: '1.0',
 			content: ['Test Data'],
 			relativeDidUrl: didUrl,
 			options: {
 				network: 'testnet',
+                name: 'ResourceName1',
+                type: 'TextDocument',
+                versionId: '1.0',
 			},
 		},
 	});
@@ -243,13 +243,13 @@ test('resource-update. Resource not found', async ({ request }) => {
 	const payload = await request.post(`/1.0/updateResource`, {
 		data: {
 			did: activeDid,
-			name: 'ResourceName',
-			type: 'TextDocument',
-			version: '1.0',
 			content: ['Test Data'],
 			relativeDidUrl: '/resources/1234567',
 			options: {
 				network: 'testnet',
+                name: 'ResourceName',
+                type: 'TextDocument',
+                versionId: '1.0',
 			},
 		},
 	});
@@ -265,12 +265,12 @@ test('resource-update. Send wrong name/type without relativeDidUrl', async ({ re
 	const payload = await request.post(`/1.0/updateResource`, {
 		data: {
 			did: activeDid,
-			name: 'ResourceName2',
-			type: 'TextDocument2',
-			version: '1.0',
 			content: ['Test Data'],
 			options: {
 				network: 'testnet',
+                name: 'ResourceName2',
+                type: 'TextDocument2',
+                versionId: '1.0',
 			},
 		},
 	});
@@ -288,11 +288,11 @@ test('resource-create. Fail second create with same name and type', async ({ req
 		data: {
 			did: didPayload.id,
 			content: 'SGVsbG8gV29ybGQ=',
-			name: 'ResourceName',
-			type: 'TextDocument',
-			version: '1.0',
 			options: {
 				network: 'testnet',
+                name: 'ResourceName',
+                type: 'TextDocument',
+                versionId: '1.0',
 			},
 		},
 	});
@@ -306,19 +306,19 @@ test('resource-create. Fail second create with same name and type', async ({ req
 	expect(body.didUrlState.description).toEqual('Invalid payload: Resource already exists');
 });
 
-test('resource-update. Fail Resource update with existing nextVersionId', async ({ request }) => {
+test('resource-update. Fail Resource update with existing nextversionId', async ({ request }) => {
 	const didPayload = getDidDocument();
 	const resourceId = getResourceId();
 	const payload = await request.post(`/1.0/updateResource`, {
 		data: {
 			did: didPayload.id,
-			name: 'ResourceName',
-			type: 'TextDocument',
 			content: ['SGVsbG8gV29ybGQ='],
-			version: '4.0',
 			relativeDidUrl: '/resources/' + resourceId,
 			options: {
 				network: 'testnet',
+                name: 'ResourceName',
+                type: 'TextDocument',
+                versionId: '4.0',
 			},
 		},
 	});

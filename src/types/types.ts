@@ -100,28 +100,28 @@ export interface IOptions {
 	versionId?: string;
 }
 
+export interface IResourceOptions extends IOptions {
+    name: string
+    type: string
+	alsoKnownAs?: AlternativeUri[];
+}
+
 export interface IResourceCreateRequest {
 	jobId: string | null;
-	options?: IOptions;
+	options?: IResourceOptions;
 	secret?: ISecret;
 	did: string;
 	relativeDidUrl: string;
 	content: any;
-	name: string;
-	type: string;
-	version: string;
 }
 export interface IResourceUpdateRequest {
 	jobId: string | null;
-	options?: IOptions;
+	options?: IResourceOptions;
 	secret?: ISecret;
 	did: string;
 	relativeDidUrl: string;
 	content: any;
 	contentOperation: ContentOperation[];
-	name: string;
-	type: string;
-	version: string;
 }
 
 export enum ContentOperation {

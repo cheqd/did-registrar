@@ -16,9 +16,9 @@ test('resource-update. Initiate Resource update procedure', async ({ request }) 
 			relativeDidUrl: '/resources/' + resourceId,
 			options: {
 				network: 'testnet',
-                name: 'ResourceName',
-                type: 'TextDocument',
-                versionId: '2.0',
+				name: 'ResourceName',
+				type: 'TextDocument',
+				versionId: '2.0',
 			},
 		},
 	});
@@ -61,9 +61,9 @@ test('resource-update. Send the final request for Resource update', async ({ req
 			secret: secret,
 			options: {
 				network: 'testnet',
-                name: 'ResourceName',
-                type: 'TextDocument',
-                versionId: '1.0',
+				name: 'ResourceName',
+				type: 'TextDocument',
+				versionId: '1.0',
 			},
 		},
 	});
@@ -86,9 +86,9 @@ test('resource-update. Resource update without relativeDidUrl', async ({ request
 			content: ['SGVsbG8gV29ybGQ='],
 			options: {
 				network: 'testnet',
-                name: 'ResourceName',
-                type: 'TextDocument',
-                versionId: '3.0',
+				name: 'ResourceName',
+				type: 'TextDocument',
+				versionId: '3.0',
 			},
 		},
 	});

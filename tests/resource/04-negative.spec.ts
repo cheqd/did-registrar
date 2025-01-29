@@ -15,9 +15,9 @@ test('resource-create. wrong did', async ({ request }) => {
 			did: indyDid,
 			options: {
 				network: 'testnet',
-                name: 'ResourceName',
-                type: 'TextDocument',
-                versionId: '1.0',
+				name: 'ResourceName',
+				type: 'TextDocument',
+				versionId: '1.0',
 			},
 		},
 	});
@@ -35,9 +35,9 @@ test('resource-create. Fail to send content', async ({ request }) => {
 			did: activeDid,
 			options: {
 				network: 'testnet',
-                name: 'ResourceName',
-                type: 'TextDocument',
-                versionId: '1.0',
+				name: 'ResourceName',
+				type: 'TextDocument',
+				versionId: '1.0',
 			},
 		},
 	});
@@ -56,9 +56,9 @@ test('resource-create. Send wrong content type', async ({ request }) => {
 			content: 50,
 			options: {
 				network: 'testnet',
-                name: 'ResourceName',
-                type: 'TextDocument',
-                versionId: '1.0',
+				name: 'ResourceName',
+				type: 'TextDocument',
+				versionId: '1.0',
 			},
 		},
 	});
@@ -76,9 +76,9 @@ test('resource-create. Send deactivated did', async ({ request }) => {
 			content: 'Test Data',
 			options: {
 				network: 'testnet',
-                name: 'ResourceName',
-                type: 'TextDocument',
-                versionId: '1.0',
+				name: 'ResourceName',
+				type: 'TextDocument',
+				versionId: '1.0',
 			},
 		},
 	});
@@ -96,9 +96,9 @@ test('resource-update. wrong did', async ({ request }) => {
 			did: indyDid,
 			options: {
 				network: 'testnet',
-                name: 'ResourceName',
-                type: 'TextDocument',
-                versionId: '1.0',
+				name: 'ResourceName',
+				type: 'TextDocument',
+				versionId: '1.0',
 			},
 		},
 	});
@@ -116,9 +116,9 @@ test('resource-update. Fail to send content', async ({ request }) => {
 			did: activeDid,
 			options: {
 				network: 'testnet',
-                name: 'ResourceName',
-                type: 'TextDocument',
-                versionId: '1.0',
+				name: 'ResourceName',
+				type: 'TextDocument',
+				versionId: '1.0',
 			},
 		},
 	});
@@ -137,9 +137,9 @@ test('resource-update. Send wrong content type', async ({ request }) => {
 			content: [50],
 			options: {
 				network: 'testnet',
-                name: 'ResourceName',
-                type: 'TextDocument',
-                versionId: '1.0',
+				name: 'ResourceName',
+				type: 'TextDocument',
+				versionId: '1.0',
 			},
 		},
 	});
@@ -160,9 +160,9 @@ test('resource-update. Send wrong didUrl', async ({ request }) => {
 			relativeDidUrl: 'abcdef',
 			options: {
 				network: 'testnet',
-                name: 'ResourceName',
-                type: 'TextDocument',
-                versionId: '1.0',
+				name: 'ResourceName',
+				type: 'TextDocument',
+				versionId: '1.0',
 			},
 		},
 	});
@@ -182,9 +182,9 @@ test('resource-update. Send wrong operation', async ({ request }) => {
 			contentOperation: ['removeContent'],
 			options: {
 				network: 'testnet',
-                name: 'ResourceName',
-                type: 'TextDocument',
-                versionId: '1.0',
+				name: 'ResourceName',
+				type: 'TextDocument',
+				versionId: '1.0',
 			},
 		},
 	});
@@ -203,9 +203,9 @@ test('resource-update. Send deactivated did', async ({ request }) => {
 			relativeDidUrl: didUrl,
 			options: {
 				network: 'testnet',
-                name: 'ResourceName',
-                type: 'TextDocument',
-                versionId: '1.0',
+				name: 'ResourceName',
+				type: 'TextDocument',
+				versionId: '1.0',
 			},
 		},
 	});
@@ -224,9 +224,9 @@ test('resource-update. Send wrong name/type', async ({ request }) => {
 			relativeDidUrl: didUrl,
 			options: {
 				network: 'testnet',
-                name: 'ResourceName1',
-                type: 'TextDocument',
-                versionId: '1.0',
+				name: 'ResourceName1',
+				type: 'TextDocument',
+				versionId: '1.0',
 			},
 		},
 	});
@@ -247,9 +247,9 @@ test('resource-update. Resource not found', async ({ request }) => {
 			relativeDidUrl: '/resources/1234567',
 			options: {
 				network: 'testnet',
-                name: 'ResourceName',
-                type: 'TextDocument',
-                versionId: '1.0',
+				name: 'ResourceName',
+				type: 'TextDocument',
+				versionId: '1.0',
 			},
 		},
 	});
@@ -268,9 +268,9 @@ test('resource-update. Send wrong name/type without relativeDidUrl', async ({ re
 			content: ['Test Data'],
 			options: {
 				network: 'testnet',
-                name: 'ResourceName2',
-                type: 'TextDocument2',
-                versionId: '1.0',
+				name: 'ResourceName2',
+				type: 'TextDocument2',
+				versionId: '1.0',
 			},
 		},
 	});
@@ -290,9 +290,9 @@ test('resource-create. Fail second create with same name and type', async ({ req
 			content: 'SGVsbG8gV29ybGQ=',
 			options: {
 				network: 'testnet',
-                name: 'ResourceName',
-                type: 'TextDocument',
-                versionId: '1.0',
+				name: 'ResourceName',
+				type: 'TextDocument',
+				versionId: '1.0',
 			},
 		},
 	});
@@ -316,9 +316,9 @@ test('resource-update. Fail Resource update with existing nextversionId', async 
 			relativeDidUrl: '/resources/' + resourceId,
 			options: {
 				network: 'testnet',
-                name: 'ResourceName',
-                type: 'TextDocument',
-                versionId: '4.0',
+				name: 'ResourceName',
+				type: 'TextDocument',
+				versionId: '4.0',
 			},
 		},
 	});

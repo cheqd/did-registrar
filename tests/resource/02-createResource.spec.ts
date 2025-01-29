@@ -14,9 +14,9 @@ test('resource-create. Initiate Resource creation procedure', async ({ request }
 			content: 'SGVsbG8gV29ybGQ=',
 			options: {
 				network: 'testnet',
-                name: 'ResourceName',
-                type: 'TextDocument',
-                versionId: '1.0',
+				name: 'ResourceName',
+				type: 'TextDocument',
+				versionId: '1.0',
 			},
 		},
 	});
@@ -57,9 +57,9 @@ test('resource-create. Send the final request for Resource creation', async ({ r
 			secret: secret,
 			options: {
 				network: 'testnet',
-                name: 'ResourceName',
-                type: 'TextDocument',
-                versionId: '1.0',
+				name: 'ResourceName',
+				type: 'TextDocument',
+				versionId: '1.0',
 			},
 		},
 	});

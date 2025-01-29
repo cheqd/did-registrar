@@ -101,8 +101,8 @@ export interface IOptions {
 }
 
 export interface IResourceOptions extends IOptions {
-    name: string
-    type: string
+	name: string;
+	type: string;
 	alsoKnownAs?: AlternativeUri[];
 }
 

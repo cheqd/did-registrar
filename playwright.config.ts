@@ -54,7 +54,7 @@ export default defineConfig({
 	// Github Actions runners have 2 logical CPU cores
 	// Defaults to half of the logical CPU cores available
 	// Docs: https://playwright.dev/docs/api/class-testconfig#test-config-workers
-	workers: process.env.CI ? 1 : undefined,
+	workers: 1,
 
 	// Limit the numbers of failures to set a fail-fast strategy on CI
 	// Docs: https://playwright.dev/docs/api/class-testconfig#test-config-max-failures

@@ -1,27 +1,13 @@
 import { test, expect } from '@playwright/test';
 import { sign } from '@stablelib/ed25519';
-import { toString, fromString } from 'uint8arrays';
-import base64url from 'base64url';
+import { toString } from 'uint8arrays';
+import { getDidDocument, privKeyBytes, pubKeyHex, setDidDocument } from 'fixtures';
 
-import * as dotenv from 'dotenv';
-import { assert } from 'console';
-
-dotenv.config();
-
-const pub_key_base_64 = process.env.TEST_PUBLIC_KEY;
-const priv_key_base_64 = process.env.TEST_PRIVATE_KEY;
-
-assert(pub_key_base_64, 'TEST_PUBLIC_KEY is not defined');
-assert(priv_key_base_64, 'TEST_PRIVATE_KEY is not defined');
-
-const pubKeyHex = toString(fromString(pub_key_base_64 as string, 'base64pad'), 'base16');
-const privKeyBytes = base64url.toBuffer(priv_key_base_64 as string);
-
-let didPayload;
 let didState;
+let resourceState;
 let jobId;
 
-test('did-deactivate. Generate the payload', async ({ request }) => {
+test.beforeAll(async ({ request }) => {
 	const payload = await request.get(
 		`/1.0/did-document?verificationMethod=JsonWebKey2020&methodSpecificIdAlgo=uuid&network=testnet&publicKeyHex=${pubKeyHex}`
 	);
@@ -34,10 +20,11 @@ test('did-deactivate. Generate the payload', async ({ request }) => {
 	expect(body.key.kid).toBeDefined();
 	expect(body.key.publicKeyHex).toBeDefined();
 
-	didPayload = body.didDoc;
+	setDidDocument(body.didDoc);
 });
 
-test('did-deactivate. Initiate DID Create procedure', async ({ request }) => {
+test('resource-create. Initiate DID Create procedure', async ({ request }) => {
+	const didPayload = getDidDocument();
 	const payload = await request.post('/1.0/create', {
 		data: {
 			didDocument: didPayload,
@@ -62,18 +49,20 @@ test('did-deactivate. Initiate DID Create procedure', async ({ request }) => {
 	jobId = body.jobId;
 });
 
-test('did-deactivate. Send the final request for DID creating', async ({ request }) => {
-	const serializedPayload = didState.signingRequest[0].serializedPayload;
+test('resource-create. Send the final request for DID creation', async ({ request }) => {
+	const didPayload = getDidDocument();
+	const signingRequest = didState.signingRequest['signingRequest0'];
+	const serializedPayload = signingRequest.serializedPayload;
 	const serializedBytes = Buffer.from(serializedPayload, 'base64');
 	const signature = sign(privKeyBytes, serializedBytes);
 
 	const secret = {
-		signingResponse: [
-			{
-				kid: didState.signingRequest[0].kid,
+		signingResponse: {
+			signingRequest0: {
+				kid: signingRequest.kid,
 				signature: toString(signature, 'base64'),
 			},
-		],
+		},
 	};
 
 	const didCreate = await request.post(`/1.0/create/`, {
@@ -90,14 +79,13 @@ test('did-deactivate. Send the final request for DID creating', async ({ request
 	expect(didCreate.status()).toBe(201);
 });
 
-test('did-deactivate. Initiate DID Deactivate procedure', async ({ request }) => {
-	const payload = await request.post('/1.0/deactivate', {
+test('resource-create. Initiate Resource creation procedure', async ({ request }) => {
+	const didPayload = getDidDocument();
+	const payload = await request.post(`/1.0/${didPayload.id}/create-resource`, {
 		data: {
-			did: didPayload.id,
-			secret: {},
-			options: {
-				network: 'testnet',
-			},
+			data: 'SGVsbG8gV29ybGQ=',
+			name: 'TestResourceName',
+			type: 'Document',
 		},
 	});
 
@@ -105,32 +93,34 @@ test('did-deactivate. Initiate DID Deactivate procedure', async ({ request }) =>
 
 	const body = await payload.json();
 
-	expect(body.jobId).toBeDefined();
-	expect(body.didState).toBeDefined();
-	expect(body.didState.did).toBeDefined();
-	expect(body.didState.state).toBeDefined();
-	expect(body.didState.secret).toBeDefined();
+	expect(body.resourceState).toBeDefined();
+	expect(body.resourceState).toBeDefined();
 
-	didState = body.didState;
+	resourceState = body.resourceState;
 	jobId = body.jobId;
 });
 
-test('did-deactivate. Send the final request for DID deactivating', async ({ request }) => {
-	const serializedPayload = didState.signingRequest[0].serializedPayload;
+test('resource-create. Send the final request for Resource creation', async ({ request }) => {
+	const didPayload = getDidDocument();
+	const signingRequest = resourceState.signingRequest['signingRequest0'];
+	const serializedPayload = signingRequest.serializedPayload;
 	const serializedBytes = Buffer.from(serializedPayload, 'base64');
 	const signature = sign(privKeyBytes, serializedBytes);
 
 	const secret = {
-		signingResponse: [
-			{
-				kid: didState.signingRequest[0].kid,
+		signingResponse: {
+			signingRequest0: {
+				kid: signingRequest.kid,
 				signature: toString(signature, 'base64'),
 			},
-		],
+		},
 	};
 
-	const didDeactivate = await request.post(`/1.0/deactivate`, {
+	const resourceCreate = await request.post(`/1.0/${didPayload.id}/create-resource`, {
 		data: {
+			data: 'SGVsbG8gV29ybGQ=',
+			name: 'TestResourceName',
+			type: 'Document',
 			jobId: jobId,
 			secret: secret,
 			options: {
@@ -140,5 +130,5 @@ test('did-deactivate. Send the final request for DID deactivating', async ({ req
 		},
 	});
 
-	expect(didDeactivate.status()).toBe(201);
+	expect(resourceCreate.status()).toBe(201);
 });

@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test';
 import { sign } from '@stablelib/ed25519';
-import { toString, fromString } from 'uint8arrays';
+import { toString } from 'uint8arrays';
 import { getDidDocument, privKeyBytes } from 'fixtures';
 
 let didPayload;

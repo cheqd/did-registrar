@@ -1,5 +1,4 @@
 import { expect, test } from '@playwright/test';
-import { toString, fromString } from 'uint8arrays';
 import { getDidDocument } from 'fixtures';
 
 let indyDid = 'did:indy:sovrin:WRfXPg8dantKVubE3HX8pw';

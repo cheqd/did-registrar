@@ -11,6 +11,18 @@
 * Make did and relativeDidUrl optional ([#372](https://github.com/cheqd/did-registrar/issues/372)) ([75ee35b](https://github.com/cheqd/did-registrar/commit/75ee35b079180e89c345032dac56eab7b18cd4f1))
 * Store did in cache for resources ([#373](https://github.com/cheqd/did-registrar/issues/373)) ([d601b62](https://github.com/cheqd/did-registrar/commit/d601b62aa46bff045a00be05b1f03bea8417b532))
 
+## [2.3.0-develop.5](https://github.com/cheqd/did-registrar/compare/2.3.0-develop.4...2.3.0-develop.5) (2025-01-29)
+
+### Features
+
+* Migrate name, type, versionId to options ([#376](https://github.com/cheqd/did-registrar/issues/376)) ([3e40a6b](https://github.com/cheqd/did-registrar/commit/3e40a6b2db0811ca6991af01fb4b296ecaf764c6))
+
+## [2.3.0-develop.4](https://github.com/cheqd/did-registrar/compare/2.3.0-develop.3...2.3.0-develop.4) (2025-01-24)
+
+### Bug Fixes
+
+* Signing type from array to object ([#374](https://github.com/cheqd/did-registrar/issues/374)) ([61ad71b](https://github.com/cheqd/did-registrar/commit/61ad71b090d50bb2a520739c7b78d97148ef314d))
+
 ## [2.3.0-develop.3](https://github.com/cheqd/did-registrar/compare/2.3.0-develop.2...2.3.0-develop.3) (2025-01-10)
 
 ### Bug Fixes

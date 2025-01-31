@@ -11,6 +11,7 @@ import {
 	ContentOperation,
 	IResourceCreateRequest,
 	IResourceCreateRequestV1,
+	IResourceOptions,
 	IResourceUpdateRequest,
 	IState,
 } from '../types/types.js';
@@ -35,33 +36,36 @@ export class ResourceController {
 		check('alsoKnownAs.*.uri').isString().withMessage(Messages.Invalid),
 		check('alsoKnownAs.*.description').isString().withMessage(Messages.Invalid),
 	];
+
+	static validateJobId = check('jobId')
+		.custom((value, { req }) => {
+			if (!value && !(req.body.content && req.body.options && req.body.options.name && req.body.options.type))
+				return false;
+			return true;
+		})
+		.withMessage('options and content are required');
+
+	static validateOptions = [
+		check('options').optional().isObject().withMessage(Messages.Invalid),
+		check('options.name').optional().isString().withMessage(Messages.Invalid),
+		check('options.type').optional().isString().withMessage(Messages.Invalid),
+		check('options.versionId').optional().isString().withMessage(Messages.Invalid),
+		check('options.alsoKnownAs').optional().isArray().withMessage(Messages.Invalid),
+		check('options.alsoKnownAs.*.uri').isString().withMessage(Messages.Invalid),
+		check('options.alsoKnownAs.*.description').isString().withMessage(Messages.Invalid),
+	];
+
 	public static createResourceValidator = [
 		check('did').optional().isString().contains('did:cheqd').withMessage(Messages.InvalidDid),
-		check('jobId')
-			.custom((value, { req }) => {
-				if (!value && !(req.body.name && req.body.type && req.body.content)) return false;
-				return true;
-			})
-			.withMessage('name, type and content are required'),
+		this.validateJobId,
 		check('content').optional().isString().withMessage(Messages.Invalid),
-		check('name').optional().isString().withMessage(Messages.Invalid),
-		check('type').optional().isString().withMessage(Messages.Invalid),
-		check('version').optional().isString().withMessage(Messages.Invalid),
 		check('relativeDidUrl').optional().isString().contains('/resources/').withMessage(Messages.InvalidDidUrl),
-		check('alsoKnownAs').optional().isArray().withMessage(Messages.Invalid),
-		check('alsoKnownAs.*.uri').isString().withMessage(Messages.Invalid),
-		check('alsoKnownAs.*.description').isString().withMessage(Messages.Invalid),
+		...this.validateOptions,
 	];
+
 	public static updateResourceValidator = [
 		check('did').optional().isString().contains('did:cheqd').withMessage(Messages.InvalidDid),
-		check('jobId')
-			.custom((value, { req }) => {
-				if (!value && !(req.body.name && req.body.type && req.body.content)) return false;
-				return true;
-			})
-			.withMessage('name, type and content are required'),
-		check('name').optional().isString().withMessage(Messages.Invalid),
-		check('type').optional().isString().withMessage(Messages.Invalid),
+		this.validateJobId,
 		check('content')
 			.optional()
 			.isArray()
@@ -77,6 +81,7 @@ export class ResourceController {
 			.isArray()
 			.custom((value) => value[0] === ContentOperation.Set && value.length == 1)
 			.withMessage('Only Set operation is supported'),
+		...this.validateOptions,
 	];
 
 	public async create(request: Request, response: Response) {
@@ -221,16 +226,7 @@ export class ResourceController {
 				.json(Responses.GetInvalidResourceResponse('', {}, request.body.secret, result.array()[0].msg));
 		}
 
-		let {
-			did,
-			jobId,
-			content,
-			name,
-			type,
-			version,
-			secret = {},
-			options = {},
-		} = request.body as IResourceCreateRequest;
+		let { did, jobId, content, secret = {}, options } = request.body as IResourceCreateRequest;
 
 		let resourcePayload: Partial<MsgCreateResourcePayload> = {};
 
@@ -263,11 +259,17 @@ export class ResourceController {
 				resourcePayload = storeData.resource;
 				did = storeData.did;
 				resourcePayload.data = new Uint8Array(Object.values(resourcePayload.data!));
-			} else if (!content) {
+				options = {
+					name: storeData.resource.name!,
+					type: storeData.resource.resourceType!,
+				};
+			} else if (!content || !options) {
 				return response
 					.status(400)
 					.json(Responses.GetInvalidResourceResponse('', {}, secret, Messages.InvalidContent));
 			} else {
+				const { name, type, versionId } = options as IResourceOptions;
+
 				const checkResource = await ResourceController.checkResourceStatus(did, name, type);
 				if (checkResource.existingResource) {
 					return response
@@ -281,7 +283,7 @@ export class ResourceController {
 					id: v4(),
 					name,
 					resourceType: type,
-					version: version,
+					version: versionId,
 					data: fromString(content, 'base64'),
 				};
 			}
@@ -337,17 +339,7 @@ export class ResourceController {
 				.json(Responses.GetInvalidResourceResponse('', {}, request.body.secret, result.array()[0].msg));
 		}
 
-		let {
-			did,
-			jobId,
-			content,
-			relativeDidUrl,
-			name,
-			type,
-			version,
-			secret = {},
-			options = {},
-		} = request.body as IResourceUpdateRequest;
+		let { did, jobId, content, relativeDidUrl, secret = {}, options } = request.body as IResourceUpdateRequest;
 
 		let resourcePayload: Partial<MsgCreateResourcePayload> = {};
 
@@ -380,11 +372,16 @@ export class ResourceController {
 				resourcePayload = storeData.resource;
 				did = storeData.did;
 				resourcePayload.data = new Uint8Array(Object.values(resourcePayload.data!));
-			} else if (!content) {
+				options = {
+					name: storeData.resource.name!,
+					type: storeData.resource.resourceType!,
+				};
+			} else if (!content || !options) {
 				return response
 					.status(400)
 					.json(Responses.GetInvalidResourceResponse('', {}, secret, Messages.InvalidContent));
 			} else {
+				const { name, type, versionId } = options as IResourceOptions;
 				let existingResource;
 				const linkedResourceMetadata = resolvedDocument.didDocumentMetadata.linkedResourceMetadata || [];
 
@@ -440,7 +437,7 @@ export class ResourceController {
 					id: v4(),
 					name,
 					resourceType: type,
-					version: version,
+					version: versionId,
 					data: fromString(content[0], 'base64'),
 				};
 			}

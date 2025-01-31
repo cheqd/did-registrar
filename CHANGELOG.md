@@ -1,5 +1,15 @@
 # Changelog
 
+## [2.4.0](https://github.com/cheqd/did-registrar/compare/2.3.0...2.4.0) (2025-01-31)
+
+### Features
+
+* Migrate name, type, versionId to options ([#376](https://github.com/cheqd/did-registrar/issues/376)) ([3e40a6b](https://github.com/cheqd/did-registrar/commit/3e40a6b2db0811ca6991af01fb4b296ecaf764c6))
+
+### Bug Fixes
+
+* Signing type from array to object ([#374](https://github.com/cheqd/did-registrar/issues/374)) ([61ad71b](https://github.com/cheqd/did-registrar/commit/61ad71b090d50bb2a520739c7b78d97148ef314d))
+
 ## [2.3.0](https://github.com/cheqd/did-registrar/compare/2.2.0...2.3.0) (2025-01-21)
 
 ### Features

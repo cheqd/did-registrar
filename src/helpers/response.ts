@@ -1,4 +1,4 @@
-import type { DIDDocument, VerificationMethod } from '@cheqd/sdk';
+import type { DIDDocument } from '@cheqd/sdk';
 
 import { DIDModule } from '@cheqd/sdk';
 import { MsgCreateDidDocPayload, MsgDeactivateDidDocPayload } from '@cheqd/ts-proto/cheqd/did/v2/index.js';
@@ -8,6 +8,7 @@ import { toString } from 'uint8arrays';
 
 import { Messages } from '../types/constants.js';
 import { IAction, IState } from '../types/types.js';
+import { CheqdResolver } from '../service/cheqd.js';
 
 export class Responses {
 	static GetSuccessResponse(jobId: string, didDocument: DIDDocument, secret: Record<string, any>) {
@@ -27,10 +28,25 @@ export class Responses {
 			await DIDModule.validateSpecCompliantPayload(didPayload);
 		const signingRequest: Record<string, any> = {};
 
-		didPayload.verificationMethod!.forEach((method, index) => {
+        const controllers = didPayload.controller || []
+
+        const authentications: string[] = []
+        for(const controller of controllers) {
+            if (controller == didPayload.id) {
+                authentications.push(...(didPayload.authentication as string[] || []))
+                continue
+            }
+
+            let resolvedDocument = await CheqdResolver(controller);
+            if (!resolvedDocument?.didDocument || resolvedDocument.didDocumentMetadata.deactivated) {
+                return Responses.GetInvalidResponse({ id: controller }, {}, Messages.ControllerNotFound);
+            }
+            authentications.push(...resolvedDocument.didDocument.authentication)
+        }
+
+		authentications.forEach((kid, index) => {
 			signingRequest[`signingRequest${index}`] = {
-				kid: method.id,
-				type: method.type,
+				kid: kid,
 				alg: 'EdDSA',
 				serializedPayload: toString(
 					MsgCreateDidDocPayload.encode(
@@ -69,12 +85,27 @@ export class Responses {
 		};
 	}
 
-	static GetDeactivateDidSignatureResponse(jobId: string, payload: DIDDocument, versionId: string) {
+	static async GetDeactivateDidSignatureResponse(jobId: string, payload: DIDDocument, versionId: string) {
 		const signingRequest: Record<string, any> = {};
-		payload.verificationMethod!.map((method, index) => {
+
+        const controllers = payload.controller || []
+        const authentications: string[] = []
+        for(const controller of controllers) {
+            if (controller == payload.id) {
+                authentications.push(...(payload.authentication as string[] || []))
+                continue
+            }
+
+            let resolvedDocument = await CheqdResolver(controller);
+            if (!resolvedDocument?.didDocument || resolvedDocument.didDocumentMetadata.deactivated) {
+                return Responses.GetInvalidResponse({ id: controller }, {}, Messages.ControllerNotFound);
+            }
+            authentications.push(...resolvedDocument.didDocument.authentication)
+        }
+
+		authentications.forEach((kid, index) => {
 			signingRequest[`signingRequest${index}`] = {
-				kid: method.id,
-				type: method.type,
+				kid: kid,
 				alg: 'EdDSA',
 				serializedPayload: toString(
 					MsgDeactivateDidDocPayload.encode({
@@ -101,17 +132,30 @@ export class Responses {
 		};
 	}
 
-	static GetResourceActionSignatureResponseV1(
+	static async GetResourceActionSignatureResponseV1(
 		jobId: string,
-		verificationMethod: VerificationMethod[],
+		didPayload: DIDDocument,
 		resource: Partial<MsgCreateResourcePayload>
 	) {
 		const signingRequest: Record<string, any> = {};
+        const controllers = didPayload.controller || []
+        const authentications: string[] = []
+        for(const controller of controllers) {
+            if (controller == didPayload.id) {
+                authentications.push(...(didPayload.authentication as string[] || []))
+                continue
+            }
 
-		verificationMethod.forEach((method, index) => {
+            let resolvedDocument = await CheqdResolver(controller);
+            if (!resolvedDocument?.didDocument || resolvedDocument.didDocumentMetadata.deactivated) {
+                return Responses.GetInvalidResponse({ id: controller }, {}, Messages.ControllerNotFound);
+            }
+            authentications.push(...resolvedDocument.didDocument.authentication)
+        }
+
+		authentications.forEach((kid, index) => {
 			signingRequest[`signingRequest${index}`] = {
-				kid: method.id,
-				type: method.type,
+				kid: kid,
 				alg: 'EdDSA',
 				serializedPayload: toString(
 					MsgCreateResourcePayload.encode(MsgCreateResourcePayload.fromPartial(resource)).finish(),
@@ -134,18 +178,29 @@ export class Responses {
 			},
 		};
 	}
-	static GetResourceActionSignatureResponse(
+	static async GetResourceActionSignatureResponse(
 		jobId: string,
-		verificationMethod: VerificationMethod[],
-		did: string,
+		didPayload: DIDDocument,
 		resource: Partial<MsgCreateResourcePayload>
 	) {
 		const signingRequest: Record<string, any> = {};
+        const controllers = didPayload.controller || []
+        const authentications: string[] = []
+        for(const controller of controllers) {
+            if (controller == didPayload.id) {
+                authentications.push(...(didPayload.authentication as string[] || []))
+                continue
+            }
 
-		verificationMethod.forEach((method, index) => {
+            let resolvedDocument = await CheqdResolver(controller);
+            if (!resolvedDocument?.didDocument || resolvedDocument.didDocumentMetadata.deactivated) {
+                return Responses.GetInvalidResponse({ id: controller }, {}, Messages.ControllerNotFound);
+            }
+            authentications.push(...resolvedDocument.didDocument.authentication)
+        }
+		authentications.forEach((kid, index) => {
 			signingRequest[`signingRequest${index}`] = {
-				kid: method.id,
-				type: method.type,
+				kid: kid,
 				alg: 'EdDSA',
 				serializedPayload: toString(
 					MsgCreateResourcePayload.encode(MsgCreateResourcePayload.fromPartial(resource)).finish(),
@@ -157,7 +212,7 @@ export class Responses {
 		return {
 			jobId,
 			didUrlState: {
-				didUrl: did + '/resources/' + resource.id,
+				didUrl: didPayload.id + '/resources/' + resource.id,
 				state: IState.Action,
 				action: IAction.GetSignature,
 				description: Messages.GetSignature,

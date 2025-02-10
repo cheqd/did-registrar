@@ -163,7 +163,7 @@ export class ResourceController {
 				return response
 					.status(200)
 					.json(
-						Responses.GetResourceActionSignatureResponseV1(
+						await Responses.GetResourceActionSignatureResponseV1(
 							jobId,
 							resolvedDocument.verificationMethod,
 							resourcePayload
@@ -297,10 +297,9 @@ export class ResourceController {
 				return response
 					.status(200)
 					.json(
-						Responses.GetResourceActionSignatureResponse(
+						await Responses.GetResourceActionSignatureResponse(
 							jobId,
-							resolvedDocument.verificationMethod,
-							did,
+							resolvedDocument,
 							resourcePayload
 						)
 					);
@@ -451,10 +450,9 @@ export class ResourceController {
 				return response
 					.status(200)
 					.json(
-						Responses.GetResourceActionSignatureResponse(
+						await Responses.GetResourceActionSignatureResponse(
 							jobId,
-							resolvedDidDocument.verificationMethod,
-							did,
+							resolvedDidDocument,
 							resourcePayload
 						)
 					);

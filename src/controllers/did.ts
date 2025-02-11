@@ -248,10 +248,7 @@ export class DidController {
 						.send(Responses.GetInvalidResponse({ id: did }, secret, Messages.DidNotFound));
 				}
 
-				payload = {
-					verificationMethod: resolvedDocument.didDocument.verificationMethod,
-					id: resolvedDocument.didDocument.id,
-				};
+				payload = resolvedDocument.didDocument;
 			}
 
 			let signInputs: SignInfo[];
@@ -261,7 +258,7 @@ export class DidController {
 				LocalStore.instance.setItem(jobId, { didDocument: payload, state: IState.Action, versionId });
 				return response
 					.status(200)
-					.json(Responses.GetDeactivateDidSignatureResponse(jobId, payload, versionId));
+					.json(await Responses.GetDeactivateDidSignatureResponse(jobId, payload, versionId));
 			}
 
 			options.network = options?.network || (did!.split(':')[2] as NetworkType);

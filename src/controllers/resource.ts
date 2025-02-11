@@ -165,7 +165,7 @@ export class ResourceController {
 					.json(
 						await Responses.GetResourceActionSignatureResponseV1(
 							jobId,
-							resolvedDocument.verificationMethod,
+							resolvedDocument,
 							resourcePayload
 						)
 					);

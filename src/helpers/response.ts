@@ -178,6 +178,7 @@ export class Responses {
 			},
 		};
 	}
+
 	static async GetResourceActionSignatureResponse(
 		jobId: string,
 		didPayload: DIDDocument,

@@ -3,7 +3,7 @@ import type { MsgCreateResourcePayload } from '@cheqd/ts-proto/cheqd/resource/v2
 import type { SignInfo } from '@cheqd/ts-proto/cheqd/did/v2/index.js';
 
 import { check, param, validationResult } from 'express-validator';
-import { v4 } from 'uuid';
+import { v4, validate } from 'uuid';
 import { fromString } from 'uint8arrays';
 
 import { CheqdRegistrar, CheqdResolver, NetworkType } from '../service/cheqd.js';
@@ -43,7 +43,7 @@ export class ResourceController {
 				return false;
 			return true;
 		})
-		.withMessage('options and content are required');
+		.withMessage('options.name, options.type and content are required');
 
 	static validateOptions = [
 		check('options').optional().isObject().withMessage(Messages.Invalid),
@@ -59,7 +59,9 @@ export class ResourceController {
 		check('did').optional().isString().contains('did:cheqd').withMessage(Messages.InvalidDid),
 		this.validateJobId,
 		check('content').optional().isString().withMessage(Messages.Invalid),
-		check('relativeDidUrl').optional().isString().contains('/resources/').withMessage(Messages.InvalidDidUrl),
+		check('relativeDidUrl').optional().isString().contains('/resources/').withMessage(Messages.InvalidDidUrl)
+        .customSanitizer(value => value.replace('/resources/', ''))
+        .isUUID().withMessage(Messages.InvalidResourceId),
 		...this.validateOptions,
 	];
 
@@ -75,7 +77,10 @@ export class ResourceController {
 				return true;
 			})
 			.withMessage('The content array must be provided and must have exactly one string'),
-		check('relativeDidUrl').optional().isString().contains('/resources/').withMessage(Messages.InvalidDidUrl),
+		check('relativeDidUrl')
+            .optional().isString().contains('/resources/').withMessage(Messages.InvalidDidUrl)
+            .customSanitizer(value => value.replace('/resources/', ''))
+            .isUUID().withMessage(Messages.InvalidResourceId),
 		check('contentOperation')
 			.optional()
 			.isArray()
@@ -111,7 +116,7 @@ export class ResourceController {
 			if (!resolvedDocument?.didDocument || resolvedDocument.didDocumentMetadata.deactivated) {
 				return response
 					.status(400)
-					.send(Responses.GetInvalidResponse({ id: did }, secret, Messages.DidNotFound));
+					.send(Responses.GetInvalidResourceResponseV1({ id: did }, secret, Messages.DidNotFound));
 			} else {
 				resolvedDocument = resolvedDocument.didDocument;
 			}
@@ -226,7 +231,7 @@ export class ResourceController {
 				.json(Responses.GetInvalidResourceResponse('', {}, request.body.secret, result.array()[0].msg));
 		}
 
-		let { did, jobId, content, secret = {}, options } = request.body as IResourceCreateRequest;
+		let { did, jobId, content, secret = {}, options, relativeDidUrl } = request.body as IResourceCreateRequest;
 
 		let resourcePayload: Partial<MsgCreateResourcePayload> = {};
 
@@ -243,7 +248,7 @@ export class ResourceController {
 			if (jobId) {
 				const storeData = LocalStore.instance.getResource(jobId);
 				if (!storeData) {
-					return response.status(400).json(Responses.GetJobExpiredResponse(jobId));
+					return response.status(400).json(Responses.GetJobExpiredResourceResponse(jobId));
 				} else if (storeData.state == IState.Finished) {
 					return response.status(201).json({
 						jobId,
@@ -278,9 +283,12 @@ export class ResourceController {
 				}
 				jobId = v4();
 
+                const id = relativeDidUrl.replace('/resources/', "")
+                const resourceId = validate(id) ? id : v4() 
+
 				resourcePayload = {
 					collectionId: did.split(':').pop()!,
-					id: v4(),
+					id: resourceId,
 					name,
 					resourceType: type,
 					version: versionId,
@@ -356,7 +364,7 @@ export class ResourceController {
 			if (jobId) {
 				const storeData = LocalStore.instance.getResource(jobId);
 				if (!storeData) {
-					return response.status(400).json(Responses.GetJobExpiredResponse(jobId));
+					return response.status(400).json(Responses.GetJobExpiredResourceResponse(jobId));
 				} else if (storeData.state == IState.Finished) {
 					return response.status(201).json({
 						jobId,
@@ -382,59 +390,22 @@ export class ResourceController {
 					.json(Responses.GetInvalidResourceResponse('', {}, secret, Messages.InvalidContent));
 			} else {
 				const { name, type, versionId } = options as IResourceOptions;
-				let existingResource;
-				const linkedResourceMetadata = resolvedDocument.didDocumentMetadata.linkedResourceMetadata || [];
 
-				if (relativeDidUrl) {
-					// search resource using relativeDidUrl
-					const didUrlIndex = linkedResourceMetadata.findIndex(
-						(resource: { resourceURI: string }) => resource.resourceURI === did + relativeDidUrl
-					);
-					if (didUrlIndex !== -1) {
-						// if resource is found using relativeDidUrl
-						existingResource = linkedResourceMetadata[didUrlIndex];
-						// passed name and type must match
-						if (existingResource.resourceName !== name || existingResource.resourceType !== type)
-							return response
-								.status(400)
-								.send(
-									Responses.GetInvalidResourceResponse(
-										did,
-										{ id: relativeDidUrl.split('resources/')[1] },
-										secret,
-										Messages.InvalidUpdateResource
-									)
-								);
-						// If resource has a nextVersionId, then return error
-						if (existingResource.nextVersionId) {
-							return response
-								.status(400)
-								.send(
-									Responses.GetInvalidResourceResponse(
-										did,
-										{},
-										secret,
-										'Only latest version of resource can be updated'
-									)
-								);
-						}
-					}
-				} else {
-					// if not relativeDidUrl, find by name and type
-					const checkResource = await ResourceController.checkResourceStatus(did, name, type);
-					existingResource = checkResource.existingResource;
-				}
-				if (!existingResource) {
+                // find by name and type
+                const { existingResource} = await ResourceController.checkResourceStatus(did, name, type);
+   				if (!existingResource) {
 					return response
 						.status(400)
 						.send(Responses.GetInvalidResourceResponse(did, {}, secret, Messages.ResourceNotFound));
 				}
 
 				jobId = v4();
+                const id = relativeDidUrl.replace('/resources/', "")
+                const resourceId = validate(id) ? id : v4() 
 
 				resourcePayload = {
 					collectionId: did.split(':').pop()!,
-					id: v4(),
+					id: resourceId,
 					name,
 					resourceType: type,
 					version: versionId,

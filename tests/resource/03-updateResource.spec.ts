@@ -1,14 +1,15 @@
 import { test, expect } from '@playwright/test';
 import { sign } from '@stablelib/ed25519';
 import { toString } from 'uint8arrays';
-import { getDidDocument, getResourceId, privKeyBytes } from 'fixtures';
+import { getDidDocument, privKeyBytes } from 'fixtures';
+import { v4 } from 'uuid';
 
 let didUrlState;
 let resourceJobId;
-
+let resourceId;
 test('resource-update. Initiate Resource update procedure', async ({ request }) => {
 	const didPayload = getDidDocument();
-	const resourceId = getResourceId();
+	resourceId = v4();
 	const payload = await request.post(`/1.0/updateResource`, {
 		data: {
 			did: didPayload.id,
@@ -37,7 +38,6 @@ test('resource-update. Initiate Resource update procedure', async ({ request }) 
 
 test('resource-update. Send the final request for Resource update', async ({ request }) => {
 	const didPayload = getDidDocument();
-	const resourceId = getResourceId();
 	const signingRequest = didUrlState.signingRequest['signingRequest0'];
 	const serializedPayload = signingRequest.serializedPayload;
 	const serializedBytes = Buffer.from(serializedPayload, 'base64');

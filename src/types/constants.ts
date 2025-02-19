@@ -18,4 +18,5 @@ export enum Messages {
 	SigingResponse = 'e.g. { signingRequest0: { kid: did:cheqd:testnet:qsqdcansoica#key-1, signature: aca1s12q14213casdvaadcfas }, signingRequest1: ... }',
 	InvalidOptions = 'The provided options are invalid',
 	InvalidSecret = 'The provided secret is invalid',
+    InvalidResourceId = "ResourceId should be an unique UUID"
 }

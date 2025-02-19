@@ -206,6 +206,16 @@ export class Responses {
 		};
 	}
 
+    static GetJobExpiredResourceResponse(jobId: string) {
+		return {
+			jobId,
+			didUrlState: {
+				state: IState.Failed,
+				reason: Messages.InvalidJob,
+			},
+		};
+	}
+
 	static GetResourceSuccessResponseV1(
 		jobId: string,
 		secret: Record<string, any>,

@@ -283,8 +283,8 @@ export class ResourceController {
 				}
 				jobId = v4();
 
-                const id = relativeDidUrl.replace('/resources/', "")
-                const resourceId = validate(id) ? id : v4() 
+                const id = relativeDidUrl ? relativeDidUrl.replace('/resources/', '') : '';
+                const resourceId = validate(id) ? id : v4();
 
 				resourcePayload = {
 					collectionId: did.split(':').pop()!,
@@ -400,8 +400,8 @@ export class ResourceController {
 				}
 
 				jobId = v4();
-                const id = relativeDidUrl.replace('/resources/', "")
-                const resourceId = validate(id) ? id : v4() 
+                const id = relativeDidUrl ? relativeDidUrl.replace('/resources/', '') : '';
+                const resourceId = validate(id) ? id : v4();
 
 				resourcePayload = {
 					collectionId: did.split(':').pop()!,

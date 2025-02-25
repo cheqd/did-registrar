@@ -47,7 +47,7 @@
 		"README.md"
 	],
 	"dependencies": {
-		"@cheqd/sdk": "^5.1.0-develop.11",
+		"@cheqd/sdk": "^5.1.0",
 		"@cheqd/ts-proto": "^4.0.0",
 		"@cosmjs/proto-signing": "^0.32.4",
 		"dotenv": "^16.4.7",
@@ -57,7 +57,7 @@
 		"node-cache": "^5.1.2",
 		"node-fetch": "^3.3.2",
 		"swagger-ui-express": "^5.0.1",
-        "uint8arrays": "^5.1.0"
+		"uint8arrays": "^5.1.0"
 	},
 	"devDependencies": {
 		"@playwright/test": "^1.50.0",

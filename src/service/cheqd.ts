@@ -1,6 +1,6 @@
 import type { CheqdSDK, AbstractCheqdSDKModule, ICheqdSDKOptions, DIDDocument, DidStdFee } from '@cheqd/sdk';
 
-import { createCheqdSDK, DIDModule, ResourceModule } from '@cheqd/sdk';
+import { createCheqdSDK, DIDModule, FeemarketModule, ResourceModule } from '@cheqd/sdk';
 import { MsgCreateResourcePayload } from '@cheqd/ts-proto/cheqd/resource/v2/index.js';
 import { SignInfo } from '@cheqd/ts-proto/cheqd/did/v2/index.js';
 import { DirectSecp256k1HdWallet } from '@cosmjs/proto-signing';
@@ -43,6 +43,7 @@ export class CheqdRegistrar {
 
 		const sdkOptions: ICheqdSDKOptions = {
 			modules: [
+                FeemarketModule as unknown as AbstractCheqdSDKModule,
 				DIDModule as unknown as AbstractCheqdSDKModule,
 				ResourceModule as unknown as AbstractCheqdSDKModule,
 			],
@@ -100,7 +101,11 @@ export class CheqdRegistrar {
 }
 
 export async function CheqdResolver(id: string) {
-	const result = await fetch(`${DefaultResolverUrl.Cheqd}/1.0/identifiers/${id}`);
+	const result = await fetch(`${DefaultResolverUrl.Cheqd}/1.0/identifiers/${id}`, {
+        headers: {
+            "Accept" : "application/ld+json;profile=https://w3id.org/did-resolution"
+        }
+    });
 	if (!result.ok) {
 		return null;
 	}

@@ -209,17 +209,16 @@ export class ResourceController {
 		type: string
 	): Promise<{ existingResource: any }> {
 		let existingResource;
-		const queryString = `${did}?resourceName=${name}&resourceType=${type}&resourceMetadata=true`;
-		let resource = await CheqdResolver(queryString);
-		if (resource)
-			if (resource.contentStream) {
-				let metadata = resource.contentStream.linkedResourceMetadata || [];
-				if (metadata.length >= 1) {
-					return {
-						existingResource: metadata[0],
-					};
-				}
-			}
+		const queryString = `${did}?resourceName=${name}&resourceType=${type}`;
+		let didResolutionResult = await CheqdResolver(queryString);
+		if (didResolutionResult) {
+            let metadata = didResolutionResult.didDocumentMetadata.linkedResourceMetadata || [];
+            if (metadata.length >= 1) {
+                return {
+                    existingResource: metadata[0],
+                };
+            }
+		}
 		return { existingResource: existingResource };
 	}
 

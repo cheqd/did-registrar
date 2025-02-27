@@ -248,10 +248,7 @@ export class DidController {
 						.send(Responses.GetInvalidResponse({ id: did }, secret, Messages.DidNotFound));
 				}
 
-				payload = {
-					verificationMethod: resolvedDocument.didDocument.verificationMethod,
-					id: resolvedDocument.didDocument.id,
-				};
+				payload = resolvedDocument.didDocument;
 			}
 
 			let signInputs: SignInfo[];

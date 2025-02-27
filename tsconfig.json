@@ -3,10 +3,9 @@
     "strict": true,
     "preserveConstEnums": true,
     "sourceMap": true,
-    "module": "esnext",     /* Specify ECMAScript target version: 'ES3' (default), 'ES5', 'ES2015', 'ES2016', 'ES2017', 'ES2018', 'ES2019', 'ES2020', or 'ESNEXT'. */
+    "module": "NodeNext",     /* Specify ECMAScript target version: 'ES3' (default), 'ES5', 'ES2015', 'ES2016', 'ES2017', 'ES2018', 'ES2019', 'ES2020', or 'ESNEXT'. */
     "outDir": "dist",       /* Redirect output structure to the directory. */
-    "target": "esnext",
-    "moduleResolution": "node",
+    "target": "ES2024",
     "types": ["@types/node"],
     "allowSyntheticDefaultImports": true,
     "skipLibCheck": true,

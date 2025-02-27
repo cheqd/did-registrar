@@ -72,6 +72,5 @@ test('resource-create. Send the final request for Resource creation', async ({ r
 	expect(response.didUrlState.name).toEqual('ResourceName');
 	expect(response.didUrlState.type).toEqual('TextDocument');
 	expect(response.didUrlState.version).toEqual('1.0');
-	console.log('DIDUrl:' + response.didUrlState.didUrl);
 	setResourceId(response.didUrlState.didUrl.split('/resources/')[1]);
 });

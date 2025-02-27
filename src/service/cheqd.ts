@@ -101,7 +101,11 @@ export class CheqdRegistrar {
 }
 
 export async function CheqdResolver(id: string) {
-	const result = await fetch(`${DefaultResolverUrl.Cheqd}/1.0/identifiers/${id}`);
+	const result = await fetch(`${DefaultResolverUrl.Cheqd}/1.0/identifiers/${id}`, {
+        headers: {
+            "Accept" : "application/ld+json;profile=https://w3id.org/did-resolution"
+        }
+    });
 	if (!result.ok) {
 		return null;
 	}

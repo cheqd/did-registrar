@@ -391,11 +391,11 @@ export class ResourceController {
 				const { name, type, versionId } = options as IResourceOptions;
 
                 // find by name and type
-                const { existingResource} = await ResourceController.checkResourceStatus(did, name, type);
+                const { existingResource } = await ResourceController.checkResourceStatus(did, name, type);
    				if (!existingResource) {
 					return response
 						.status(400)
-						.send(Responses.GetInvalidResourceResponse(did, {}, secret, Messages.ResourceNotFound));
+						.send(Responses.GetInvalidResourceResponse(did, {}, secret, Messages.InvalidUpdateResource));
 				}
 
 				jobId = v4();

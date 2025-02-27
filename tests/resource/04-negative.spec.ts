@@ -46,7 +46,7 @@ test('resource-create. Fail to send content', async ({ request }) => {
 
 	const body = await payload.json();
 	expect(body.didUrlState).toBeDefined();
-	expect(body.didUrlState.description).toEqual('Invalid payload: options and content are required');
+	expect(body.didUrlState.description).toEqual('Invalid payload: options.name, options.type and content are required');
 });
 
 test('resource-create. Send wrong content type', async ({ request }) => {
@@ -127,7 +127,7 @@ test('resource-update. Fail to send content', async ({ request }) => {
 
 	const body = await payload.json();
 	expect(body.didUrlState).toBeDefined();
-	expect(body.didUrlState.description).toEqual('Invalid payload: options and content are required');
+	expect(body.didUrlState.description).toEqual('Invalid payload: options.name, options.type and content are required');
 });
 
 test('resource-update. Send wrong content type', async ({ request }) => {
@@ -244,10 +244,10 @@ test('resource-update. Resource not found', async ({ request }) => {
 		data: {
 			did: activeDid,
 			content: ['Test Data'],
-			relativeDidUrl: '/resources/1234567',
+			relativeDidUrl: '/resources/8ee801d1-890f-4ca3-a368-eb4c363c0344',
 			options: {
 				network: 'testnet',
-				name: 'ResourceName',
+				name: 'NotFoundResource',
 				type: 'TextDocument',
 				versionId: '1.0',
 			},
@@ -258,7 +258,7 @@ test('resource-update. Resource not found', async ({ request }) => {
 
 	const body = await payload.json();
 	expect(body.didUrlState).toBeDefined();
-	expect(body.didUrlState.description).toEqual('Invalid payload: Resource does not exist');
+	expect(body.didUrlState.description).toEqual('Invalid payload: Update resource name or type does not match existing resource');
 });
 
 test('resource-update. Send wrong name/type without relativeDidUrl', async ({ request }) => {
@@ -279,7 +279,7 @@ test('resource-update. Send wrong name/type without relativeDidUrl', async ({ re
 
 	const body = await payload.json();
 	expect(body.didUrlState).toBeDefined();
-	expect(body.didUrlState.description).toEqual('Invalid payload: Resource does not exist');
+	expect(body.didUrlState.description).toEqual('Invalid payload: Update resource name or type does not match existing resource');
 });
 
 test('resource-create. Fail second create with same name and type', async ({ request }) => {

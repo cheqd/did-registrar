@@ -206,20 +206,26 @@ export class ResourceController {
 	public static async checkResourceStatus(
 		did: string,
 		name: string,
-		type: string
-	): Promise<{ existingResource: any }> {
+		type: string,
+        options?: {
+            resourceId?: string,
+            resourceVersion?: string,
+        }
+	): Promise<{ existingResource: any, existingIdentifier: boolean }> {
 		let existingResource;
 		const queryString = `${did}?resourceName=${name}&resourceType=${type}`;
 		let didResolutionResult = await CheqdResolver(queryString);
 		if (didResolutionResult) {
             let metadata = didResolutionResult.didDocumentMetadata.linkedResourceMetadata || [];
+            let isExistingIdentifier: boolean = metadata.some((m: any)=> m.resourceId == options?.resourceId || m.resourceVersion == options?.resourceVersion )
             if (metadata.length >= 1) {
                 return {
                     existingResource: metadata[0],
+                    existingIdentifier: isExistingIdentifier
                 };
             }
 		}
-		return { existingResource: existingResource };
+		return { existingResource: existingResource, existingIdentifier: false };
 	}
 
 	public async createResource(request: Request, response: Response) {
@@ -388,19 +394,25 @@ export class ResourceController {
 					.status(400)
 					.json(Responses.GetInvalidResourceResponse('', {}, secret, Messages.InvalidContent));
 			} else {
+                jobId = v4();
+                const id = relativeDidUrl ? relativeDidUrl.replace('/resources/', '') : '';
+                const resourceId = validate(id) ? id : v4();
+
 				const { name, type, versionId } = options as IResourceOptions;
 
                 // find by name and type
-                const { existingResource } = await ResourceController.checkResourceStatus(did, name, type);
+                const { existingResource, existingIdentifier } = await ResourceController.checkResourceStatus(did, name, type, { resourceVersion: versionId, resourceId });
    				if (!existingResource) {
 					return response
-						.status(400)
+						.status(409)
 						.send(Responses.GetInvalidResourceResponse(did, {}, secret, Messages.InvalidUpdateResource));
 				}
 
-				jobId = v4();
-                const id = relativeDidUrl ? relativeDidUrl.replace('/resources/', '') : '';
-                const resourceId = validate(id) ? id : v4();
+                if (existingIdentifier) {
+                    return response
+                    .status(400)
+                    .send(Responses.GetInvalidResourceResponse(did, {}, secret, Messages.InvalidUpdateResource));
+                }
 
 				resourcePayload = {
 					collectionId: did.split(':').pop()!,

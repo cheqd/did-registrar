@@ -404,14 +404,14 @@ export class ResourceController {
                 const { existingResource, existingIdentifier } = await ResourceController.checkResourceStatus(did, name, type, { resourceVersion: versionId, resourceId });
    				if (!existingResource) {
 					return response
-						.status(409)
+						.status(400)
 						.send(Responses.GetInvalidResourceResponse(did, {}, secret, Messages.InvalidUpdateResource));
 				}
 
                 if (existingIdentifier) {
                     return response
-                    .status(400)
-                    .send(Responses.GetInvalidResourceResponse(did, {}, secret, Messages.InvalidUpdateResource));
+                    .status(409)
+                    .send(Responses.GetInvalidResourceResponse(did, {}, secret, Messages.InvalidUpdateVersion));
                 }
 
 				resourcePayload = {

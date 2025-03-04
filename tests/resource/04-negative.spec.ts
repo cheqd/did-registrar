@@ -17,7 +17,7 @@ test('resource-create. wrong did', async ({ request }) => {
 				network: 'testnet',
 				name: 'ResourceName',
 				type: 'TextDocument',
-				versionId: '1.0',
+				versionId: '3.0',
 			},
 		},
 	});
@@ -37,7 +37,7 @@ test('resource-create. Fail to send content', async ({ request }) => {
 				network: 'testnet',
 				name: 'ResourceName',
 				type: 'TextDocument',
-				versionId: '1.0',
+				versionId: '3.0',
 			},
 		},
 	});
@@ -46,7 +46,9 @@ test('resource-create. Fail to send content', async ({ request }) => {
 
 	const body = await payload.json();
 	expect(body.didUrlState).toBeDefined();
-	expect(body.didUrlState.description).toEqual('Invalid payload: options and content are required');
+	expect(body.didUrlState.description).toEqual(
+		'Invalid payload: options.name, options.type and content are required'
+	);
 });
 
 test('resource-create. Send wrong content type', async ({ request }) => {
@@ -58,7 +60,7 @@ test('resource-create. Send wrong content type', async ({ request }) => {
 				network: 'testnet',
 				name: 'ResourceName',
 				type: 'TextDocument',
-				versionId: '1.0',
+				versionId: '3.0',
 			},
 		},
 	});
@@ -78,7 +80,7 @@ test('resource-create. Send deactivated did', async ({ request }) => {
 				network: 'testnet',
 				name: 'ResourceName',
 				type: 'TextDocument',
-				versionId: '1.0',
+				versionId: '3.0',
 			},
 		},
 	});
@@ -98,7 +100,7 @@ test('resource-update. wrong did', async ({ request }) => {
 				network: 'testnet',
 				name: 'ResourceName',
 				type: 'TextDocument',
-				versionId: '1.0',
+				versionId: '3.0',
 			},
 		},
 	});
@@ -118,7 +120,7 @@ test('resource-update. Fail to send content', async ({ request }) => {
 				network: 'testnet',
 				name: 'ResourceName',
 				type: 'TextDocument',
-				versionId: '1.0',
+				versionId: '3.0',
 			},
 		},
 	});
@@ -127,7 +129,9 @@ test('resource-update. Fail to send content', async ({ request }) => {
 
 	const body = await payload.json();
 	expect(body.didUrlState).toBeDefined();
-	expect(body.didUrlState.description).toEqual('Invalid payload: options and content are required');
+	expect(body.didUrlState.description).toEqual(
+		'Invalid payload: options.name, options.type and content are required'
+	);
 });
 
 test('resource-update. Send wrong content type', async ({ request }) => {
@@ -139,7 +143,7 @@ test('resource-update. Send wrong content type', async ({ request }) => {
 				network: 'testnet',
 				name: 'ResourceName',
 				type: 'TextDocument',
-				versionId: '1.0',
+				versionId: '3.0',
 			},
 		},
 	});
@@ -162,7 +166,7 @@ test('resource-update. Send wrong didUrl', async ({ request }) => {
 				network: 'testnet',
 				name: 'ResourceName',
 				type: 'TextDocument',
-				versionId: '1.0',
+				versionId: '3.0',
 			},
 		},
 	});
@@ -184,7 +188,7 @@ test('resource-update. Send wrong operation', async ({ request }) => {
 				network: 'testnet',
 				name: 'ResourceName',
 				type: 'TextDocument',
-				versionId: '1.0',
+				versionId: '3.0',
 			},
 		},
 	});
@@ -205,7 +209,7 @@ test('resource-update. Send deactivated did', async ({ request }) => {
 				network: 'testnet',
 				name: 'ResourceName',
 				type: 'TextDocument',
-				versionId: '1.0',
+				versionId: '3.0',
 			},
 		},
 	});
@@ -221,12 +225,12 @@ test('resource-update. Send wrong name/type', async ({ request }) => {
 		data: {
 			did: activeDid,
 			content: ['Test Data'],
-			relativeDidUrl: didUrl,
+			relativeDidUrl: '/resources/0055074c-e6da-4274-a2e0-9b504f401ed6',
 			options: {
 				network: 'testnet',
-				name: 'ResourceName1',
+				name: 'ResourceNameInvalid',
 				type: 'TextDocument',
-				versionId: '1.0',
+				versionId: '3.0',
 			},
 		},
 	});
@@ -244,12 +248,12 @@ test('resource-update. Resource not found', async ({ request }) => {
 		data: {
 			did: activeDid,
 			content: ['Test Data'],
-			relativeDidUrl: '/resources/1234567',
+			relativeDidUrl: '/resources/0055074c-e6da-4274-a2e0-9b504f401ed6',
 			options: {
 				network: 'testnet',
-				name: 'ResourceName',
+				name: 'NotFoundResource',
 				type: 'TextDocument',
-				versionId: '1.0',
+				versionId: '3.0',
 			},
 		},
 	});
@@ -258,7 +262,9 @@ test('resource-update. Resource not found', async ({ request }) => {
 
 	const body = await payload.json();
 	expect(body.didUrlState).toBeDefined();
-	expect(body.didUrlState.description).toEqual('Invalid payload: Resource does not exist');
+	expect(body.didUrlState.description).toEqual(
+		'Invalid payload: Update resource name or type does not match existing resource'
+	);
 });
 
 test('resource-update. Send wrong name/type without relativeDidUrl', async ({ request }) => {
@@ -270,7 +276,7 @@ test('resource-update. Send wrong name/type without relativeDidUrl', async ({ re
 				network: 'testnet',
 				name: 'ResourceName2',
 				type: 'TextDocument2',
-				versionId: '1.0',
+				versionId: '3.0',
 			},
 		},
 	});
@@ -279,7 +285,9 @@ test('resource-update. Send wrong name/type without relativeDidUrl', async ({ re
 
 	const body = await payload.json();
 	expect(body.didUrlState).toBeDefined();
-	expect(body.didUrlState.description).toEqual('Invalid payload: Resource does not exist');
+	expect(body.didUrlState.description).toEqual(
+		'Invalid payload: Update resource name or type does not match existing resource'
+	);
 });
 
 test('resource-create. Fail second create with same name and type', async ({ request }) => {
@@ -292,7 +300,7 @@ test('resource-create. Fail second create with same name and type', async ({ req
 				network: 'testnet',
 				name: 'ResourceName',
 				type: 'TextDocument',
-				versionId: '1.0',
+				versionId: '3.0',
 			},
 		},
 	});
@@ -308,26 +316,24 @@ test('resource-create. Fail second create with same name and type', async ({ req
 
 test('resource-update. Fail Resource update with existing nextversionId', async ({ request }) => {
 	const didPayload = getDidDocument();
-	const resourceId = getResourceId();
 	const payload = await request.post(`/1.0/updateResource`, {
 		data: {
 			did: didPayload.id,
 			content: ['SGVsbG8gV29ybGQ='],
-			relativeDidUrl: '/resources/' + resourceId,
 			options: {
 				network: 'testnet',
 				name: 'ResourceName',
 				type: 'TextDocument',
-				versionId: '4.0',
+				versionId: '3.0',
 			},
 		},
 	});
 
-	expect(payload.status()).toBe(400);
+	expect(payload.status()).toBe(409);
 
 	const body = await payload.json();
 	expect(body.didUrlState).toBeDefined();
 	expect(body.didUrlState.state).toBeDefined();
 	expect(body.didUrlState.state).toEqual('failed');
-	expect(body.didUrlState.description).toEqual('Invalid payload: Only latest version of resource can be updated');
+	expect(body.didUrlState.description).toEqual('Invalid payload: Update resource version or id already exists');
 });

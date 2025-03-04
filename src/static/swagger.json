@@ -525,10 +525,30 @@
                     }
                 }
             },
+            "RegistrarResourceRequest": {
+                "description": "Input fields for a Resource operation.",
+                "type": "object",
+                "properties": {
+                    "jobId": {
+                        "description": "This input field is used to keep track of an ongoing DID operation process. See <a href=\"https://identity.foundation/did-registration/#jobid\">https://identity.foundation/did-registration/#jobid</a>.",
+                        "type": "string",
+                        "example": "6d85bcd0-2ea3-4288-ab00-15afadd8a156"
+                    },
+                    "options": {
+                        "$ref": "#/components/schemas/ResourceRequestOptions"
+                    },
+                    "secret": {
+                        "$ref": "#/components/schemas/RequestSecret"
+                    }
+                }
+            },
             "RequestOptions": {
                 "description": "This input field contains an object with various options for the DID operation, such as the network where the DID operation should be executed. See <a href=\"https://identity.foundation/did-registration/#options\">https://identity.foundation/did-registration/#options</a>.",
                 "type": "object",
                 "properties": {
+                    "network": {
+                        "description": "This input field contains the network to operate the DID"
+                    },
                     "clientSecretMode": {
                         "$ref": "#/components/schemas/Boolean"
                     },
@@ -545,6 +565,37 @@
                 "additionalProperties": {},
                 "example": {
                     "network": "testnet"
+                }
+            },
+            "ResourceRequestOptions": {
+                "description": "This input field contains an object with various options for the DID operation, such as the network where the DID operation should be executed. See <a href=\"https://identity.foundation/did-registration/#options\">https://identity.foundation/did-registration/#options</a>.",
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "description": "This input field contains the name of the linkedResource",
+                        "type": "string"
+                    },
+                    "type": {
+                        "description": "This input field contains the type of the linkedResource",
+                        "type": "string"
+                    },
+                    "clientSecretMode": {
+                        "$ref": "#/components/schemas/Boolean"
+                    },
+                    "storeSecrets": {
+                        "$ref": "#/components/schemas/Boolean"
+                    },
+                    "returnSecrets": {
+                        "$ref": "#/components/schemas/Boolean"
+                    },
+                    "requestVerificationMethod": {
+                        "$ref": "#/components/schemas/RequestOptionsRequestVerificationMethod"
+                    }
+                },
+                "additionalProperties": {},
+                "example": {
+                    "name": "Demo Resource",
+                    "type": "Year 2024"
                 }
             },
             "RequestOptionsRequestVerificationMethod": {
@@ -727,7 +778,7 @@
                 "description": "Input fields for a DID URL create operation.",
                 "allOf": [
                     {
-                        "$ref": "#/components/schemas/RegistrarRequest"
+                        "$ref": "#/components/schemas/RegistrarResourceRequest"
                     },
                     {
                         "type": "object",
@@ -738,9 +789,9 @@
                                 "example": "did:cheqd:testnet:ca9ff47c-0286-4614-a4be-8ffa83911e09"
                             },
                             "relativeDidUrl": {
-                                "description": "This input field indicates a relative DID URL that is the target of the DID URL create operation.",
+                                "description": "This input field indicates a relative DID URL for this resource after create operation.",
                                 "type": "string",
-                                "example": "/resources/123"
+                                "example": "/resources/0d033721-dfdc-46b4-85c2-68f35fced15a"
                             },
                             "content": {
                                 "description": "This input field contains Base64-encoded data that is the content of the resource associated with the DID URL.",
@@ -755,7 +806,7 @@
                 "description": "Input fields for a DID URL update operation.",
                 "allOf": [
                     {
-                        "$ref": "#/components/schemas/RegistrarRequest"
+                        "$ref": "#/components/schemas/RegistrarResourceRequest"
                     },
                     {
                         "type": "object",
@@ -766,9 +817,9 @@
                                 "example": "did:cheqd:testnet:ca9ff47c-0286-4614-a4be-8ffa83911e09"
                             },
                             "relativeDidUrl": {
-                                "description": "This input field indicates a relative DID URL that is the target of the DID URL update operation.",
+                                "description": "This input field indicates a relative DID URL for this resource after update operation.",
                                 "type": "string",
-                                "example": "/resources/123"
+                                "example": "/resources/e667fa68-c3cf-449e-89e1-482ef821abfe"
                             },
                             "contentOperation": {
                                 "description": "This input field indicates which update operation(s) should be applied to the content of a DID URL’s associated resource. See <a href=\"https://identity.foundation/did-registration/#diddocumentoperation\">https://identity.foundation/did-registration/#resourceoperation</a>.",

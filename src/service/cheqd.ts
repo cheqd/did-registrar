@@ -43,7 +43,7 @@ export class CheqdRegistrar {
 
 		const sdkOptions: ICheqdSDKOptions = {
 			modules: [
-                FeemarketModule as unknown as AbstractCheqdSDKModule,
+				FeemarketModule as unknown as AbstractCheqdSDKModule,
 				DIDModule as unknown as AbstractCheqdSDKModule,
 				ResourceModule as unknown as AbstractCheqdSDKModule,
 			],
@@ -102,10 +102,10 @@ export class CheqdRegistrar {
 
 export async function CheqdResolver(id: string) {
 	const result = await fetch(`${DefaultResolverUrl.Cheqd}/1.0/identifiers/${id}`, {
-        headers: {
-            "Accept" : "application/ld+json;profile=https://w3id.org/did-resolution"
-        }
-    });
+		headers: {
+			Accept: 'application/ld+json;profile=https://w3id.org/did-resolution',
+		},
+	});
 	if (!result.ok) {
 		return null;
 	}

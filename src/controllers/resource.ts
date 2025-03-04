@@ -59,9 +59,14 @@ export class ResourceController {
 		check('did').optional().isString().contains('did:cheqd').withMessage(Messages.InvalidDid),
 		this.validateJobId,
 		check('content').optional().isString().withMessage(Messages.Invalid),
-		check('relativeDidUrl').optional().isString().contains('/resources/').withMessage(Messages.InvalidDidUrl)
-        .customSanitizer(value => value.replace('/resources/', ''))
-        .isUUID().withMessage(Messages.InvalidResourceId),
+		check('relativeDidUrl')
+			.optional()
+			.isString()
+			.contains('/resources/')
+			.withMessage(Messages.InvalidDidUrl)
+			.customSanitizer((value) => value.replace('/resources/', ''))
+			.isUUID()
+			.withMessage(Messages.InvalidResourceId),
 		...this.validateOptions,
 	];
 
@@ -78,9 +83,13 @@ export class ResourceController {
 			})
 			.withMessage('The content array must be provided and must have exactly one string'),
 		check('relativeDidUrl')
-            .optional().isString().contains('/resources/').withMessage(Messages.InvalidDidUrl)
-            .customSanitizer(value => value.replace('/resources/', ''))
-            .isUUID().withMessage(Messages.InvalidResourceId),
+			.optional()
+			.isString()
+			.contains('/resources/')
+			.withMessage(Messages.InvalidDidUrl)
+			.customSanitizer((value) => value.replace('/resources/', ''))
+			.isUUID()
+			.withMessage(Messages.InvalidResourceId),
 		check('contentOperation')
 			.optional()
 			.isArray()
@@ -207,23 +216,26 @@ export class ResourceController {
 		did: string,
 		name: string,
 		type: string,
-        options?: {
-            resourceId?: string,
-            resourceVersion?: string,
-        }
-	): Promise<{ existingResource: any, existingIdentifier: boolean }> {
+		options?: {
+			resourceId?: string;
+			resourceVersion?: string;
+		}
+	): Promise<{ existingResource: any; existingIdentifier: boolean }> {
 		let existingResource;
 		const queryString = `${did}?resourceName=${name}&resourceType=${type}`;
 		let didResolutionResult = await CheqdResolver(queryString);
+		console.log('didResolutionResult', didResolutionResult);
 		if (didResolutionResult) {
-            let metadata = didResolutionResult.didDocumentMetadata.linkedResourceMetadata || [];
-            let isExistingIdentifier: boolean = metadata.some((m: any)=> m.resourceId == options?.resourceId || m.resourceVersion == options?.resourceVersion )
-            if (metadata.length >= 1) {
-                return {
-                    existingResource: metadata[0],
-                    existingIdentifier: isExistingIdentifier
-                };
-            }
+			let metadata = didResolutionResult.didDocumentMetadata.linkedResourceMetadata || [];
+			let isExistingIdentifier: boolean = metadata.some(
+				(m: any) => m.resourceId == options?.resourceId || m.resourceVersion == options?.resourceVersion
+			);
+			if (metadata.length >= 1) {
+				return {
+					existingResource: metadata[0],
+					existingIdentifier: isExistingIdentifier,
+				};
+			}
 		}
 		return { existingResource: existingResource, existingIdentifier: false };
 	}
@@ -288,8 +300,8 @@ export class ResourceController {
 				}
 				jobId = v4();
 
-                const id = relativeDidUrl ? relativeDidUrl.replace('/resources/', '') : '';
-                const resourceId = validate(id) ? id : v4();
+				const id = relativeDidUrl ? relativeDidUrl.replace('/resources/', '') : '';
+				const resourceId = validate(id) ? id : v4();
 
 				resourcePayload = {
 					collectionId: did.split(':').pop()!,
@@ -394,25 +406,30 @@ export class ResourceController {
 					.status(400)
 					.json(Responses.GetInvalidResourceResponse('', {}, secret, Messages.InvalidContent));
 			} else {
-                jobId = v4();
-                const id = relativeDidUrl ? relativeDidUrl.replace('/resources/', '') : '';
-                const resourceId = validate(id) ? id : v4();
+				jobId = v4();
+				const id = relativeDidUrl ? relativeDidUrl.replace('/resources/', '') : '';
+				const resourceId = validate(id) ? id : v4();
 
 				const { name, type, versionId } = options as IResourceOptions;
 
-                // find by name and type
-                const { existingResource, existingIdentifier } = await ResourceController.checkResourceStatus(did, name, type, { resourceVersion: versionId, resourceId });
-   				if (!existingResource) {
+				// find by name and type
+				const { existingResource, existingIdentifier } = await ResourceController.checkResourceStatus(
+					did,
+					name,
+					type,
+					{ resourceVersion: versionId, resourceId }
+				);
+				if (!existingResource) {
 					return response
 						.status(400)
 						.send(Responses.GetInvalidResourceResponse(did, {}, secret, Messages.InvalidUpdateResource));
 				}
 
-                if (existingIdentifier) {
-                    return response
-                    .status(409)
-                    .send(Responses.GetInvalidResourceResponse(did, {}, secret, Messages.InvalidUpdateVersion));
-                }
+				if (existingIdentifier) {
+					return response
+						.status(409)
+						.send(Responses.GetInvalidResourceResponse(did, {}, secret, Messages.InvalidUpdateVersion));
+				}
 
 				resourcePayload = {
 					collectionId: did.split(':').pop()!,

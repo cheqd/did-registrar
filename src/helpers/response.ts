@@ -206,7 +206,7 @@ export class Responses {
 		};
 	}
 
-    static GetJobExpiredResourceResponse(jobId: string) {
+	static GetJobExpiredResourceResponse(jobId: string) {
 		return {
 			jobId,
 			didUrlState: {

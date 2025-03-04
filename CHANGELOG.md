@@ -1,5 +1,13 @@
 # Changelog
 
+## [2.4.1-develop.2](https://github.com/cheqd/did-registrar/compare/2.4.1-develop.1...2.4.1-develop.2) (2025-03-04)
+
+### Bug Fixes
+
+* Improve error handling and correct relativeDidUrl reference ([#391](https://github.com/cheqd/did-registrar/issues/391)) ([6bbece1](https://github.com/cheqd/did-registrar/commit/6bbece15ed85b908af8457f8ba655b421303a963))
+
+## [2.4.1-develop.1](https://github.com/cheqd/did-registrar/compare/2.4.0...2.4.1-develop.1) (2025-02-27)
+
 ## [2.4.0](https://github.com/cheqd/did-registrar/compare/2.3.0...2.4.0) (2025-01-31)
 
 ### Features

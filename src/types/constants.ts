@@ -4,7 +4,7 @@ export enum Messages {
 	TryAgain = 'The operation failed due to an internal error. Please try again',
 	GetSignature = 'Please sign the following payload with the keys in verificationMethod and Add the signingResponse in secret',
 	DidNotFound = 'The DID does not exist or is Deactivated',
-    ControllerNotFound = 'The Controller does not exist or is Deactivated',
+	ControllerNotFound = 'The Controller does not exist or is Deactivated',
 	InvalidDidDocument = 'Provide a DID Document with at least one valid verification method',
 	InvalidDid = 'The DID is not valid',
 	InvalidDidUrl = 'The DID URL is not valid',

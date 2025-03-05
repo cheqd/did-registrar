@@ -177,11 +177,7 @@ export class ResourceController {
 				return response
 					.status(200)
 					.json(
-						await Responses.GetResourceActionSignatureResponseV1(
-							jobId,
-							resolvedDocument,
-							resourcePayload
-						)
+						await Responses.GetResourceActionSignatureResponseV1(jobId, resolvedDocument, resourcePayload)
 					);
 			}
 
@@ -321,13 +317,7 @@ export class ResourceController {
 				LocalStore.instance.setResource(jobId, { resource: resourcePayload, state: IState.Action, did });
 				return response
 					.status(200)
-					.json(
-						await Responses.GetResourceActionSignatureResponse(
-							jobId,
-							resolvedDocument,
-							resourcePayload
-						)
-					);
+					.json(await Responses.GetResourceActionSignatureResponse(jobId, resolvedDocument, resourcePayload));
 			}
 
 			options.network = options.network || (did.split(':')[2] as NetworkType);
@@ -449,11 +439,7 @@ export class ResourceController {
 				return response
 					.status(200)
 					.json(
-						await Responses.GetResourceActionSignatureResponse(
-							jobId,
-							resolvedDidDocument,
-							resourcePayload
-						)
+						await Responses.GetResourceActionSignatureResponse(jobId, resolvedDidDocument, resourcePayload)
 					);
 			}
 

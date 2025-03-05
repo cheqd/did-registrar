@@ -28,21 +28,21 @@ export class Responses {
 			await DIDModule.validateSpecCompliantPayload(didPayload);
 		const signingRequest: Record<string, any> = {};
 
-        const controllers = didPayload.controller || []
+		const controllers = didPayload.controller || [];
 
-        const authentications: string[] = []
-        for(const controller of controllers) {
-            if (controller == didPayload.id) {
-                authentications.push(...(didPayload.authentication as string[] || []))
-                continue
-            }
+		const authentications: string[] = [];
+		for (const controller of controllers) {
+			if (controller == didPayload.id) {
+				authentications.push(...((didPayload.authentication as string[]) || []));
+				continue;
+			}
 
-            let resolvedDocument = await CheqdResolver(controller);
-            if (!resolvedDocument?.didDocument || resolvedDocument.didDocumentMetadata.deactivated) {
-                return Responses.GetInvalidResponse({ id: controller }, {}, Messages.ControllerNotFound);
-            }
-            authentications.push(...resolvedDocument.didDocument.authentication)
-        }
+			let resolvedDocument = await CheqdResolver(controller);
+			if (!resolvedDocument?.didDocument || resolvedDocument.didDocumentMetadata.deactivated) {
+				return Responses.GetInvalidResponse({ id: controller }, {}, Messages.ControllerNotFound);
+			}
+			authentications.push(...resolvedDocument.didDocument.authentication);
+		}
 
 		authentications.forEach((kid, index) => {
 			signingRequest[`signingRequest${index}`] = {
@@ -88,20 +88,20 @@ export class Responses {
 	static async GetDeactivateDidSignatureResponse(jobId: string, payload: DIDDocument, versionId: string) {
 		const signingRequest: Record<string, any> = {};
 
-        const controllers = payload.controller || []
-        const authentications: string[] = []
-        for(const controller of controllers) {
-            if (controller == payload.id) {
-                authentications.push(...(payload.authentication as string[] || []))
-                continue
-            }
+		const controllers = payload.controller || [];
+		const authentications: string[] = [];
+		for (const controller of controllers) {
+			if (controller == payload.id) {
+				authentications.push(...((payload.authentication as string[]) || []));
+				continue;
+			}
 
-            let resolvedDocument = await CheqdResolver(controller);
-            if (!resolvedDocument?.didDocument || resolvedDocument.didDocumentMetadata.deactivated) {
-                return Responses.GetInvalidResponse({ id: controller }, {}, Messages.ControllerNotFound);
-            }
-            authentications.push(...resolvedDocument.didDocument.authentication)
-        }
+			let resolvedDocument = await CheqdResolver(controller);
+			if (!resolvedDocument?.didDocument || resolvedDocument.didDocumentMetadata.deactivated) {
+				return Responses.GetInvalidResponse({ id: controller }, {}, Messages.ControllerNotFound);
+			}
+			authentications.push(...resolvedDocument.didDocument.authentication);
+		}
 
 		authentications.forEach((kid, index) => {
 			signingRequest[`signingRequest${index}`] = {
@@ -138,20 +138,20 @@ export class Responses {
 		resource: Partial<MsgCreateResourcePayload>
 	) {
 		const signingRequest: Record<string, any> = {};
-        const controllers = didPayload.controller || []
-        const authentications: string[] = []
-        for(const controller of controllers) {
-            if (controller == didPayload.id) {
-                authentications.push(...(didPayload.authentication as string[] || []))
-                continue
-            }
+		const controllers = didPayload.controller || [];
+		const authentications: string[] = [];
+		for (const controller of controllers) {
+			if (controller == didPayload.id) {
+				authentications.push(...((didPayload.authentication as string[]) || []));
+				continue;
+			}
 
-            let resolvedDocument = await CheqdResolver(controller);
-            if (!resolvedDocument?.didDocument || resolvedDocument.didDocumentMetadata.deactivated) {
-                return Responses.GetInvalidResponse({ id: controller }, {}, Messages.ControllerNotFound);
-            }
-            authentications.push(...resolvedDocument.didDocument.authentication)
-        }
+			let resolvedDocument = await CheqdResolver(controller);
+			if (!resolvedDocument?.didDocument || resolvedDocument.didDocumentMetadata.deactivated) {
+				return Responses.GetInvalidResponse({ id: controller }, {}, Messages.ControllerNotFound);
+			}
+			authentications.push(...resolvedDocument.didDocument.authentication);
+		}
 
 		authentications.forEach((kid, index) => {
 			signingRequest[`signingRequest${index}`] = {
@@ -185,20 +185,20 @@ export class Responses {
 		resource: Partial<MsgCreateResourcePayload>
 	) {
 		const signingRequest: Record<string, any> = {};
-        const controllers = didPayload.controller || []
-        const authentications: string[] = []
-        for(const controller of controllers) {
-            if (controller == didPayload.id) {
-                authentications.push(...(didPayload.authentication as string[] || []))
-                continue
-            }
+		const controllers = didPayload.controller || [];
+		const authentications: string[] = [];
+		for (const controller of controllers) {
+			if (controller == didPayload.id) {
+				authentications.push(...((didPayload.authentication as string[]) || []));
+				continue;
+			}
 
-            let resolvedDocument = await CheqdResolver(controller);
-            if (!resolvedDocument?.didDocument || resolvedDocument.didDocumentMetadata.deactivated) {
-                return Responses.GetInvalidResponse({ id: controller }, {}, Messages.ControllerNotFound);
-            }
-            authentications.push(...resolvedDocument.didDocument.authentication)
-        }
+			let resolvedDocument = await CheqdResolver(controller);
+			if (!resolvedDocument?.didDocument || resolvedDocument.didDocumentMetadata.deactivated) {
+				return Responses.GetInvalidResponse({ id: controller }, {}, Messages.ControllerNotFound);
+			}
+			authentications.push(...resolvedDocument.didDocument.authentication);
+		}
 		authentications.forEach((kid, index) => {
 			signingRequest[`signingRequest${index}`] = {
 				kid: kid,

@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.4.1](https://github.com/cheqd/did-registrar/compare/2.4.0...2.4.1) (2025-03-06)
+
+### Bug Fixes
+
+* Improve error handling and correct relativeDidUrl reference ([#391](https://github.com/cheqd/did-registrar/issues/391)) ([6bbece1](https://github.com/cheqd/did-registrar/commit/6bbece15ed85b908af8457f8ba655b421303a963))
+* Request signatures only from controller keys [DEV-4734] ([#382](https://github.com/cheqd/did-registrar/issues/382)) ([bde69ef](https://github.com/cheqd/did-registrar/commit/bde69efc9419a4900635b7aba04603fd9fec51eb))
+
 ## [2.4.1-develop.3](https://github.com/cheqd/did-registrar/compare/2.4.1-develop.2...2.4.1-develop.3) (2025-03-06)
 
 ### Bug Fixes

@@ -30,7 +30,6 @@ jobs:
         env:
           TEST_PRIVATE_KEY: ${{ secrets.TEST_PRIVATE_KEY }}
           TEST_PUBLIC_KEY: ${{ secrets.TEST_PUBLIC_KEY }}
-          
         run: npm run test
 
   build-docker:

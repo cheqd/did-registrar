@@ -1,5 +1,11 @@
 # Changelog
 
+## [2.4.5-develop.1](https://github.com/cheqd/did-registrar/compare/2.4.4...2.4.5-develop.1) (2025-05-06)
+
+### Bug Fixes
+
+* Return resource content as string [DEV-4925] ([#423](https://github.com/cheqd/did-registrar/issues/423)) ([f32ce90](https://github.com/cheqd/did-registrar/commit/f32ce9019b7f74c9afc8304d09ed27b8a1bd2dcd))
+
 ## [2.4.4](https://github.com/cheqd/did-registrar/compare/2.4.3...2.4.4) (2025-04-16)
 
 ## [2.4.4-develop.1](https://github.com/cheqd/did-registrar/compare/2.4.3...2.4.4-develop.1) (2025-04-16)

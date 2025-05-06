@@ -299,7 +299,7 @@ export class Responses {
 				didUrl: did + '/resources/' + resourcePayload.id || '',
 				state: IState.Finished,
 				secret,
-				content: resourcePayload.data,
+				content: resourcePayload.data ? toString(resourcePayload.data) : undefined,
 				name: resourcePayload.name,
 				type: resourcePayload.resourceType,
 				version: resourcePayload.version,

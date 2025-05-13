@@ -1,0 +1,7 @@
+# Because `github/super-linter/slim@v6` doesn't know about `ubuntu-24.04`
+# but `super-linter/slim@v7` doesn't support ESLint@9
+# https://github.com/super-linter/super-linter/issues/6405
+self-hosted-runner:
+  labels:
+    - ubuntu-24.04
+    - ubuntu-24.04-arm

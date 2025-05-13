@@ -21,12 +21,12 @@ jobs:
         with:
           fetch-depth: 0
           persist-credentials: false
-      
+
       - uses: actions/setup-node@v4
         with:
           node-version: 20
           cache: 'npm'
-      
+
       - name: "Obtain Github App token"
         id: app-token
         uses: getsentry/action-github-app-token@v3
@@ -45,22 +45,62 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-      
+
       - name: Set release version number
         id: set-version
         run: |
           RELEASE_VERSION=$( git describe --tags "${{ github.sha }}")
           echo "RELEASE_VERSION=$RELEASE_VERSION" >> "$GITHUB_OUTPUT"
 
+  build-docker:
+    name: Build Docker image
+    needs: release-node
+    runs-on: ${{ matrix.runs-on }}
+    if: ${{ github.ref_name == 'main' }}
+    env:
+      IMAGE_NAME: ${{ github.repository }}
+
+    strategy:
+      matrix:
+        arch: [amd64, arm64]
+        include:
+          - arch: amd64
+            runs-on: ubuntu-24.04
+          - arch: arm64
+            runs-on: ubuntu-24.04-arm
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+        id: buildx
+        with:
+          install: true
+          version: latest
+
+      - name: Build and cache image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: false
+          file: Dockerfile
+          platforms: linux/${{ matrix.arch }}
+          cache-from: type=gha,scope=docker-release-${{ matrix.arch }}
+          cache-to: type=gha,scope=docker-release-${{ matrix.arch }},mode=max
 
   release-docker:
     name: "Release Docker image"
-    needs: release-node
+    needs:
+      - build-docker
+      - release-node
     runs-on: ubuntu-latest
     if: ${{ ( github.ref_name == 'main' ) }}
     env:
       IMAGE_NAME: ${{ github.repository }}
-    environment: 
+    environment:
       name: production
       url: https://did-registrar.cheqd.net/api-docs
 
@@ -80,7 +120,7 @@ jobs:
         uses: digitalocean/action-doctl@v2
         with:
           token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
-      
+
       - name: Login to GitHub Container Registry
         uses: docker/login-action@v3
         with:
@@ -90,7 +130,7 @@ jobs:
 
       - name: Login to DOCR
         run: doctl registry login --expiry-seconds 600
-      
+
       - name: Configure Docker image metadata
         id: meta
         uses: docker/metadata-action@v5
@@ -110,22 +150,16 @@ jobs:
             org.opencontainers.image.vendor="Cheqd Foundation Limited"
             org.opencontainers.image.created={{date 'dddd, MMMM Do YYYY, h:mm:ss a'}}
             org.opencontainers.image.documentation="https://docs.cheqd.io/identity"
-      
+
       - name: Build image with labels
         uses: docker/build-push-action@v6
         with:
           context: .
           file: Dockerfile
-          platforms: linux/amd64
-          load: true
-          target: runner
+          platforms: linux/amd64,linux/arm64
+          push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-          cache-from: type=gha
-          cache-to: type=gha,mode=min
-      
-      - name: Push image to GitHub Container Registry
-        run: docker image push --all-tags ghcr.io/${{ env.IMAGE_NAME }}
-
-      - name: Push image to DigitalOcean Container Registry
-        run: docker image push --all-tags registry.digitalocean.com/${{ env.IMAGE_NAME }}
+          cache-from: |
+            type=gha,scope=docker-release-amd64
+            type=gha,scope=docker-release-arm64

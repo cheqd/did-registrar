@@ -10,7 +10,7 @@ jobs:
   md-link-check:
     name: "Broken Markdown links"
     runs-on: ubuntu-latest
-    
+
     steps:
       - uses: actions/checkout@v4
 
@@ -23,14 +23,14 @@ jobs:
   super-lint:
     name: "Super Linter"
     runs-on: ubuntu-latest
-    
+
     steps:
     - uses: actions/checkout@v4
       with:
         fetch-depth: 0 # Required to fetch version
-    
+
     - name: Run Super Linter
-      uses: github/super-linter/slim@v6
+      uses: super-linter/super-linter/slim@v7
       env:
         IGNORE_GITIGNORED_FILES: true
         DEFAULT_BRANCH: main

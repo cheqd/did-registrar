@@ -1,5 +1,7 @@
 # Changelog
 
+## [2.4.6](https://github.com/cheqd/did-registrar/compare/2.4.5...2.4.6) (2025-05-16)
+
 ## [2.4.5](https://github.com/cheqd/did-registrar/compare/2.4.4...2.4.5) (2025-05-06)
 
 ### Bug Fixes

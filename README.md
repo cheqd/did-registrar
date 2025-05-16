@@ -8,7 +8,7 @@
 
 ## ℹ️ Overview
 
-The purpose of this service is to provide a [Universal Registrar driver](https://identity.foundation/did-registration/#abstract) for the `did:cheqd` DID method. Universal Registrar is a project to provide simple REST APIs for DID creation, update, and deactivation.
+The purpose of this service is to provide a [Universal Registrar driver](https://identity.foundation/did-registration/#abstract) for the `did:cheqd` DID method. Universal Registrar is a project to provide [simple REST APIs for DID creation, update, and deactivation](https://identity.foundation/did-registration/).
 
 ## 📖 Endpoints
 

@@ -1590,14 +1590,19 @@
             },
             "Service": {
                 "type": "object",
+                "required": [
+                    "id",
+                    "type",
+                    "serviceEndpoint"
+                ],
                 "properties": {
                     "id": {
                         "type": "string",
-                        "example": "did:cheqd:testnet:ca9ff47c-0286-4614-a4be-8ffa83911e09#rand,"
+                        "example": "did:cheqd:testnet:ca9ff47c-0286-4614-a4be-8ffa83911e09#rand"
                     },
                     "type": {
                         "type": "string",
-                        "example": "rand,"
+                        "example": "rand"
                     },
                     "serviceEndpoint": {
                         "type": "array",
@@ -1607,6 +1612,37 @@
                         "example": [
                             "https://rand.in"
                         ]
+                    },
+                    "recipientKeys": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "example": [
+                            "did:key:z6MkhaXgBZDvotDkL5257faiztiGiC2QtKLGpbnnEGta2doK"
+                        ]
+                    },
+                    "routingKeys": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "example": [
+                            "did:key:z6MkjchhfUsD6mmvni8mCdXHw216Xrm9bQe2mBH1P5RDjVJG"
+                        ]
+                    },
+                    "accept": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "example": [
+                            "application/didcomm-plain+json"
+                        ]
+                    },
+                    "priority": {
+                        "type": "number",
+                        "example": 1
                     }
                 }
             },

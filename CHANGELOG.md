@@ -1,5 +1,11 @@
 # Changelog
 
+## [2.5.0-develop.1](https://github.com/cheqd/did-registrar/compare/2.4.7...2.5.0-develop.1) (2025-05-30)
+
+### Features
+
+* Bump sdk && support public didcomm [DEV-5018] ([#431](https://github.com/cheqd/did-registrar/issues/431)) ([030ac81](https://github.com/cheqd/did-registrar/commit/030ac81ca3b305eb8de8fefcae5b2a059b6cd6c3))
+
 ## [2.4.7](https://github.com/cheqd/did-registrar/compare/2.4.6...2.4.7) (2025-05-16)
 
 ## [2.4.6](https://github.com/cheqd/did-registrar/compare/2.4.5...2.4.6) (2025-05-16)

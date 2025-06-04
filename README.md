@@ -32,12 +32,12 @@ The purpose of this service is to provide a [Universal Registrar driver](https:/
 
 Environment variables needed for the Registrar are
 
-1. `FEE_PAYER_MAINNET_MNEMONIC` : The cosmos payer mnemonic for the Cheqd Mainnet
-2. `FEE_PAYER_TESTNET_MNEMONIC` : The cosmos payer mnemonic for the Cheqd Testnet, By default it's the Testnet Faucet
+1. `FEE_PAYER_MAINNET_MNEMONIC` : The Cosmos SDK payer account mnemonic for cheqd Mainnet
+2. `FEE_PAYER_TESTNET_MNEMONIC` : The Cosmos SDK payer account mnemonic for cheqd Testnet.
 3. `LOCAL_STORE_TTL` (default: `600`): The time in seconds for the registrar to store data in cache
 4. `PORT` (default: `3000`): The port number
-5. `TESTNET_RPC_URL` (default: `https://rpc.cheqd.network`): Rpc Url for Cheqd Testnet
-6. `MAINNET_RPC_URL` (default: `https://rpc.cheqd.network`): Rpc Url for Cheqd Mainnet
+5. `TESTNET_RPC_URL` (default: `https://rpc.cheqd.network`): RPC URL for cheqd Testnet. This could be an internal RPC endpoint, if you don't use the public endpoint.
+6. `MAINNET_RPC_URL` (default: `https://rpc.cheqd.net`): RPC URL for cheqd Mainnet. This could be an internal RPC endpoint, if you don't use the default public endpoint or [one of the 3rd party publicly available endpoints](https://cosmos.directory/cheqd/nodes).
 
 Clone the repository
 
@@ -86,7 +86,7 @@ Then execute the tests
 
 ```bash
 npm run test
-# if tests faile because of parallelism, run
+# if tests fail because of parallelism, run
 npm run test -- --workers=1
 ```
 

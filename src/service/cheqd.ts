@@ -12,7 +12,7 @@ import { IOptions } from '../types/types.js';
 
 dotenv.config();
 
-let { FEE_PAYER_TESTNET_MNEMONIC, FEE_PAYER_MAINNET_MNEMONIC } = process.env;
+let { FEE_PAYER_TESTNET_MNEMONIC, FEE_PAYER_MAINNET_MNEMONIC, TESTNET_RPC_URL, MAINNET_RPC_URL } = process.env;
 
 export enum DefaultRPCUrl {
 	Mainnet = 'https://rpc.cheqd.net',
@@ -50,8 +50,8 @@ export class CheqdRegistrar {
 			rpcUrl: options.rpcUrl
 				? options.rpcUrl
 				: options.network === NetworkType.Testnet
-					? DefaultRPCUrl.Testnet
-					: DefaultRPCUrl.Mainnet,
+					? TESTNET_RPC_URL || DefaultRPCUrl.Testnet
+					: MAINNET_RPC_URL || DefaultRPCUrl.Mainnet,
 			wallet: await DirectSecp256k1HdWallet.fromMnemonic(
 				options.network === NetworkType.Mainnet ? FEE_PAYER_MAINNET_MNEMONIC : FEE_PAYER_TESTNET_MNEMONIC,
 				{ prefix: 'cheqd' }

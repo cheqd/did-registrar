@@ -36,7 +36,8 @@ Environment variables needed for the Registrar are
 2. `FEE_PAYER_TESTNET_MNEMONIC` : The cosmos payer mnemonic for the Cheqd Testnet, By default it's the Testnet Faucet
 3. `LOCAL_STORE_TTL` (default: `600`): The time in seconds for the registrar to store data in cache
 4. `PORT` (default: `3000`): The port number
-
+5. `TESTNET_RPC_URL` (default: `https://rpc.cheqd.network`): Rpc Url for Cheqd Testnet
+6. `MAINNET_RPC_URL` (default: `https://rpc.cheqd.network`): Rpc Url for Cheqd Mainnet
 
 Clone the repository
 

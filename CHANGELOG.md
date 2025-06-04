@@ -1,5 +1,11 @@
 # Changelog
 
+## [2.5.0-develop.2](https://github.com/cheqd/did-registrar/compare/2.5.0-develop.1...2.5.0-develop.2) (2025-06-04)
+
+### Bug Fixes
+
+* Allow setting own RPC URLs ([#434](https://github.com/cheqd/did-registrar/issues/434)) ([74cd96b](https://github.com/cheqd/did-registrar/commit/74cd96b7c425a1c528fb663c9be868cec6c6f05f))
+
 ## [2.5.0-develop.1](https://github.com/cheqd/did-registrar/compare/2.4.7...2.5.0-develop.1) (2025-05-30)
 
 ### Features

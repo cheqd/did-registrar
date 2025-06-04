@@ -32,7 +32,7 @@ The purpose of this service is to provide a [Universal Registrar driver](https:/
 
 Environment variables needed for the Registrar are
 
-1. `FEE_PAYER_MAINNET_MNEMONIC` : The Cosmos SDK payer account mnemonic for cheqd Mainnet
+1. `FEE_PAYER_MAINNET_MNEMONIC` : The Cosmos SDK payer account mnemonic for cheqd Mainnet.
 2. `FEE_PAYER_TESTNET_MNEMONIC` : The Cosmos SDK payer account mnemonic for cheqd Testnet.
 3. `LOCAL_STORE_TTL` (default: `600`): The time in seconds for the registrar to store data in cache
 4. `PORT` (default: `3000`): The port number

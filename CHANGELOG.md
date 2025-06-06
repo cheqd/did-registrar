@@ -1,5 +1,7 @@
 # Changelog
 
+## [2.6.0-develop.2](https://github.com/cheqd/did-registrar/compare/2.6.0-develop.1...2.6.0-develop.2) (2025-06-06)
+
 ## [2.6.0-develop.1](https://github.com/cheqd/did-registrar/compare/2.5.0...2.6.0-develop.1) (2025-06-04)
 
 ### Features

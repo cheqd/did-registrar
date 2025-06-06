@@ -1,5 +1,11 @@
 # Changelog
 
+## [2.6.0](https://github.com/cheqd/did-registrar/compare/2.5.0...2.6.0) (2025-06-06)
+
+### Features
+
+* Make did resolver configurable ([#435](https://github.com/cheqd/did-registrar/issues/435)) ([e4c7abd](https://github.com/cheqd/did-registrar/commit/e4c7abd0cf80d0b6ab54424d067c4f3926a9d637))
+
 ## [2.6.0-develop.2](https://github.com/cheqd/did-registrar/compare/2.6.0-develop.1...2.6.0-develop.2) (2025-06-06)
 
 ## [2.6.0-develop.1](https://github.com/cheqd/did-registrar/compare/2.5.0...2.6.0-develop.1) (2025-06-04)

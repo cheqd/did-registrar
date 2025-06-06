@@ -1,5 +1,27 @@
 # Changelog
 
+## [2.6.0-develop.1](https://github.com/cheqd/did-registrar/compare/2.5.0...2.6.0-develop.1) (2025-06-04)
+
+### Features
+
+* Make did resolver configurable ([#435](https://github.com/cheqd/did-registrar/issues/435)) ([e4c7abd](https://github.com/cheqd/did-registrar/commit/e4c7abd0cf80d0b6ab54424d067c4f3926a9d637))
+
+## [2.5.0](https://github.com/cheqd/did-registrar/compare/2.4.7...2.5.0) (2025-06-04)
+
+### Features
+
+* Bump sdk && support public didcomm [DEV-5018] ([#431](https://github.com/cheqd/did-registrar/issues/431)) ([030ac81](https://github.com/cheqd/did-registrar/commit/030ac81ca3b305eb8de8fefcae5b2a059b6cd6c3))
+
+### Bug Fixes
+
+* Allow setting own RPC URLs ([#434](https://github.com/cheqd/did-registrar/issues/434)) ([74cd96b](https://github.com/cheqd/did-registrar/commit/74cd96b7c425a1c528fb663c9be868cec6c6f05f))
+
+## [2.5.0-develop.2](https://github.com/cheqd/did-registrar/compare/2.5.0-develop.1...2.5.0-develop.2) (2025-06-04)
+
+### Bug Fixes
+
+* Allow setting own RPC URLs ([#434](https://github.com/cheqd/did-registrar/issues/434)) ([74cd96b](https://github.com/cheqd/did-registrar/commit/74cd96b7c425a1c528fb663c9be868cec6c6f05f))
+
 ## [2.5.0-develop.1](https://github.com/cheqd/did-registrar/compare/2.4.7...2.5.0-develop.1) (2025-05-30)
 
 ### Features

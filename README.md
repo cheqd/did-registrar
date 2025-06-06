@@ -38,6 +38,7 @@ Environment variables needed for the Registrar are
 4. `PORT` (default: `3000`): The port number
 5. `TESTNET_RPC_URL` (default: `https://rpc.cheqd.network`): RPC URL for cheqd Testnet. This could be an internal RPC endpoint, if you don't use the public endpoint.
 6. `MAINNET_RPC_URL` (default: `https://rpc.cheqd.net`): RPC URL for cheqd Mainnet. This could be an internal RPC endpoint, if you don't use the default public endpoint or [one of the 3rd party publicly available endpoints](https://cosmos.directory/cheqd/nodes).
+7. `RESOLVER_URL` (default: `https://resolver.cheqd.net`): DID Resolver url supporting did:cheqd.
 
 Clone the repository
 

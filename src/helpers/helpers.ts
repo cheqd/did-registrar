@@ -52,7 +52,11 @@ export function validateSpecCompliantPayload(didDocument: DIDDocument): SpecVali
 
 	const isValidService = didDocument.service
 		? didDocument?.service?.every((s) => {
-				return Array.isArray(s?.serviceEndpoint) && s?.id && s?.type;
+				const endpoint = s?.serviceEndpoint
+				const validEndpoint = typeof endpoint === 'string' ||
+					Array.isArray(endpoint) ||
+					(typeof endpoint === 'object' && endpoint !== null);
+				return validEndpoint && s?.id && s?.type;
 			})
 		: true;
 

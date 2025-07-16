@@ -12,7 +12,8 @@ import { IOptions } from '../types/types.js';
 
 dotenv.config();
 
-let { FEE_PAYER_TESTNET_MNEMONIC, FEE_PAYER_MAINNET_MNEMONIC } = process.env;
+let { FEE_PAYER_TESTNET_MNEMONIC, FEE_PAYER_MAINNET_MNEMONIC, TESTNET_RPC_URL, MAINNET_RPC_URL, RESOLVER_URL } =
+	process.env;
 
 export enum DefaultRPCUrl {
 	Mainnet = 'https://rpc.cheqd.net',
@@ -50,8 +51,8 @@ export class CheqdRegistrar {
 			rpcUrl: options.rpcUrl
 				? options.rpcUrl
 				: options.network === NetworkType.Testnet
-					? DefaultRPCUrl.Testnet
-					: DefaultRPCUrl.Mainnet,
+					? TESTNET_RPC_URL || DefaultRPCUrl.Testnet
+					: MAINNET_RPC_URL || DefaultRPCUrl.Mainnet,
 			wallet: await DirectSecp256k1HdWallet.fromMnemonic(
 				options.network === NetworkType.Mainnet ? FEE_PAYER_MAINNET_MNEMONIC : FEE_PAYER_TESTNET_MNEMONIC,
 				{ prefix: 'cheqd' }
@@ -101,7 +102,7 @@ export class CheqdRegistrar {
 }
 
 export async function CheqdResolver(id: string) {
-	const result = await fetch(`${DefaultResolverUrl.Cheqd}/1.0/identifiers/${id}`, {
+	const result = await fetch(`${RESOLVER_URL || DefaultResolverUrl.Cheqd}/1.0/identifiers/${id}`, {
 		headers: {
 			Accept: 'application/ld+json;profile=https://w3id.org/did-resolution',
 		},

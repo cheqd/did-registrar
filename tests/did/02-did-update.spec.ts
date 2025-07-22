@@ -75,7 +75,9 @@ test('did-update. Send the final request for DID updating', async ({ request }) 
 	expect(didUpdate.status()).toBe(201);
 });
 
-test('did-update. Initiate DID Update procedure with serviceEndpoint as string and additional params', async ({ request }) => {
+test('did-update. Initiate DID Update procedure with serviceEndpoint as string and additional params', async ({
+	request,
+}) => {
 	didPayload = getDidDocument();
 	// Change didPayload
 	didPayload = {
@@ -144,9 +146,9 @@ test('did-update. Send the final request for updating DID with additional servic
 		},
 	});
 	expect(didUpdate.status()).toBe(201);
-	const response =  await didUpdate.json();
+	const response = await didUpdate.json();
 	expect(response.didState).toBeDefined();
-	expect(response.didState.state).toBe("finished");
+	expect(response.didState.state).toBe('finished');
 	expect(response.didState.didDocument).toBeDefined();
 	expect(response.didState.didDocument.service).toBeDefined();
 	expect(response.didState.didDocument.service[0].priority).toBe(1);
@@ -154,4 +156,3 @@ test('did-update. Send the final request for updating DID with additional servic
 	expect(response.didState.didDocument.service[0].routingKeys).toBeDefined();
 	expect(response.didState.didDocument.service[0].accept).toBeDefined();
 });
-

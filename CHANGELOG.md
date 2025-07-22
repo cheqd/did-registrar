@@ -1,5 +1,11 @@
 # Changelog
 
+## [2.6.1-develop.1](https://github.com/cheqd/did-registrar/compare/2.6.0...2.6.1-develop.1) (2025-07-22)
+
+### Bug Fixes
+
+* add service tests [DEV-5018] ([#457](https://github.com/cheqd/did-registrar/issues/457)) ([c8ac1ae](https://github.com/cheqd/did-registrar/commit/c8ac1aefdb9056b6d2dec28775a6a4dd3313f34c))
+
 ## [2.6.0](https://github.com/cheqd/did-registrar/compare/2.5.0...2.6.0) (2025-06-06)
 
 ### Features

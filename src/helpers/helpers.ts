@@ -100,8 +100,8 @@ function isValidService(service: unknown): boolean {
 	}
 
 	if (
-		s.routing_keys !== undefined &&
-		(!Array.isArray(s.routing_keys) || !s.routing_keys.every((key) => typeof key === 'string'))
+		s.routingKeys !== undefined &&
+		(!Array.isArray(s.routingKeys) || !s.routingKeys.every((key) => typeof key === 'string'))
 	) {
 		return false;
 	}

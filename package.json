@@ -47,7 +47,7 @@
 		"README.md"
 	],
 	"dependencies": {
-		"@cheqd/sdk": "^5.3.1",
+		"@cheqd/sdk": "^5.3.2-develop.2",
 		"@cheqd/ts-proto": "^4.1.0",
 		"@cosmjs/proto-signing": "^0.34.0",
 		"dotenv": "^16.5.0",

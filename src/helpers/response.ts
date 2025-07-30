@@ -29,8 +29,20 @@ export class Responses {
 		const signingRequest: Record<string, any> = {};
 
 		const controllers = didPayload.controller || [];
+		let authentications: string[] = [];
 
-		const authentications: string[] = [];
+		try {
+			let existingDocument = await CheqdResolver(didPayload.id);
+			if (existingDocument?.didDocument && !existingDocument.didDocumentMetadata.deactivated) {
+				// Add existing authentication keys for updates
+				const existingAuthentications = existingDocument.didDocument.authentication || [];
+				authentications.push(...existingAuthentications);
+			}
+		} catch (error) {
+			// This is likely a create operation
+			console.debug('DID not found - treating as create operation');
+		}
+
 		for (const controller of controllers) {
 			if (controller == didPayload.id) {
 				authentications.push(...((didPayload.authentication as string[]) || []));
@@ -43,6 +55,8 @@ export class Responses {
 			}
 			authentications.push(...resolvedDocument.didDocument.authentication);
 		}
+		// Remove duplicates while preserving order
+		authentications = [...new Set(authentications)];
 
 		authentications.forEach((kid, index) => {
 			signingRequest[`signingRequest${index}`] = {

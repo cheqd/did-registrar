@@ -1,5 +1,11 @@
 # Changelog
 
+## [2.6.2-develop.1](https://github.com/cheqd/did-registrar/compare/2.6.1...2.6.2-develop.1) (2025-08-04)
+
+### Bug Fixes
+
+* key replacement signatures [DEV-5161] ([#465](https://github.com/cheqd/did-registrar/issues/465)) ([cf44fed](https://github.com/cheqd/did-registrar/commit/cf44fedc197d0a31385d4ac2f6100fc44a14363a))
+
 ## [2.6.1](https://github.com/cheqd/did-registrar/compare/2.6.0...2.6.1) (2025-07-22)
 
 ### Bug Fixes

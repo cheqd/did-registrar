@@ -39,6 +39,16 @@ Environment variables needed for the Registrar are
 5. `TESTNET_RPC_URL` (default: `https://rpc.cheqd.network`): RPC URL for cheqd Testnet. This could be an internal RPC endpoint, if you don't use the public endpoint.
 6. `MAINNET_RPC_URL` (default: `https://rpc.cheqd.net`): RPC URL for cheqd Mainnet. This could be an internal RPC endpoint, if you don't use the default public endpoint or [one of the 3rd party publicly available endpoints](https://cosmos.directory/cheqd/nodes).
 7. `RESOLVER_URL` (default: `https://resolver.cheqd.net`): DID Resolver url supporting did:cheqd.
+8. `ENABLE_FALLBACK_ENDPOINTS` (default: `false`): Enable periodic health checks and automatic fallback.
+9. `TESTNET_RPC_URL_FALLBACK` (optional): Fallback RPC URL for cheqd Testnet.
+10. `MAINNET_RPC_URL_FALLBACK` (optional): Fallback RPC URL for cheqd Mainnet.
+
+Fallback behavior (when enabled):
+
+- On startup, both primary and fallback endpoints are health-checked; if neither network has a healthy endpoint, the service fails fast.
+- Every 30 seconds, endpoints are re-checked and health statuses updated.
+- Requests use the primary endpoint when healthy; otherwise they use the fallback, and switch back automatically when the primary recovers.
+- If a request fails due to an endpoint going unhealthy between checks, a quick reconnect is attempted using the other healthy endpoint.
 
 Clone the repository
 

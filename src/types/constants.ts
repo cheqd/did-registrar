@@ -21,4 +21,7 @@ export enum Messages {
 	InvalidOptions = 'The provided options are invalid',
 	InvalidSecret = 'The provided secret is invalid',
 	InvalidResourceId = 'ResourceId should be an unique UUID',
+	FallbackEndpointsMissing = 'ENABLE_FALLBACK_ENDPOINTS is true but fallback endpoints are missing',
+	NoHealthyEndpoints = 'No healthy RPC endpoints available at startup',
+	HealthCheckFailed = 'Health check failed',
 }

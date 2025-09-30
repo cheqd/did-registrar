@@ -8,7 +8,7 @@ import * as dotenv from 'dotenv';
 import fetch from 'node-fetch';
 
 import { Messages } from '../types/constants.js';
-import { IOptions } from '../types/types.js';
+import { IOptions, RpcStatus } from '../types/types.js';
 
 dotenv.config();
 
@@ -36,6 +36,8 @@ export enum NetworkType {
 export enum DefaultResolverUrl {
 	Cheqd = 'https://resolver.cheqd.net',
 }
+
+// Using interface from types
 
 type EndpointHealth = {
 	primaryUrl?: string;
@@ -147,7 +149,7 @@ class EndpointHealthManager {
 			console.log('Performing health check:', target);
 			const controller = new AbortController();
 			const timeout = setTimeout(() => controller.abort(), 5_000);
-			const res = await fetch(target, { signal: controller.signal as any });
+			const res = await fetch(target, { signal: controller.signal });
 			clearTimeout(timeout);
 			
 			if (!res.ok) {
@@ -155,7 +157,7 @@ class EndpointHealthManager {
 				return false;
 			}
 
-			const data = await res.json() as any;
+			const data = (await res.json()) as unknown as RpcStatus;
 			const catchingUp = data?.result?.sync_info?.catching_up;
 			const isHealthy = catchingUp === false;
 			
@@ -225,7 +227,11 @@ export class CheqdRegistrar {
 						? TESTNET_RPC_URL || DefaultRPCUrl.Testnet
 						: MAINNET_RPC_URL || DefaultRPCUrl.Mainnet;
 				}
-				return endpointHealthManager.getPreferredUrl(options.network || NetworkType.Mainnet);
+				// Fallback endpoints enabled: require explicit network selection
+				if (!options.network) {
+					throw new Error('Network must be specified when fallback endpoints are enabled');
+				}
+				return endpointHealthManager.getPreferredUrl(options.network);
 			})();
 
 		const sdkOptions: ICheqdSDKOptions = {

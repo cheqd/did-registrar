@@ -1,5 +1,11 @@
 # Changelog
 
+## [2.7.0-develop.1](https://github.com/cheqd/did-registrar/compare/2.6.2...2.7.0-develop.1) (2025-09-30)
+
+### Features
+
+* Allow setting up fallback RPC endpoints [DEV-5226] ([#489](https://github.com/cheqd/did-registrar/issues/489)) ([560d646](https://github.com/cheqd/did-registrar/commit/560d646164def6d85f095cf59647fa253cbabb07))
+
 ## [2.6.2](https://github.com/cheqd/did-registrar/compare/2.6.1...2.6.2) (2025-08-04)
 
 ### Bug Fixes

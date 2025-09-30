@@ -1,15 +1,26 @@
 import * as http from 'http';
 import App from './app.js';
 import * as dotenv from 'dotenv';
+import { endpointHealthManager } from './service/cheqd.js';
 
 dotenv.config();
 
 const port = process.env.PORT || 3000;
 App.set('port', port);
 
-const server = http.createServer(App);
-server.listen(port);
-server.on('error', onError);
+async function bootstrap() {
+    if (endpointHealthManager.isEnabled()) {
+        await endpointHealthManager.initAndStart();
+    }
+    const server = http.createServer(App);
+    server.listen(port);
+    server.on('error', onError);
+}
+
+bootstrap().catch((err) => {
+    console.error('Failed to start server:', err);
+    process.exit(1);
+});
 
 function onError(error: NodeJS.ErrnoException): void {
 	if (error.syscall !== 'listen') {

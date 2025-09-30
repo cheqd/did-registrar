@@ -6,6 +6,9 @@ declare global {
 			RESOLVER_URL?: string;
 			TESTNET_RPC_URL?: string;
 			MAINNET_RPC_URL?: string;
+			TESTNET_RPC_URL_FALLBACK?: string;
+			MAINNET_RPC_URL_FALLBACK?: string;
+			ENABLE_FALLBACK_ENDPOINTS?: string;
 			LOCAL_STORE_TTL: string;
 			PORT: string;
 		}

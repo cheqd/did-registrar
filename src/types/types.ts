@@ -144,3 +144,12 @@ export interface IDidUrlState {
 	secret: ISecret;
 	content: string;
 }
+
+// Minimal Tendermint /status response used by health check
+export interface RpcStatus {
+    result?: {
+        sync_info?: {
+            catching_up?: boolean;
+        };
+    };
+}

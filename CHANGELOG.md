@@ -1,5 +1,7 @@
 # Changelog
 
+## [2.7.1-develop.1](https://github.com/cheqd/did-registrar/compare/2.7.0...2.7.1-develop.1) (2025-11-28)
+
 ## [2.7.0](https://github.com/cheqd/did-registrar/compare/2.6.2...2.7.0) (2025-09-30)
 
 ### Features

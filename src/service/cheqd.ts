@@ -266,6 +266,7 @@ export class CheqdRegistrar {
 			this?.fee,
 			undefined,
 			versionId,
+			undefined,
 			{ sdk: this.forceGetSdk() }
 		);
 	}
@@ -278,6 +279,7 @@ export class CheqdRegistrar {
 			this?.fee,
 			undefined,
 			versionId,
+			undefined,
 			{ sdk: this.forceGetSdk() }
 		);
 	}
@@ -290,6 +292,7 @@ export class CheqdRegistrar {
 			this?.fee,
 			undefined,
 			versionId,
+			undefined,
 			{ sdk: this.forceGetSdk() }
 		);
 	}
@@ -300,6 +303,7 @@ export class CheqdRegistrar {
 			resourcePayload,
 			'',
 			this?.fee,
+			undefined,
 			undefined,
 			{ sdk: this.forceGetSdk() }
 		);

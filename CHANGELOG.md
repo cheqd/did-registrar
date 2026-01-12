@@ -1,5 +1,11 @@
 # Changelog
 
+## [2.7.2-develop.1](https://github.com/cheqd/did-registrar/compare/2.7.1...2.7.2-develop.1) (2026-01-12)
+
+### Bug Fixes
+
+* Bump CI-related packages on did-registrar repository [DEV-5614] ([#518](https://github.com/cheqd/did-registrar/issues/518)) ([3d9d678](https://github.com/cheqd/did-registrar/commit/3d9d678ed299e7141b22607e45be520cbf9fd62d))
+
 ## [2.7.1](https://github.com/cheqd/did-registrar/compare/2.7.0...2.7.1) (2025-11-28)
 
 ## [2.7.1-develop.1](https://github.com/cheqd/did-registrar/compare/2.7.0...2.7.1-develop.1) (2025-11-28)

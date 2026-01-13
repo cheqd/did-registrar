@@ -25,7 +25,7 @@ let {
 
 export enum DefaultRPCUrl {
 	Mainnet = 'https://rpc.cheqd.net',
-	Testnet = 'https://rpc.cheqd.network',
+	Testnet = 'https://rpc-devnet.cheqd.network',
 }
 
 export enum NetworkType {

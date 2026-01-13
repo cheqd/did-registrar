@@ -1,5 +1,11 @@
 # Changelog
 
+## [2.7.2-develop.2](https://github.com/cheqd/did-registrar/compare/2.7.2-develop.1...2.7.2-develop.2) (2026-01-13)
+
+### Bug Fixes
+
+* Enforce URL ([a470141](https://github.com/cheqd/did-registrar/commit/a47014117d0f25265d6871023bb771da44f746ec))
+
 ## [2.7.2-develop.1](https://github.com/cheqd/did-registrar/compare/2.7.1...2.7.2-develop.1) (2026-01-12)
 
 ### Bug Fixes

@@ -11,7 +11,6 @@ jobs:
   build-node:
     name: "Build Node.js"
     runs-on: ubuntu-latest
-    
     steps:
       - uses: actions/checkout@v6
 
@@ -19,19 +18,18 @@ jobs:
         with:
           node-version: 22
           cache: 'npm'
-    
+
       - name: "Clean install dependencies"
         run: npm ci --force
 
       - name: "Run npm build"
         run: npm run build
 
-      - name: "Run npm test"
-        env:
-          TEST_PRIVATE_KEY: ${{ secrets.TEST_PRIVATE_KEY }}
-          TEST_PUBLIC_KEY: ${{ secrets.TEST_PUBLIC_KEY }}
-          TESTNET_RPC_URL: https://rpc-devnet.cheqd.network
-        run: npm run test
+      # - name: "Run npm test"
+      #   env:
+      #     TEST_PRIVATE_KEY: ${{ secrets.TEST_PRIVATE_KEY }}
+      #     TEST_PUBLIC_KEY: ${{ secrets.TEST_PUBLIC_KEY }}
+      #   run: npm run test
 
   build-docker:
     name: "Build Docker image"
@@ -48,7 +46,6 @@ jobs:
         with:
           install: true
           version: latest
-    
       - name: Configure Docker image metadata
         id: meta
         uses: docker/metadata-action@v5

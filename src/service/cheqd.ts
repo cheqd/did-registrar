@@ -25,7 +25,7 @@ let {
 
 export enum DefaultRPCUrl {
 	Mainnet = 'https://rpc.cheqd.net',
-	Testnet = 'https://rpc-devnet.cheqd.network',
+	Testnet = 'https://rpc.cheqd.network',
 }
 
 export enum NetworkType {
@@ -126,10 +126,7 @@ class EndpointHealthManager {
 	}
 
 	public async checkAll(): Promise<void> {
-		await Promise.all([
-			this.checkNetwork(NetworkType.Mainnet),
-			this.checkNetwork(NetworkType.Testnet),
-		]);
+		await Promise.all([this.checkNetwork(NetworkType.Mainnet), this.checkNetwork(NetworkType.Testnet)]);
 	}
 
 	private async checkNetwork(network: NetworkType): Promise<void> {
@@ -151,7 +148,7 @@ class EndpointHealthManager {
 			const timeout = setTimeout(() => controller.abort(), 5_000);
 			const res = await fetch(target, { signal: controller.signal });
 			clearTimeout(timeout);
-			
+
 			if (!res.ok) {
 				console.log('Health check failed - HTTP error:', { url: target, status: res.status });
 				return false;
@@ -160,18 +157,21 @@ class EndpointHealthManager {
 			const data = (await res.json()) as unknown as RpcStatus;
 			const catchingUp = data?.result?.sync_info?.catching_up;
 			const isHealthy = catchingUp === false;
-			
-			console.log('Health check response:', { 
-				url: target, 
-				status: res.status, 
-				catching_up: catchingUp, 
-				healthy: isHealthy 
+
+			console.log('Health check response:', {
+				url: target,
+				status: res.status,
+				catching_up: catchingUp,
+				healthy: isHealthy,
 			});
-			
+
 			return isHealthy;
 		} catch (error) {
 			const target = `${baseUrl.replace(/\/$/, '')}/status`;
-			console.log('Health check failed:', { url: target, error: error instanceof Error ? error.message : 'Unknown error' });
+			console.log('Health check failed:', {
+				url: target,
+				error: error instanceof Error ? error.message : 'Unknown error',
+			});
 			return false;
 		}
 	}
@@ -222,17 +222,17 @@ export class CheqdRegistrar {
 		const rpcUrl = options.rpcUrl
 			? options.rpcUrl
 			: ((): string => {
-				if (!endpointHealthManager.isEnabled()) {
-					return options.network === NetworkType.Testnet
-						? TESTNET_RPC_URL || DefaultRPCUrl.Testnet
-						: MAINNET_RPC_URL || DefaultRPCUrl.Mainnet;
-				}
-				// Fallback endpoints enabled: require explicit network selection
-				if (!options.network) {
-					throw new Error('Network must be specified when fallback endpoints are enabled');
-				}
-				return endpointHealthManager.getPreferredUrl(options.network);
-			})();
+					if (!endpointHealthManager.isEnabled()) {
+						return options.network === NetworkType.Testnet
+							? TESTNET_RPC_URL || DefaultRPCUrl.Testnet
+							: MAINNET_RPC_URL || DefaultRPCUrl.Mainnet;
+					}
+					// Fallback endpoints enabled: require explicit network selection
+					if (!options.network) {
+						throw new Error('Network must be specified when fallback endpoints are enabled');
+					}
+					return endpointHealthManager.getPreferredUrl(options.network);
+				})();
 
 		const sdkOptions: ICheqdSDKOptions = {
 			modules: [

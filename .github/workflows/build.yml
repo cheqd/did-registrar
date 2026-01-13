@@ -30,6 +30,7 @@ jobs:
         env:
           TEST_PRIVATE_KEY: ${{ secrets.TEST_PRIVATE_KEY }}
           TEST_PUBLIC_KEY: ${{ secrets.TEST_PUBLIC_KEY }}
+          TESTNET_RPC_URL: https://rpc-devnet.cheqd.network
         run: npm run test
 
   build-docker:

@@ -25,11 +25,11 @@ jobs:
       - name: "Run npm build"
         run: npm run build
 
-      # - name: "Run npm test"
-      #   env:
-      #     TEST_PRIVATE_KEY: ${{ secrets.TEST_PRIVATE_KEY }}
-      #     TEST_PUBLIC_KEY: ${{ secrets.TEST_PUBLIC_KEY }}
-      #   run: npm run test
+      - name: "Run npm test"
+        env:
+          TEST_PRIVATE_KEY: ${{ secrets.TEST_PRIVATE_KEY }}
+          TEST_PUBLIC_KEY: ${{ secrets.TEST_PUBLIC_KEY }}
+        run: npm run test
 
   build-docker:
     name: "Build Docker image"

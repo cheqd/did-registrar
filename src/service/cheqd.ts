@@ -251,6 +251,14 @@ export class CheqdRegistrar {
 		this.fee = options.fee;
 	}
 
+	private async getSignerAddress(): Promise<string> {
+		const accounts = await this.forceGetSdk().options.wallet.getAccounts();
+		if (!accounts[0]) {
+			throw new Error('No signer account available');
+		}
+		return accounts[0].address;
+	}
+
 	public forceGetSdk(): CheqdSDK {
 		if (!this.sdk) {
 			throw new Error('Cannot connect when your offline ...');
@@ -262,8 +270,8 @@ export class CheqdRegistrar {
 		return await this.forceGetSdk().createDidDocTx(
 			signInputs,
 			didPayload,
-			'',
-			this?.fee,
+			await this.getSignerAddress(),
+			undefined,
 			undefined,
 			versionId,
 			undefined,
@@ -275,8 +283,8 @@ export class CheqdRegistrar {
 		return await this.forceGetSdk().updateDidDocTx(
 			signInputs,
 			didPayload,
-			'',
-			this?.fee,
+			await this.getSignerAddress(),
+			undefined,
 			undefined,
 			versionId,
 			undefined,
@@ -288,8 +296,8 @@ export class CheqdRegistrar {
 		return await this.forceGetSdk().deactivateDidDocTx(
 			signInputs,
 			didPayload,
-			'',
-			this?.fee,
+			await this.getSignerAddress(),
+			undefined,
 			undefined,
 			versionId,
 			undefined,
@@ -301,8 +309,8 @@ export class CheqdRegistrar {
 		return await this.forceGetSdk().createLinkedResourceTx(
 			signInputs,
 			resourcePayload,
-			'',
-			this?.fee,
+			await this.getSignerAddress(),
+			undefined,
 			undefined,
 			undefined,
 			{ sdk: this.forceGetSdk() }

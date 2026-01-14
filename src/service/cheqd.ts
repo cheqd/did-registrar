@@ -1,6 +1,6 @@
 import type { CheqdSDK, AbstractCheqdSDKModule, ICheqdSDKOptions, DIDDocument, DidStdFee } from '@cheqd/sdk';
 
-import { createCheqdSDK, DIDModule, FeemarketModule, ResourceModule } from '@cheqd/sdk';
+import { createCheqdSDK, DIDModule, FeemarketModule, OracleModule, ResourceModule } from '@cheqd/sdk';
 import { MsgCreateResourcePayload } from '@cheqd/ts-proto/cheqd/resource/v2/index.js';
 import { SignInfo } from '@cheqd/ts-proto/cheqd/did/v2/index.js';
 import { DirectSecp256k1HdWallet } from '@cosmjs/proto-signing';
@@ -239,6 +239,7 @@ export class CheqdRegistrar {
 				FeemarketModule as unknown as AbstractCheqdSDKModule,
 				DIDModule as unknown as AbstractCheqdSDKModule,
 				ResourceModule as unknown as AbstractCheqdSDKModule,
+				OracleModule as unknown as AbstractCheqdSDKModule,
 			],
 			rpcUrl,
 			wallet: await DirectSecp256k1HdWallet.fromMnemonic(

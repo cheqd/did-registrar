@@ -1,5 +1,11 @@
 # Changelog
 
+## [2.7.2-develop.3](https://github.com/cheqd/did-registrar/compare/2.7.2-develop.2...2.7.2-develop.3) (2026-01-15)
+
+### Bug Fixes
+
+* Removed fee assumptions (shift to dynamic lookup) ([dd931a6](https://github.com/cheqd/did-registrar/commit/dd931a647185f612b1bf91f6c05e1b6bb0cfb717))
+
 ## [2.7.2-develop.2](https://github.com/cheqd/did-registrar/compare/2.7.2-develop.1...2.7.2-develop.2) (2026-01-13)
 
 ### Bug Fixes

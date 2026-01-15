@@ -1,4 +1,4 @@
-import type { CheqdSDK, AbstractCheqdSDKModule, ICheqdSDKOptions, DIDDocument, DidStdFee } from '@cheqd/sdk';
+import type { CheqdSDK, AbstractCheqdSDKModule, ICheqdSDKOptions, DIDDocument, DidStdFee, IContext } from '@cheqd/sdk';
 
 import { createCheqdSDK, DIDModule, FeemarketModule, OracleModule, ResourceModule } from '@cheqd/sdk';
 import { MsgCreateResourcePayload } from '@cheqd/ts-proto/cheqd/resource/v2/index.js';
@@ -260,6 +260,26 @@ export class CheqdRegistrar {
 		return accounts[0].address;
 	}
 
+	private async getDynamicDidFee(
+		operation: 'create' | 'update' | 'deactivate',
+		feePayer?: string
+	): Promise<DidStdFee> {
+		const sdk = this.forceGetSdk();
+		const payer = feePayer ?? (await this.getSignerAddress());
+		const context = { sdk } as IContext;
+
+		switch (operation) {
+			case 'create':
+				return sdk.generateCreateDidDocFees(payer, undefined, undefined, context);
+			case 'update':
+				return sdk.generateUpdateDidDocFees(payer, undefined, undefined, context);
+			case 'deactivate':
+				return sdk.generateDeactivateDidDocFees(payer, undefined, undefined, context);
+			default:
+				throw new Error(`Unsupported DID operation for dynamic fee: ${operation}`);
+		}
+	}
+
 	public forceGetSdk(): CheqdSDK {
 		if (!this.sdk) {
 			throw new Error('Cannot connect when your offline ...');
@@ -268,41 +288,39 @@ export class CheqdRegistrar {
 	}
 
 	public async create(signInputs: SignInfo[], didPayload: DIDDocument, versionId: string | undefined) {
-		return await this.forceGetSdk().createDidDocTx(
-			signInputs,
-			didPayload,
-			await this.getSignerAddress(),
-			undefined,
-			undefined,
-			versionId,
-			undefined,
-			{ sdk: this.forceGetSdk() }
-		);
+		const sdk = this.forceGetSdk();
+		const signerAddress = await this.getSignerAddress();
+		const fee = this.fee ?? (await this.getDynamicDidFee('create', signerAddress));
+
+		return await sdk.createDidDocTx(signInputs, didPayload, signerAddress, fee, undefined, versionId, undefined, {
+			sdk,
+		});
 	}
 
 	public async update(signInputs: SignInfo[], didPayload: DIDDocument, versionId: string | undefined) {
-		return await this.forceGetSdk().updateDidDocTx(
-			signInputs,
-			didPayload,
-			await this.getSignerAddress(),
-			undefined,
-			undefined,
-			versionId,
-			undefined,
-			{ sdk: this.forceGetSdk() }
-		);
+		const sdk = this.forceGetSdk();
+		const signerAddress = await this.getSignerAddress();
+		const fee = this.fee ?? (await this.getDynamicDidFee('update', signerAddress));
+
+		return await sdk.updateDidDocTx(signInputs, didPayload, signerAddress, fee, undefined, versionId, undefined, {
+			sdk,
+		});
 	}
 
 	public async deactivate(signInputs: SignInfo[], didPayload: DIDDocument, versionId: string | undefined) {
-		return await this.forceGetSdk().deactivateDidDocTx(
+		const sdk = this.forceGetSdk();
+		const signerAddress = await this.getSignerAddress();
+		const fee = this.fee ?? (await this.getDynamicDidFee('deactivate', signerAddress));
+
+		return await sdk.deactivateDidDocTx(
 			signInputs,
 			didPayload,
-			await this.getSignerAddress(),
-			undefined,
+			signerAddress,
+			fee,
 			undefined,
 			versionId,
 			undefined,
-			{ sdk: this.forceGetSdk() }
+			{ sdk }
 		);
 	}
 

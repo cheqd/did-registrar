@@ -1,5 +1,7 @@
 # Changelog
 
+## [2.7.2-develop.4](https://github.com/cheqd/did-registrar/compare/2.7.2-develop.3...2.7.2-develop.4) (2026-01-15)
+
 ## [2.7.2-develop.3](https://github.com/cheqd/did-registrar/compare/2.7.2-develop.2...2.7.2-develop.3) (2026-01-15)
 
 ### Bug Fixes

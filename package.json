@@ -1,6 +1,6 @@
 {
 	"name": "@cheqd/did-registrar",
-	"version": "2.7.2",
+	"version": "2.7.3-develop.1",
 	"description": "Universal Registrar for cheqd DID method",
 	"homepage": "https://github.com/cheqd/did-registrar#readme",
 	"license": "Apache-2.0",

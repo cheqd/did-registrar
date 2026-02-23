@@ -26,7 +26,7 @@
 		}
 	},
 	"scripts": {
-		"dev": "nodemon src/index.ts",
+		"dev": "nodemon --exec tsx src/index.ts",
 		"start": "node dist/index.js",
 		"build": "tsc",
 		"format": "prettier --write '**/*.{js,ts,cjs,mjs,json}'",
@@ -84,6 +84,7 @@
 		"eslint-config-typescript": "^3.0.0",
 		"prettier": "^3.5.3",
 		"semantic-release": "^25.0.2",
+		"tsx": "^4.21.0",
 		"typescript": "^5.9.3"
 	},
 	"publishConfig": {

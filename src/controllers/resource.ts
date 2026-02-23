@@ -106,7 +106,9 @@ export class ResourceController {
 				.json(Responses.GetInvalidResourceResponseV1({}, request.body.secret, result.array()[0].msg));
 		}
 
-		let { did } = request.params;
+		let did = Array.isArray(request.params.did)
+			? request.params.did[0]
+			: (request.params.did as string);
 		let {
 			jobId,
 			data,

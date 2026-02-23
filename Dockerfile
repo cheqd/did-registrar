@@ -2,7 +2,7 @@
 ###             STAGE 1: Build did-registrar app            ###
 ###############################################################
 
-FROM node:22-alpine AS builder
+FROM node:25-alpine AS builder
 
 # Set working directory
 WORKDIR /home/node/app
@@ -11,7 +11,7 @@ WORKDIR /home/node/app
 COPY . .
 
 # Installing dependencies
-RUN npm ci
+RUN npm ci --force
 
 # Build the app
 RUN npm run build
@@ -21,7 +21,7 @@ RUN npm run build
 ###             STAGE 2: Build did-registrar runner         ###
 ###############################################################
 
-FROM node:22-alpine AS runner
+FROM node:25-alpine AS runner
 
 # Set Node.js environment
 ENV NODE_ENV=production
@@ -38,7 +38,7 @@ COPY --from=builder --chown=node:node /home/node/app/*.json /home/node/app/*.md 
 COPY --from=builder --chown=node:node /home/node/app/dist ./dist
 
 # Install production dependencies
-RUN npm ci
+RUN npm ci --force
 
 # Build-time arguments
 ARG NPM_CONFIG_LOGLEVEL=warn

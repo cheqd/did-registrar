@@ -125,7 +125,7 @@ class App {
 		app.get(`${URL_PREFIX}/did-document`, CheqdController.didDocValidator, new CheqdController().generateDidDoc);
 
 		// 404 for all other requests
-		app.all('*', (req, res) => res.status(400).send('Bad request'));
+		app.all('{*path}', (req, res) => res.status(400).send('Bad request'));
 	}
 }
 

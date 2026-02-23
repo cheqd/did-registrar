@@ -26,7 +26,7 @@
 		}
 	},
 	"scripts": {
-		"dev": "nodemon src/index.ts",
+		"dev": "nodemon --exec tsx src/index.ts",
 		"start": "node dist/index.js",
 		"build": "tsc",
 		"format": "prettier --write '**/*.{js,ts,cjs,mjs,json}'",
@@ -51,7 +51,7 @@
 		"@cheqd/ts-proto": "^4.2.0",
 		"@cosmjs/proto-signing": "^0.36.2",
 		"dotenv": "^17.2.3",
-		"express": "^4.21.2",
+		"express": "^5.2.1",
 		"express-validator": "^7.3.0",
 		"helmet": "^8.1.0",
 		"node-cache": "^5.1.2",
@@ -68,7 +68,7 @@
 		"@semantic-release/npm": "^13.1.2",
 		"@semantic-release/release-notes-generator": "^14.0.3",
 		"@stablelib/base64": "^2.0.1",
-		"@types/express": "^4.17.22",
+		"@types/express": "^5.0.6",
 		"@types/helmet": "^4.0.0",
 		"@types/node": "^25.2.3",
 		"@types/node-fetch": "^2.6.12",
@@ -84,6 +84,7 @@
 		"eslint-config-typescript": "^3.0.0",
 		"prettier": "^3.5.3",
 		"semantic-release": "^25.0.2",
+		"tsx": "^4.21.0",
 		"typescript": "^5.9.3"
 	},
 	"publishConfig": {

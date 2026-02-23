@@ -1,10 +1,52 @@
 # Changelog
 
+## [2.7.3](https://github.com/cheqd/did-registrar/compare/2.7.2...2.7.3) (2026-02-17)
+
+## [2.7.3-develop.1](https://github.com/cheqd/did-registrar/compare/2.7.2...2.7.3-develop.1) (2026-02-16)
+
+## [2.7.2-develop.6](https://github.com/cheqd/did-registrar/compare/2.7.2-develop.5...2.7.2-develop.6) (2026-02-13)
+
+## [2.7.2](https://github.com/cheqd/did-registrar/compare/2.7.1...2.7.2) (2026-01-19)
+
+### Bug Fixes
+
+* Bump CI-related packages on did-registrar repository [DEV-5614] ([#518](https://github.com/cheqd/did-registrar/issues/518)) ([3d9d678](https://github.com/cheqd/did-registrar/commit/3d9d678ed299e7141b22607e45be520cbf9fd62d))
+* Enforce URL ([a470141](https://github.com/cheqd/did-registrar/commit/a47014117d0f25265d6871023bb771da44f746ec))
+* Removed fee assumptions (shift to dynamic lookup) ([dd931a6](https://github.com/cheqd/did-registrar/commit/dd931a647185f612b1bf91f6c05e1b6bb0cfb717))
+
+## [2.7.2-develop.5](https://github.com/cheqd/did-registrar/compare/2.7.2-develop.4...2.7.2-develop.5) (2026-01-19)
+
+## [2.7.2-develop.4](https://github.com/cheqd/did-registrar/compare/2.7.2-develop.3...2.7.2-develop.4) (2026-01-15)
+
+## [2.7.2-develop.3](https://github.com/cheqd/did-registrar/compare/2.7.2-develop.2...2.7.2-develop.3) (2026-01-15)
+
+### Bug Fixes
+
+* Removed fee assumptions (shift to dynamic lookup) ([dd931a6](https://github.com/cheqd/did-registrar/commit/dd931a647185f612b1bf91f6c05e1b6bb0cfb717))
+
+## [2.7.2-develop.2](https://github.com/cheqd/did-registrar/compare/2.7.2-develop.1...2.7.2-develop.2) (2026-01-13)
+
+### Bug Fixes
+
+* Enforce URL ([a470141](https://github.com/cheqd/did-registrar/commit/a47014117d0f25265d6871023bb771da44f746ec))
+
+## [2.7.2-develop.1](https://github.com/cheqd/did-registrar/compare/2.7.1...2.7.2-develop.1) (2026-01-12)
+
+### Bug Fixes
+
+* Bump CI-related packages on did-registrar repository [DEV-5614] ([#518](https://github.com/cheqd/did-registrar/issues/518)) ([3d9d678](https://github.com/cheqd/did-registrar/commit/3d9d678ed299e7141b22607e45be520cbf9fd62d))
+
+## [2.7.1](https://github.com/cheqd/did-registrar/compare/2.7.0...2.7.1) (2025-11-28)
+
+## [2.7.1-develop.1](https://github.com/cheqd/did-registrar/compare/2.7.0...2.7.1-develop.1) (2025-11-28)
+
 ## [2.7.0](https://github.com/cheqd/did-registrar/compare/2.6.2...2.7.0) (2025-09-30)
 
 ### Features
 
 * Allow setting up fallback RPC endpoints [DEV-5226] ([#489](https://github.com/cheqd/did-registrar/issues/489)) ([560d646](https://github.com/cheqd/did-registrar/commit/560d646164def6d85f095cf59647fa253cbabb07))
+
+## [2.7.0-develop.2](https://github.com/cheqd/did-registrar/compare/2.7.0-develop.1...2.7.0-develop.2) (2025-11-28)
 
 ## [2.7.0-develop.1](https://github.com/cheqd/did-registrar/compare/2.6.2...2.7.0-develop.1) (2025-09-30)
 

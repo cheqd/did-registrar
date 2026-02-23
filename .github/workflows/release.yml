@@ -17,12 +17,12 @@ jobs:
       RELEASE_VERSION: ${{ steps.set-version.outputs.RELEASE_VERSION }}
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           fetch-depth: 0
           persist-credentials: false
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v6
         with:
           node-version: 22
           cache: 'npm'
@@ -35,7 +35,7 @@ jobs:
           private_key: ${{ secrets.BOT_APP_PRIVATE_KEY }}
 
       - name: "Clean install dependencies"
-        run: npm ci
+        run: npm ci --force
 
       - name: "Build"
         run: npm run build
@@ -70,7 +70,7 @@ jobs:
             runs-on: ubuntu-24.04-arm
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           persist-credentials: false
 
@@ -105,7 +105,7 @@ jobs:
       url: https://did-registrar.cheqd.net/api-docs
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           persist-credentials: false
 

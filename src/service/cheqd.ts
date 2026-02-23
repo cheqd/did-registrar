@@ -1,6 +1,6 @@
 import type { CheqdSDK, AbstractCheqdSDKModule, ICheqdSDKOptions, DIDDocument, DidStdFee } from '@cheqd/sdk';
 
-import { createCheqdSDK, DIDModule, FeemarketModule, ResourceModule } from '@cheqd/sdk';
+import { createCheqdSDK, DIDModule, FeemarketModule, OracleModule, ResourceModule } from '@cheqd/sdk';
 import { MsgCreateResourcePayload } from '@cheqd/ts-proto/cheqd/resource/v2/index.js';
 import { SignInfo } from '@cheqd/ts-proto/cheqd/did/v2/index.js';
 import { DirectSecp256k1HdWallet } from '@cosmjs/proto-signing';
@@ -126,10 +126,7 @@ class EndpointHealthManager {
 	}
 
 	public async checkAll(): Promise<void> {
-		await Promise.all([
-			this.checkNetwork(NetworkType.Mainnet),
-			this.checkNetwork(NetworkType.Testnet),
-		]);
+		await Promise.all([this.checkNetwork(NetworkType.Mainnet), this.checkNetwork(NetworkType.Testnet)]);
 	}
 
 	private async checkNetwork(network: NetworkType): Promise<void> {
@@ -151,7 +148,7 @@ class EndpointHealthManager {
 			const timeout = setTimeout(() => controller.abort(), 5_000);
 			const res = await fetch(target, { signal: controller.signal });
 			clearTimeout(timeout);
-			
+
 			if (!res.ok) {
 				console.log('Health check failed - HTTP error:', { url: target, status: res.status });
 				return false;
@@ -160,18 +157,21 @@ class EndpointHealthManager {
 			const data = (await res.json()) as unknown as RpcStatus;
 			const catchingUp = data?.result?.sync_info?.catching_up;
 			const isHealthy = catchingUp === false;
-			
-			console.log('Health check response:', { 
-				url: target, 
-				status: res.status, 
-				catching_up: catchingUp, 
-				healthy: isHealthy 
+
+			console.log('Health check response:', {
+				url: target,
+				status: res.status,
+				catching_up: catchingUp,
+				healthy: isHealthy,
 			});
-			
+
 			return isHealthy;
 		} catch (error) {
 			const target = `${baseUrl.replace(/\/$/, '')}/status`;
-			console.log('Health check failed:', { url: target, error: error instanceof Error ? error.message : 'Unknown error' });
+			console.log('Health check failed:', {
+				url: target,
+				error: error instanceof Error ? error.message : 'Unknown error',
+			});
 			return false;
 		}
 	}
@@ -222,23 +222,24 @@ export class CheqdRegistrar {
 		const rpcUrl = options.rpcUrl
 			? options.rpcUrl
 			: ((): string => {
-				if (!endpointHealthManager.isEnabled()) {
-					return options.network === NetworkType.Testnet
-						? TESTNET_RPC_URL || DefaultRPCUrl.Testnet
-						: MAINNET_RPC_URL || DefaultRPCUrl.Mainnet;
-				}
-				// Fallback endpoints enabled: require explicit network selection
-				if (!options.network) {
-					throw new Error('Network must be specified when fallback endpoints are enabled');
-				}
-				return endpointHealthManager.getPreferredUrl(options.network);
-			})();
+					if (!endpointHealthManager.isEnabled()) {
+						return options.network === NetworkType.Testnet
+							? TESTNET_RPC_URL || DefaultRPCUrl.Testnet
+							: MAINNET_RPC_URL || DefaultRPCUrl.Mainnet;
+					}
+					// Fallback endpoints enabled: require explicit network selection
+					if (!options.network) {
+						throw new Error('Network must be specified when fallback endpoints are enabled');
+					}
+					return endpointHealthManager.getPreferredUrl(options.network);
+				})();
 
 		const sdkOptions: ICheqdSDKOptions = {
 			modules: [
 				FeemarketModule as unknown as AbstractCheqdSDKModule,
 				DIDModule as unknown as AbstractCheqdSDKModule,
 				ResourceModule as unknown as AbstractCheqdSDKModule,
+				OracleModule as unknown as AbstractCheqdSDKModule,
 			],
 			rpcUrl,
 			wallet: await DirectSecp256k1HdWallet.fromMnemonic(
@@ -249,6 +250,14 @@ export class CheqdRegistrar {
 
 		this.sdk = await createCheqdSDK(sdkOptions);
 		this.fee = options.fee;
+	}
+
+	private async getSignerAddress(): Promise<string> {
+		const accounts = await this.forceGetSdk().options.wallet.getAccounts();
+		if (!accounts[0]) {
+			throw new Error('No signer account available');
+		}
+		return accounts[0].address;
 	}
 
 	public forceGetSdk(): CheqdSDK {
@@ -262,10 +271,11 @@ export class CheqdRegistrar {
 		return await this.forceGetSdk().createDidDocTx(
 			signInputs,
 			didPayload,
-			'',
-			this?.fee,
+			await this.getSignerAddress(),
+			undefined,
 			undefined,
 			versionId,
+			undefined,
 			{ sdk: this.forceGetSdk() }
 		);
 	}
@@ -274,10 +284,11 @@ export class CheqdRegistrar {
 		return await this.forceGetSdk().updateDidDocTx(
 			signInputs,
 			didPayload,
-			'',
-			this?.fee,
+			await this.getSignerAddress(),
+			undefined,
 			undefined,
 			versionId,
+			undefined,
 			{ sdk: this.forceGetSdk() }
 		);
 	}
@@ -286,10 +297,11 @@ export class CheqdRegistrar {
 		return await this.forceGetSdk().deactivateDidDocTx(
 			signInputs,
 			didPayload,
-			'',
-			this?.fee,
+			await this.getSignerAddress(),
+			undefined,
 			undefined,
 			versionId,
+			undefined,
 			{ sdk: this.forceGetSdk() }
 		);
 	}
@@ -298,8 +310,9 @@ export class CheqdRegistrar {
 		return await this.forceGetSdk().createLinkedResourceTx(
 			signInputs,
 			resourcePayload,
-			'',
-			this?.fee,
+			await this.getSignerAddress(),
+			undefined,
+			undefined,
 			undefined,
 			{ sdk: this.forceGetSdk() }
 		);

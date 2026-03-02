@@ -49,7 +49,7 @@
 	"dependencies": {
 		"@cheqd/sdk": "^5.5.0",
 		"@cheqd/ts-proto": "^4.2.0",
-		"@cosmjs/proto-signing": "^0.36.2",
+		"@cosmjs/proto-signing": "^0.38.1",
 		"dotenv": "^17.2.3",
 		"express": "^5.2.1",
 		"express-validator": "^7.3.0",

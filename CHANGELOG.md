@@ -1,5 +1,11 @@
 # Changelog
 
+## [2.8.0-develop.1](https://github.com/cheqd/did-registrar/compare/2.7.3...2.8.0-develop.1) (2026-06-01)
+
+### Features
+
+* Allow alsoKnownAs <add_in_context_gpt> ([#560](https://github.com/cheqd/did-registrar/issues/560)) ([5d58c48](https://github.com/cheqd/did-registrar/commit/5d58c482cc068c0565806c8d0304f59713a1e365))
+
 ## [2.7.3](https://github.com/cheqd/did-registrar/compare/2.7.2...2.7.3) (2026-02-17)
 
 ## [2.7.3-develop.1](https://github.com/cheqd/did-registrar/compare/2.7.2...2.7.3-develop.1) (2026-02-16)

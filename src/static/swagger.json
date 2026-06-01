@@ -888,6 +888,15 @@
                             "type": "string"
                         }
                     },
+                    "alsoKnownAs": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "example": [
+                            "did:web:example.com"
+                        ]
+                    },
                     "verificationMethod": {
                         "type": "array",
                         "items": {
@@ -917,6 +926,9 @@
                     ],
                     "authentication": [
                         "did:cheqd:testnet:ca9ff47c-0286-4614-a4be-8ffa83911e09#key-1"
+                    ],
+                    "alsoKnownAs": [
+                        "did:web:example.com"
                     ]
                 }
             },

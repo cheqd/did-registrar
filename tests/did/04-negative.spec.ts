@@ -1,8 +1,32 @@
-import { expect, test } from '@playwright/test';
+import { type APIRequestContext, expect, test } from '@playwright/test';
 import { getDidDocument } from 'fixtures';
 
 let indyDid = 'did:indy:sovrin:WRfXPg8dantKVubE3HX8pw';
 let deactiveDid = 'did:cheqd:testnet:ca9ff47c-0286-4614-a4be-8ffa83911e09';
+
+async function expectInvalidAlsoKnownAs(request: APIRequestContext, alsoKnownAs: unknown) {
+	const didPayload = {
+		...getDidDocument(),
+		alsoKnownAs,
+	};
+	const payload = await request.post(`/1.0/update`, {
+		data: {
+			did: didPayload.id,
+			didDocument: [didPayload],
+			options: {
+				network: 'testnet',
+			},
+		},
+	});
+
+	expect(payload.status()).toBe(400);
+
+	const body = await payload.json();
+	expect(body.didState).toBeDefined();
+	expect(body.didState.description).toEqual(
+		'Invalid payload: Provide a DID Document with at least one valid verification method'
+	);
+}
 
 test('did-create. wrong didDocument', async ({ request }) => {
 	const payload = await request.post('/1.0/create', {
@@ -80,6 +104,21 @@ test('did-update. Send wrong operation', async ({ request }) => {
 	const body = await payload.json();
 	expect(body.didState).toBeDefined();
 	expect(body.didState.description).toEqual('Invalid payload: Only Set operation is supported');
+});
+
+test('did-update. rejects DID Document alsoKnownAs as string', async ({ request }) => {
+	await expectInvalidAlsoKnownAs(request, 'did:web:example.com');
+});
+
+test('did-update. rejects DID Document alsoKnownAs as null', async ({ request }) => {
+	await expectInvalidAlsoKnownAs(request, null);
+});
+test('did-update. rejects DID Document alsoKnownAs with empty string entry', async ({ request }) => {
+	await expectInvalidAlsoKnownAs(request, ['']);
+});
+
+test('did-update. rejects DID Document alsoKnownAs resource-style aliases', async ({ request }) => {
+	await expectInvalidAlsoKnownAs(request, [{ uri: 'did:web:example.com', description: 'web alias' }]);
 });
 
 test('did-deactivate. invalid did', async ({ request }) => {

@@ -110,6 +110,9 @@ test('did-update. rejects DID Document alsoKnownAs as string', async ({ request 
 	await expectInvalidAlsoKnownAs(request, 'did:web:example.com');
 });
 
+test('did-update. rejects DID Document alsoKnownAs as null', async ({ request }) => {
+	await expectInvalidAlsoKnownAs(request, null);
+});
 test('did-update. rejects DID Document alsoKnownAs with empty string entry', async ({ request }) => {
 	await expectInvalidAlsoKnownAs(request, ['']);
 });

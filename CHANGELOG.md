@@ -1,5 +1,15 @@
 # Changelog
 
+## [2.8.0](https://github.com/cheqd/did-registrar/compare/2.7.3...2.8.0) (2026-06-01)
+
+### Features
+
+* Allow alsoKnownAs <add_in_context_gpt> ([#560](https://github.com/cheqd/did-registrar/issues/560)) ([5d58c48](https://github.com/cheqd/did-registrar/commit/5d58c482cc068c0565806c8d0304f59713a1e365))
+
+### Bug Fixes
+
+* Trigger beta channel npm publish ([2cfce27](https://github.com/cheqd/did-registrar/commit/2cfce27371242f466c687a9c80b6b7ddc098c681))
+
 ## [2.8.0-develop.2](https://github.com/cheqd/did-registrar/compare/2.8.0-develop.1...2.8.0-develop.2) (2026-06-01)
 
 ### Bug Fixes

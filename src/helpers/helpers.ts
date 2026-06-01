@@ -62,11 +62,17 @@ export function validateSpecCompliantPayload(didDocument: DIDDocument): SpecVali
 }
 
 function validateDidDocumentAlsoKnownAs(alsoKnownAs: unknown): boolean {
-	if (alsoKnownAs === undefined || alsoKnownAs === null) {
+	if (alsoKnownAs === undefined) {
 		return true;
 	}
+	if (alsoKnownAs === null) {
+		return false;
+	}
 
-	return Array.isArray(alsoKnownAs) && alsoKnownAs.every((item) => typeof item === 'string' && item.trim().length > 0);
+	return (
+		Array.isArray(alsoKnownAs) &&
+		alsoKnownAs.every((item) => typeof item === 'string' && item.trim().length > 0)
+	);
 }
 
 function validateServices(services: unknown): boolean {

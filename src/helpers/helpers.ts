@@ -54,7 +54,19 @@ export function validateSpecCompliantPayload(didDocument: DIDDocument): SpecVali
 
 	if (!isValidService) return { valid: false, error: 'Service is Invalid' };
 
+	const isValidAlsoKnownAs = validateDidDocumentAlsoKnownAs(didDocument.alsoKnownAs);
+
+	if (!isValidAlsoKnownAs) return { valid: false, error: 'alsoKnownAs is Invalid' };
+
 	return { valid: true } as SpecValidationResult;
+}
+
+function validateDidDocumentAlsoKnownAs(alsoKnownAs: unknown): boolean {
+	if (alsoKnownAs === undefined || alsoKnownAs === null) {
+		return true;
+	}
+
+	return Array.isArray(alsoKnownAs) && alsoKnownAs.every((item) => typeof item === 'string' && item.trim().length > 0);
 }
 
 function validateServices(services: unknown): boolean {

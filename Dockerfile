@@ -2,7 +2,7 @@
 ###             STAGE 1: Build did-registrar app            ###
 ###############################################################
 
-FROM node:25-alpine AS builder
+FROM node:22.23.4-alpine3.23 AS builder
 
 # Set working directory
 WORKDIR /home/node/app
@@ -21,7 +21,7 @@ RUN npm run build
 ###             STAGE 2: Build did-registrar runner         ###
 ###############################################################
 
-FROM node:25-alpine AS runner
+FROM node:22.23.4-alpine3.23 AS runner
 
 # Set Node.js environment
 ENV NODE_ENV=production
@@ -29,9 +29,9 @@ ENV NODE_ENV=production
 # Set working directory
 WORKDIR /home/node/app
 
-# Install pre-requisites
-RUN apk update && \
-    apk add --no-cache bash ca-certificates
+# Install pre-requisites (refresh ca-certificates for the eMudhra CA distrust)
+RUN apk add --no-cache --upgrade bash ca-certificates && \
+    update-ca-certificates
 
 # Copy files from builder
 COPY --from=builder --chown=node:node /home/node/app/*.json /home/node/app/*.md ./
